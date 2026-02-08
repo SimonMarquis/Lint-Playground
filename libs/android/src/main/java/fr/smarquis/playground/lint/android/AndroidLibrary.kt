@@ -1,3 +1,3 @@
 package fr.smarquis.playground.lint.android
 
-object AndroidLibrary
+public object AndroidLibrary
