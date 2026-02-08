@@ -37,7 +37,7 @@ internal class PlaygroundProperties private constructor(private val project: Pro
     val warningsAsErrors: Boolean
         get() = project.providers.gradleProperty("playground.warningsAsErrors").toBoolean().getOrElse(true)
     val lintWarningsAsErrors: Boolean
-        get() = project.providers.gradleProperty("playground.lint.warningsAsErrors").toBoolean().getOrElse(warningsAsErrors)
+        get() = project.providers.gradleProperty("playground.lint.warningsAsErrors").toBoolean().getOrElse(false)
 
     private fun Provider<String>.toBoolean(): Provider<Boolean> = map(String::toBoolean)
 
