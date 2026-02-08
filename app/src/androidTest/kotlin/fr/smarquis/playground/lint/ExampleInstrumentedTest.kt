@@ -1,4 +1,4 @@
-package fr.smarquis.lint
+package fr.smarquis.playground.lint
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("fr.smarquis.lint", appContext.packageName)
+        assertEquals("fr.smarquis.playground.lint", appContext.packageName)
     }
 }

@@ -1,4 +1,4 @@
-package fr.smarquis.lint
+package fr.smarquis.playground.lint
 
 import org.junit.Test
 
