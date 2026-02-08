@@ -1,9 +1,9 @@
 plugins {
-    alias(libs.plugins.android.application)
+    alias(libs.plugins.android.library)
 }
 
 android {
-    namespace = "fr.smarquis.playground.lint"
+    namespace = "fr.smarquis.playground.lint.android"
     compileSdk {
         version = release(36) {
             minorApiLevel = 1
@@ -11,13 +11,10 @@ android {
     }
 
     defaultConfig {
-        applicationId = "fr.smarquis.playground.lint"
         minSdk = 24
-        targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
@@ -33,23 +30,9 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    lint {
-        checkDependencies = true
-        abortOnError = true
-        lintConfig = isolated.rootProject.projectDirectory.file(".config/lint.xml").asFile
-        textReport = true
-        xmlReport = true
-        sarifReport = true
-        htmlReport = true
-    }
 }
 
 dependencies {
-    lintChecks(projects.lint)
-
-    implementation(projects.libs.android)
-    implementation(projects.libs.jvm)
-
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
 }
