@@ -4,8 +4,6 @@ plugins {
 }
 
 dependencies {
-    lintChecks(projects.lint)
-
     implementation(projects.libs.android)
     implementation(projects.libs.jvm)
 

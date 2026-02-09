@@ -1,15 +1,13 @@
 plugins {
-    alias(libs.plugins.playground.kotlin.jvm)
+    alias(libs.plugins.playground.android.library)
     alias(libs.plugins.playground.lint)
 }
 
-// Compile lint rules when IDE sync to always have up-to-date rules.
-tasks.maybeCreate("prepareKotlinIdeaImport")
-    .dependsOn(tasks.assemble)
-
 dependencies {
-    compileOnly(libs.lint.api)
-
-    testImplementation(libs.lint.checks)
-    testImplementation(libs.lint.tests)
+    lintPublish(projects.checks) {
+        // Remove automatic api dependency on kotlin-stdlib to be able to publish `:lint` module.
+        // Lint library only supports a single JAR file in the 'lintPublish' configuration.
+        // And `kotlin.stdlib.default.dependency=false` applies to the entire project.
+        isTransitive = false
+    }
 }
