@@ -27,7 +27,7 @@ internal class PlaygroundLintPlugin : Plugin<Project> {
 
     private fun Project.configureDependencies() {
         dependencies.add("lintChecks", libs.`android-security-lint`)
-        dependencies.add("lintChecks", project(":lint"))
+        dependencies.add("lintChecks", project(":checks"))
     }
 
     private fun Project.configureLintTask(
@@ -55,6 +55,5 @@ internal class PlaygroundLintPlugin : Plugin<Project> {
         lintConfig = isolated.rootProject.projectDirectory.file(".config/lint.xml").asFile
         baseline = isolated.rootProject.projectDirectory.file(".config/lint-baseline.xml").asFile
     }
-
 
 }

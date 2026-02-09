@@ -47,6 +47,7 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 rootProject.name = "Lint-Playground"
 
 include(":app")
+include(":checks")
 include(":lint")
 include(":libs:android")
 include(":libs:jvm")
