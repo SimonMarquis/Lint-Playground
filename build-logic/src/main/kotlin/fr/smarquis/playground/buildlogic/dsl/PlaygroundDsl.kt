@@ -1,7 +1,6 @@
 // https://github.com/gradle/gradle/tree/master/platforms/core-configuration/kotlin-dsl/src/main/kotlin/org/gradle/kotlin/dsl
 package fr.smarquis.playground.buildlogic.dsl
 
-import org.gradle.api.DomainObjectCollection
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
@@ -12,8 +11,6 @@ import org.gradle.api.provider.Property
 import org.gradle.api.provider.Provider
 import org.gradle.api.reflect.TypeOf
 import org.gradle.api.tasks.TaskCollection
-import org.gradle.api.tasks.TaskContainer
-import org.gradle.api.tasks.TaskProvider
 
 public fun Project.apply(plugin: String): Unit = pluginManager.apply(plugin)
 public inline fun <reified T : Plugin<*>> Project.apply(): Unit = pluginManager.apply(T::class.java)
@@ -30,5 +27,7 @@ public fun <T : Any> HasMultipleValues<T>.assign(elements: Iterable<T>?): Unit =
 public fun <T : Any> HasMultipleValues<T>.assign(provider: Provider<out Iterable<T>>): Unit = set(provider)
 public fun <K : Any, V : Any> MapProperty<K, V>.assign(entries: Map<out K, V>?): Unit = set(entries)
 public fun <K : Any, V : Any> MapProperty<K, V>.assign(provider: Provider<out Map<out K, V>>): Unit = set(provider)
+
+public inline fun <reified S : Task> TaskCollection<in S>.withType(): TaskCollection<S> = withType(S::class.java)
 
 public inline fun <reified T> typeOf(): TypeOf<T> = object : TypeOf<T>() {}
