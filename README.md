@@ -2,6 +2,8 @@
 
 ### [🔍 Android Lint SARIF Viewer](https://simonmarquis.github.io/Lint-Playground/)
 
+<a href="https://simonmarquis.github.io/Lint-Playground/"><img src="docs/screenshot.png" alt="screenshot" width="400" /></a>
+
 ### ▶️ Run configurations
 
 - `🕵️ Lint`: [txt](app/build/reports/lint-results-debug.txt), [xml](app/build/reports/lint-results-debug.xml), [html](app/build/reports/lint-results-debug.html), [sarif](app/build/reports/lint-results-debug.sarif)
