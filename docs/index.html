@@ -350,6 +350,9 @@
 
         .search-row {
             margin-bottom: 1.5rem;
+            position: relative;
+            display: flex;
+            align-items: center;
         }
 
         .filter-input {
@@ -357,15 +360,49 @@
             background-color: var(--bg-body);
             border: 1px solid var(--border);
             color: var(--text-main);
-            padding: 0.75rem;
+            padding: 0.75rem 0.75rem 0.75rem 40px;
             border-radius: 6px;
-            font-size: 0.95rem;
+            font-size: 1rem;
         }
 
         .filter-input:focus {
             outline: none;
             border-color: var(--text-tertiary);
             box-shadow: 0 0 0 1px var(--text-tertiary);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            color: var(--text-secondary);
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-hint {
+            position: absolute;
+            left: 40px;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            pointer-events: none;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: opacity 0.1s ease;
+        }
+
+        kbd {
+            background-color: var(--bg-elevation);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 1px 6px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.2;
+            box-shadow: 0 1px 0 var(--border);
         }
 
         .filter-group {
@@ -388,7 +425,9 @@
             min-width: 80px;
             white-space: nowrap;
             flex-shrink: 0;
-            padding-top: 0.5rem;
+            height: 32px;
+            display: flex;
+            align-items: center;
         }
 
         .pills-container {
@@ -414,6 +453,7 @@
             align-items: center;
             justify-content: center;
             min-width: fit-content;
+            line-height: 1.2;
         }
 
         .pill:hover {
@@ -710,7 +750,28 @@
 
         .empty-state {
             text-align: center;
-            padding: 3rem;
+            padding: 4rem 2rem;
+            color: var(--text-secondary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .empty-state-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        .empty-state-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-tertiary);
+        }
+
+        .empty-state svg {
             color: var(--text-secondary);
         }
 
@@ -835,7 +896,14 @@
 
         <div class="filter-section">
             <div class="search-row">
-                <input type="text" id="filter-text" class="filter-input" placeholder="Search by issue, message, file, etc.">
+                <div class="search-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </div>
+                <input type="text" id="filter-text" class="filter-input">
+                <span class="search-hint" id="search-hint">Type <kbd>/</kbd> to search</span>
             </div>
             <div class="filter-group">
                 <div class="filter-label">Severity</div>
@@ -861,7 +929,15 @@
         </div>
 
         <div id="issue-list" class="issue-list"></div>
-        <div id="empty-filter-state" class="empty-state hidden">No issues match your filters.</div>
+        <div id="empty-filter-state" class="empty-state hidden">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                <line x1="8" y1="11" x2="14" y2="11"></line>
+            </svg>
+            <span class="empty-state-title">No matching issues found!</span>
+            <span class="empty-state-subtitle">Try adjusting your filters or search query.</span>
+        </div>
     </div>
 </main>
 
@@ -989,6 +1065,7 @@
     const issueList = document.getElementById('issue-list');
     const emptyFilterState = document.getElementById('empty-filter-state');
     const filterText = document.getElementById('filter-text');
+    const searchHint = document.getElementById('search-hint');
     const severityPillsContainer = document.getElementById('severity-pills');
     const categoryPillsContainer = document.getElementById('category-pills');
     const issueIdPillsContainer = document.getElementById('issue-id-pills');
@@ -999,6 +1076,18 @@
     const metricWarnings = document.getElementById('metric-warnings');
     const metricInfo = document.getElementById('metric-info');
     const metricCategories = document.getElementById('metric-categories');
+
+    window.addEventListener('keydown', (e) => {
+        if (e.key === '/' && document.activeElement !== filterText && resultsContainer.style.display !== 'none') {
+            e.preventDefault();
+            filterText.focus();
+        }
+    });
+
+    filterText.addEventListener('focus', () => searchHint.style.opacity = '0');
+    filterText.addEventListener('blur', () => {
+        if (filterText.value === '') searchHint.style.opacity = '1';
+    });
 
     dropZone.addEventListener('click', (e) => {
         if (e.target.closest('#load-example-wrapper')) return;
