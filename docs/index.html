@@ -309,6 +309,7 @@
         }
 
         .metric-card {
+            --card-accent: var(--text-main);
             background-color: var(--bg-surface);
             padding: 1rem;
             border-radius: 8px;
@@ -316,19 +317,23 @@
             transition: box-shadow 0.2s ease, border-color 0.2s ease;
         }
 
+        .metric-card.is-error { --card-accent: var(--severity-error); }
+        .metric-card.is-warning { --card-accent: var(--severity-warning); }
+        .metric-card.is-info { --card-accent: var(--severity-info); }
+
         .metric-card:hover {
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            border-color: var(--text-tertiary);
+            border-color: var(--card-accent);
         }
 
         .metric-value {
             font-size: 2rem;
             font-weight: 700;
-            color: var(--text-main);
+            color: var(--card-accent);
         }
 
         .metric-label {
-            color: var(--text-secondary);
+            color: var(--card-accent);
             font-size: 0.875rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -528,6 +533,7 @@
             font-weight: 700;
             color: var(--primary);
             font-size: 1.1rem;
+            cursor: help;
         }
 
         .issue-group-count {
@@ -876,21 +882,17 @@
                 <div class="metric-value" id="metric-total">0</div>
                 <div class="metric-label">Total Issues</div>
             </div>
-            <div class="metric-card">
-                <div class="metric-value" style="color: var(--severity-error)" id="metric-errors">0</div>
+            <div class="metric-card is-error">
+                <div class="metric-value" id="metric-errors">0</div>
                 <div class="metric-label">Errors</div>
             </div>
-            <div class="metric-card">
-                <div class="metric-value" style="color: var(--severity-warning)" id="metric-warnings">0</div>
+            <div class="metric-card is-warning">
+                <div class="metric-value" id="metric-warnings">0</div>
                 <div class="metric-label">Warnings</div>
             </div>
-            <div class="metric-card">
-                <div class="metric-value" style="color: var(--severity-info)" id="metric-info">0</div>
+            <div class="metric-card is-info">
+                <div class="metric-value" id="metric-info">0</div>
                 <div class="metric-label">Hints</div>
-            </div>
-            <div class="metric-card">
-                <div class="metric-value" id="metric-categories">0</div>
-                <div class="metric-label">Categories</div>
             </div>
         </div>
 
@@ -911,7 +913,7 @@
                     <button class="pill active" data-value="all">All</button>
                     <button class="pill" data-value="error" data-severity="error">Error</button>
                     <button class="pill" data-value="warning" data-severity="warning">Warning</button>
-                    <button class="pill" data-value="info" data-severity="info">Information</button>
+                    <button class="pill" data-value="info" data-severity="info">Hint</button>
                 </div>
             </div>
             <div class="filter-group">
@@ -1025,7 +1027,7 @@
 
     function applyTheme(theme, persist = true) {
         document.documentElement.setAttribute('data-theme', theme);
-        themeToggle.innerHTML = theme === 'dark' ? iconSun : iconSun;
+        themeToggle.innerHTML = theme === 'dark' ? iconSun : iconMoon;
         if (persist) localStorage.setItem('theme', theme);
     }
 
@@ -1045,6 +1047,7 @@
         filteredIssues: [],
         categories: new Set(),
         uniqueIssueIds: new Set(),
+        rules: new Map(),
         filename: '',
         driverInfo: { name: '', version: '' },
         reportDate: null,
@@ -1075,7 +1078,6 @@
     const metricErrors = document.getElementById('metric-errors');
     const metricWarnings = document.getElementById('metric-warnings');
     const metricInfo = document.getElementById('metric-info');
-    const metricCategories = document.getElementById('metric-categories');
 
     window.addEventListener('keydown', (e) => {
         if (e.key === '/' && document.activeElement !== filterText && resultsContainer.style.display !== 'none') {
@@ -1247,20 +1249,34 @@
         let dateVal = run.invocations?.[0]?.endTimeUtc || run.invocations?.[0]?.startTimeUtc || sarif.time;
         state.reportDate = dateVal ? new Date(dateVal) : (state.fileLastModified ? new Date(state.fileLastModified) : new Date());
 
-        const ruleMap = new Map();
+        const getDesc = (obj) => obj?.markdown || obj?.text || "";
+
+        state.rules.clear();
         (driver.rules || []).forEach(rule => {
             let tags = rule.tags || rule.properties?.tags || [rule.properties?.category] || ["General"];
-            ruleMap.set(rule.id, {
+            state.rules.set(rule.id, {
                 name: rule.shortDescription?.text || rule.name || rule.id,
                 categories: Array.isArray(tags) ? tags : ["General"],
-                defaultLevel: rule.defaultConfiguration?.level || "warning"
+                defaultLevel: rule.defaultConfiguration?.level || "warning",
+                shortDescription: getDesc(rule.shortDescription),
+                fullDescription: getDesc(rule.fullDescription) || getDesc(rule.shortDescription)
             });
         });
 
         state.rawIssues = (run.results || []).map(result => {
             const ruleId = result.ruleId;
-            const rd = ruleMap.get(ruleId) || { categories: ['Unknown'], name: ruleId };
+            const rd = state.rules.get(ruleId) || { categories: ['Unknown'], name: ruleId };
             const loc = result.locations?.[0]?.physicalLocation;
+
+            const related = (result.relatedLocations || []).map(rel => {
+                const pLoc = rel.physicalLocation;
+                return {
+                    file: pLoc?.artifactLocation?.uri || "Unknown",
+                    line: pLoc?.region?.startLine || 0,
+                    message: rel.message?.text || ""
+                };
+            });
+
             return {
                 id: ruleId,
                 name: rd.name,
@@ -1270,7 +1286,8 @@
                 line: loc?.region?.startLine || 0,
                 level: result.level || rd.defaultLevel || "warning",
                 snippet: loc?.contextRegion?.snippet?.text ? { text: loc.contextRegion.snippet.text, startLine: loc.contextRegion.startLine || 1 } : null,
-                region: loc?.region || {}
+                region: loc?.region || {},
+                relatedLocations: related
             };
         });
 
@@ -1299,7 +1316,7 @@
     }
 
     function resetApp() {
-        Object.assign(state, { rawIssues: [], filteredIssues: [], categories: new Set(), uniqueIssueIds: new Set(), filename: '', driverInfo: { name: '', version: '' }, reportDate: null, fileLastModified: null });
+        Object.assign(state, { rawIssues: [], filteredIssues: [], categories: new Set(), uniqueIssueIds: new Set(), rules: new Map(), filename: '', driverInfo: { name: '', version: '' }, reportDate: null, fileLastModified: null });
         state.filters = { text: '', categories: new Set(['all']), issueIds: new Set(['all']), severities: new Set(['all']) };
         dropZone.classList.remove('hidden');
         resultsContainer.style.display = 'none';
@@ -1321,7 +1338,13 @@
     function renderIssueIdPills() {
         issueIdPillsContainer.innerHTML = '<button class="pill active" data-value="all">All</button>';
         Array.from(state.uniqueIssueIds).sort().forEach(id => {
-            const p = document.createElement('button'); p.className = 'pill'; p.setAttribute('data-value', id); p.textContent = id; issueIdPillsContainer.appendChild(p);
+            const rd = state.rules.get(id);
+            const p = document.createElement('button');
+            p.className = 'pill';
+            p.setAttribute('data-value', id);
+            p.textContent = id;
+            if (rd?.shortDescription) p.setAttribute('title', rd.shortDescription);
+            issueIdPillsContainer.appendChild(p);
         });
     }
 
@@ -1351,7 +1374,7 @@
         };
         update(severityPillsContainer, 'error', counts.sevs.error, 'Error');
         update(severityPillsContainer, 'warning', counts.sevs.warning, 'Warning');
-        update(severityPillsContainer, 'info', counts.sevs.info, 'Information');
+        update(severityPillsContainer, 'info', counts.sevs.info, 'Hint');
         Array.from(state.categories).forEach(c => update(categoryPillsContainer, c, counts.cats[c] || 0));
         Array.from(state.uniqueIssueIds).forEach(id => update(issueIdPillsContainer, id, counts.ids[id] || 0));
     }
@@ -1362,8 +1385,6 @@
         metricErrors.textContent = issues.filter(i => i.level === 'error').length;
         metricWarnings.textContent = issues.filter(i => i.level === 'warning').length;
         metricInfo.textContent = issues.filter(i => i.level === 'note' || i.level === 'none').length;
-        const cats = new Set(); issues.forEach(i => i.categories.forEach(c => cats.add(c)));
-        metricCategories.textContent = cats.size;
     }
 
     function renderList() {
@@ -1376,12 +1397,15 @@
 
         const fragment = document.createDocumentFragment();
         Object.values(groups).sort((a, b) => a.id.localeCompare(b.id)).forEach(group => {
+            const rd = state.rules.get(group.id);
             const lvl = (group.instances[0].level || 'warning').toLowerCase();
             const sCls = lvl === 'error' ? 'severity-error' : (lvl === 'note' || lvl === 'none' ? 'severity-info' : 'severity-warning');
             const g = document.createElement('div'); g.className = 'issue-group';
             g.innerHTML = `
                 <div class="issue-group-header">
-                    <div class="issue-group-title" style="color: var(--${sCls})"><span class="severity-badge ${sCls}"></span>${sanitize(group.id)} <span class="issue-group-count">${group.instances.length}</span></div>
+                    <div class="issue-group-title" style="color: var(--${sCls})" ${rd?.fullDescription ? `title="${sanitize(rd.fullDescription)}"` : ''}>
+                        <span class="severity-badge ${sCls}"></span>${sanitize(group.id)} <span class="issue-group-count">${group.instances.length}</span>
+                    </div>
                     <div class="categories-wrapper">${group.categories.map(c => `<span class="category-badge">${sanitize(c)}</span>`).join('')}</div>
                 </div>`;
             const content = document.createElement('div'); content.className = 'issue-group-content';
@@ -1401,11 +1425,35 @@
                     }).join('');
                     snippet = `<div class="issue-code-snippet">${lHtml}</div>`;
                 }
+
                 const last = i.file.lastIndexOf('/');
+
+                let relatedHtml = '';
+                if (i.relatedLocations?.length > 0) {
+                    relatedHtml = i.relatedLocations.map(rel => {
+                        const rLast = rel.file.lastIndexOf('/');
+                        return `
+                            <div style="margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.25rem; padding-left: 0.75rem; border-left: 2px solid var(--border);">
+                                ${rel.message ? `<div style="font-size: 0.75rem; color: var(--text-tertiary); font-style: italic;">${sanitize(rel.message)}</div>` : ''}
+                                <button class="issue-location" data-path="${sanitize(rel.file)}:${rel.line}">
+                                    <span class="path-dir">${sanitize(rel.file.substring(0, rLast + 1))}</span>
+                                    <span class="path-name">${sanitize(rel.file.substring(rLast + 1))}</span>
+                                    <span class="line-number">:${rel.line}</span>
+                                </button>
+                            </div>
+                        `;
+                    }).join('');
+                }
+
                 const card = document.createElement('div'); card.className = 'issue-card';
                 card.innerHTML = `
                     <div class="issue-message"><span>${sanitize(i.message)}</span></div>
-                    <button class="issue-location" data-path="${sanitize(i.file)}:${i.line}"><span class="path-dir">${sanitize(i.file.substring(0, last + 1))}</span><span class="path-name">${sanitize(i.file.substring(last + 1))}</span><span class="line-number">:${i.line}</span></button>
+                    <button class="issue-location" data-path="${sanitize(i.file)}:${i.line}">
+                        <span class="path-dir">${sanitize(i.file.substring(0, last + 1))}</span>
+                        <span class="path-name">${sanitize(i.file.substring(last + 1))}</span>
+                        <span class="line-number">:${i.line}</span>
+                    </button>
+                    ${relatedHtml}
                     ${snippet}`;
                 content.appendChild(card);
             });
