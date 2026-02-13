@@ -4,7 +4,7 @@ targetSdk = "36"
 compileSdk = "36"
 
 agp = "9.0.0"
-android-tools = "32.0.0"
+android-tools = "32.0.1"
 kotlin = "2.3.10"
 
 [libraries]
