@@ -13,7 +13,7 @@ import com.android.tools.lint.detector.api.TextFormat.RAW
 import com.intellij.psi.PsiMethod
 import org.jetbrains.uast.UCallExpression
 import java.util.EnumSet
-var count = 0
+private var count = 0
 public class ReplaceMethodCallDetector : Detector(), SourceCodeScanner {
 
     override fun getApplicableMethodNames(): List<String> = listOf("foo")
