@@ -25,6 +25,7 @@
             --severity-warning: #ffca28;
             --severity-info: #42a5f5;
             --severity-ignore: #78909c;
+            --header-height: 76px; 
         }
 
         [data-theme="light"] {
@@ -79,6 +80,7 @@
             z-index: 50;
             transition: background-color 0.3s ease, border-color 0.3s ease;
             gap: 1rem;
+            height: var(--header-height);
         }
 
         h1 {
@@ -117,6 +119,7 @@
             align-items: center;
             gap: 1rem;
             flex-shrink: 0;
+            margin-left: auto;
         }
 
         #report-info {
@@ -128,7 +131,7 @@
             text-align: right;
             line-height: 1.3;
             max-width: 250px;
-            min-height: 3.2rem;
+            min-height: 3.2rem; 
         }
 
         .info-line-primary {
@@ -167,7 +170,6 @@
         @media (max-width: 480px) {
             header { padding: 0.75rem 1rem; }
             h1 { font-size: 1rem; }
-            h1 > span { display: none; }
             .header-controls { gap: 0.5rem; }
             #report-info { display: none; }
         }
@@ -303,7 +305,7 @@
 
         .metrics-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
             gap: 1rem;
             margin-bottom: 2rem;
         }
@@ -313,8 +315,12 @@
             background-color: var(--bg-surface);
             padding: 1rem;
             border-radius: 8px;
-            border: 1px solid var(--border);
+            /* Default: colored with alpha (40% opacity used for border visibility) */
+            border: 1px solid var(--border); /* Fallback */
+            border: 1px solid color-mix(in srgb, var(--card-accent) 40%, transparent);
             transition: box-shadow 0.2s ease, border-color 0.2s ease;
+            position: relative; /* Context for icon positioning */
+            overflow: hidden;
         }
 
         .metric-card.is-error { --card-accent: var(--severity-error); }
@@ -325,11 +331,41 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
             border-color: var(--card-accent);
         }
+        
+        .metric-card:hover .metric-icon {
+            opacity: 1;
+        }
+        
+        /* New Icon Style for Metric Cards */
+        .metric-icon {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 24px;
+            height: 24px;
+            color: var(--card-accent);
+            opacity: 0.5;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.2s ease;
+        }
+        
+        .metric-icon svg {
+            width: 100%;
+            height: 100%;
+            stroke-width: 2;
+        }
 
         .metric-value {
             font-size: 2rem;
             font-weight: 700;
             color: var(--card-accent);
+            position: relative;
+            z-index: 1;
+            line-height: 1; /* Fixes large top gap to match padding */
+            margin-bottom: 0.25rem; /* Adds definition between number and label */
         }
 
         .metric-label {
@@ -337,6 +373,9 @@
             font-size: 0.875rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
+            position: relative;
+            z-index: 1;
+            line-height: 1.2; /* Tighter baseline for consistent bottom spacing */
         }
 
         .filter-section {
@@ -414,7 +453,7 @@
             display: flex;
             align-items: flex-start;
             gap: 1.5rem;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
         }
 
         .filter-group:last-child {
@@ -430,7 +469,7 @@
             min-width: 80px;
             white-space: nowrap;
             flex-shrink: 0;
-            height: 32px;
+            height: 24px;
             display: flex;
             align-items: center;
         }
@@ -438,7 +477,7 @@
         .pills-container {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.5rem;
+            gap: 0.35rem;
             flex: 1;
         }
 
@@ -448,17 +487,34 @@
             background-color: var(--bg-elevation);
             color: var(--text-secondary);
             border: 1px solid transparent;
-            padding: 0.4rem 0.8rem;
+            padding: 0.25rem 0.6rem;
             border-radius: 20px;
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             cursor: pointer;
             transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
             user-select: none;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            min-width: fit-content;
+            min-width: 0; /* Allow shrinking */
+            max-width: 100%; /* Prevent overflow */
             line-height: 1.2;
+            vertical-align: middle;
+        }
+
+        .pill-label {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-width: 0;
+            flex: 0 1 auto;
+        }
+
+        .pill-count {
+            white-space: nowrap;
+            padding-left: 0.35rem;
+            flex: 0 0 auto;
+            font-variant-numeric: tabular-nums;
         }
 
         .pill:hover {
@@ -469,6 +525,7 @@
         .pill:focus {
             outline: 2px solid var(--text-tertiary);
             outline-offset: 2px;
+            border-color: var(--text-tertiary);
         }
 
         .pill.active {
@@ -507,7 +564,7 @@
             border-radius: 12px;
             overflow: hidden;
             content-visibility: auto;
-            contain-intrinsic-size: 150px;
+            contain-intrinsic-size: 500px;
             transition: box-shadow 0.2s ease, border-color 0.2s ease;
         }
 
@@ -515,7 +572,7 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
             border-color: var(--text-tertiary);
         }
-
+        
         .issue-group-header {
             background-color: var(--bg-elevation);
             padding: 1rem 1.25rem;
@@ -523,8 +580,12 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            flex-wrap: wrap; 
+            gap: 0.5rem;
+            user-select: none;
+            transition: background-color 0.2s ease;
         }
-
+        
         .issue-group-title {
             display: flex;
             align-items: center;
@@ -533,7 +594,17 @@
             font-weight: 700;
             color: var(--primary);
             font-size: 1.1rem;
-            cursor: help;
+            flex: 1 1 auto;
+            min-width: 0;
+            margin-right: 0.5rem;
+        }
+        
+        .issue-rule-id {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-width: 0;
+            flex: 0 1 auto;
         }
 
         .issue-group-count {
@@ -544,6 +615,7 @@
             font-size: 0.8rem;
             font-weight: 600;
             border: 1px solid var(--border);
+            flex-shrink: 0;
         }
 
         .issue-group-content {
@@ -559,18 +631,22 @@
             border-radius: 8px;
             padding: 1rem;
             transition: transform 0.1s ease;
+            /* Removed position relative */
         }
 
         .issue-card:hover {
             border-color: var(--text-tertiary);
         }
+        
+        /* Removed .issue-card-icon style */
 
         .categories-wrapper {
             display: flex;
             gap: 0.5rem;
             flex-wrap: wrap;
             justify-content: flex-end;
-            max-width: 50%;
+            max-width: 100%;
+            flex-shrink: 0;
         }
 
         .category-badge {
@@ -623,6 +699,23 @@
             display: flex;
             align-items: flex-start;
             gap: 0.75rem;
+        }
+
+        /* Formatting Styles for Markdown */
+        .issue-message strong { font-weight: 700; color: var(--text-main); }
+        .issue-message em { font-style: italic; }
+        .issue-message u { text-decoration: underline; text-underline-offset: 3px; }
+        .issue-message del { opacity: 0.7; }
+        .issue-message .formatted-code {
+            background-color: var(--bg-elevation);
+            border: 1px solid var(--border);
+            padding: 0.1rem 0.35rem;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.85em;
+            color: var(--primary);
+            white-space: pre-wrap;
+            word-break: break-word;
         }
 
         .issue-location {
@@ -686,17 +779,20 @@
             background-color: var(--code-bg);
             border: 1px solid var(--code-border);
             border-radius: 6px;
-            padding: 0.75rem;
+            /* Modified padding: remove left padding from container to allow sticky element to sit flush */
+            padding: 0.75rem 0.75rem 0.75rem 0;
             font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
             font-size: 0.85rem;
             overflow-x: auto;
             line-height: 1.4;
+            position: relative; /* Context for sticky */
+            display: grid; /* Ensures all lines stretch to the width of the longest line */
         }
 
         .code-line {
             display: flex;
             gap: 1rem;
-            min-width: fit-content;
+            /* min-width: fit-content; Removed as grid handles width stretching */
         }
 
         .code-line-number {
@@ -705,8 +801,15 @@
             text-align: right;
             user-select: none;
             border-right: 1px solid var(--border);
+            /* Add left padding here instead of container */
             padding-right: 0.75rem;
+            padding-left: 0.75rem;
             flex-shrink: 0;
+            /* Sticky positioning */
+            position: sticky;
+            left: 0;
+            background-color: var(--code-bg);
+            z-index: 1;
         }
 
         .code-content {
@@ -830,637 +933,823 @@
 </head>
 <body>
 
-<header>
-    <h1>
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" style="color:var(--primary)">
-            <path d="M20 8h-2.81c-.45-.78-1.07-1.45-1.82-1.96L17 4.41 15.59 3l-2.17 2.17C12.96 5.06 12.49 5 12 5c-.49 0-.96.06-1.41.17L8.41 3 7 4.41l1.62 1.63C7.88 6.55 7.26 7.22 6.81 8H4v2h2.09c-.05.33-.09.66-.09 1v1H4v2h2v1c0 .34.04.67.09 1H4v2h2.81c1.04 1.79 2.97 3 5.19 3s4.15-1.21 5.19-3H20v-2h-2.09c.05-.33.09-.66.09-1v-1h2v-2h-2v-1c0-.34-.04-.67-.09-1H20V8zm-6 8h-4v-2h4v2zm0-4h-4v-2h4v2z"/>
-        </svg>
-        Android Lint <span>SARIF Viewer</span>
-    </h1>
-    <span class="status-badge">🚧 Work in Progress 🚧</span>
-    <div class="header-controls">
-        <div id="report-info"></div>
+    <header>
+        <h1>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" style="color:var(--primary)">
+                <path d="M20 8h-2.81c-.45-.78-1.07-1.45-1.82-1.96L17 4.41 15.59 3l-2.17 2.17C12.96 5.06 12.49 5 12 5c-.49 0-.96.06-1.41.17L8.41 3 7 4.41l1.62 1.63C7.88 6.55 7.26 7.22 6.81 8H4v2h2.09c-.05.33-.09.66-.09 1v1H4v2h2v1c0 .34.04.67.09 1H4v2h2.81c1.04 1.79 2.97 3 5.19 3s4.15-1.21 5.19-3H20v-2h-2.09c.05-.33.09-.66.09-1v-1h2v-2h-2v-1c0-.34-.04-.67-.09-1H20V8zm-6 8h-4v-2h4v2zm0-4h-4v-2h4v2z"/>
+            </svg>
+            Android Lint <span>SARIF Viewer</span>
+        </h1>
+        <span class="status-badge">🚧 Work in Progress 🚧</span>
+        <div class="header-controls">
+            <div id="report-info"></div>
 
-        <button id="reset-button" class="reset-btn hidden" title="Load New File">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <button id="reset-button" class="reset-btn hidden" title="Load New File">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                    <line x1="12" y1="11" x2="12" y2="17"></line>
+                    <line x1="9" y1="14" x2="15" y2="14"></line>
+                </svg>
+            </button>
+            <button id="theme-toggle" class="theme-toggle" title="Toggle Theme"></button>
+            <a href="https://github.com/SimonMarquis/Lint-Playground?utm_source=sarif-viewer" target="_blank" rel="noopener noreferrer" class="header-link" title="View on GitHub">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                </svg>
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <div id="drop-zone">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
                 <line x1="12" y1="11" x2="12" y2="17"></line>
                 <line x1="9" y1="14" x2="15" y2="14"></line>
             </svg>
-        </button>
-        <button id="theme-toggle" class="theme-toggle" title="Toggle Theme"></button>
-        <a href="https://github.com/SimonMarquis/Lint-Playground?utm_source=sarif-viewer" target="_blank" rel="noopener noreferrer" class="header-link" title="View on GitHub">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
-            </svg>
-        </a>
-    </div>
-</header>
+            <div class="drop-text-main">Drop your SARIF file here</div>
+            
+            <div class="or-separator">
+                <span>or</span>
+            </div>
 
-<main>
-    <div id="drop-zone">
+            <div class="drop-actions" id="load-example-wrapper">
+                load report from <strong>android/nowinandroid</strong> project
+            </div>
+            <input type="file" id="file-input" accept=".sarif,.json" style="display:none">
+        </div>
+
+        <div id="results-container">
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    </div>
+                    <div class="metric-value" id="metric-total">0</div>
+                    <div class="metric-label">Total Issues</div>
+                </div>
+                <div class="metric-card is-error">
+                    <div class="metric-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
+                            <line x1="9" y1="9" x2="15" y2="15"></line>
+                            <line x1="15" y1="9" x2="9" y2="15"></line>
+                        </svg>
+                    </div>
+                    <div class="metric-value" id="metric-errors">0</div>
+                    <div class="metric-label">Errors</div>
+                </div>
+                <div class="metric-card is-warning">
+                    <div class="metric-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                    </div>
+                    <div class="metric-value" id="metric-warnings">0</div>
+                    <div class="metric-label">Warnings</div>
+                </div>
+                <div class="metric-card is-info">
+                    <div class="metric-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                    </div>
+                    <div class="metric-value" id="metric-info">0</div>
+                    <div class="metric-label">Hints</div>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <div class="search-row">
+                    <div class="search-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                    </div>
+                    <input type="text" id="filter-text" class="filter-input">
+                    <span class="search-hint" id="search-hint">Type <kbd>/</kbd> to search</span>
+                </div>
+                <div class="filter-group">
+                    <div class="filter-label">Severity</div>
+                    <div class="pills-container" id="severity-pills">
+                        <button class="pill active" data-value="all">All</button>
+                        <button class="pill" data-value="error" data-severity="error">Error</button>
+                        <button class="pill" data-value="warning" data-severity="warning">Warning</button>
+                        <button class="pill" data-value="info" data-severity="info">Hint</button>
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <div class="filter-label">Category</div>
+                    <div class="pills-container" id="category-pills">
+                        <button class="pill active" data-value="all">All</button>
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <div class="filter-label">Issue ID</div>
+                    <div class="pills-container" id="issue-id-pills">
+                        <button class="pill active" data-value="all">All</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="issue-list" class="issue-list"></div>
+            <div id="empty-filter-state" class="empty-state hidden">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    <line x1="8" y1="11" x2="14" y2="11"></line>
+                </svg>
+                <span class="empty-state-title">No matching issues found!</span>
+                <span class="empty-state-subtitle">Try adjusting your filters or search query.</span>
+            </div>
+        </div>
+    </main>
+
+    <div id="toast" class="toast hidden"></div>
+
+    <div id="drag-overlay" class="hidden">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
             <line x1="12" y1="11" x2="12" y2="17"></line>
             <line x1="9" y1="14" x2="15" y2="14"></line>
         </svg>
-        <div class="drop-text-main">Drop your SARIF file here</div>
-
-        <div class="or-separator">
-            <span>or</span>
-        </div>
-
-        <div class="drop-actions" id="load-example-wrapper">
-            load report from <strong>android/nowinandroid</strong> project
-        </div>
-        <input type="file" id="file-input" accept=".sarif,.json" style="display:none">
+        <h2 style="font-size: 1.5rem; font-weight: 600;">Drop to Load New File</h2>
     </div>
 
-    <div id="results-container">
-        <div class="metrics-grid">
-            <div class="metric-card">
-                <div class="metric-value" id="metric-total">0</div>
-                <div class="metric-label">Total Issues</div>
-            </div>
-            <div class="metric-card is-error">
-                <div class="metric-value" id="metric-errors">0</div>
-                <div class="metric-label">Errors</div>
-            </div>
-            <div class="metric-card is-warning">
-                <div class="metric-value" id="metric-warnings">0</div>
-                <div class="metric-label">Warnings</div>
-            </div>
-            <div class="metric-card is-info">
-                <div class="metric-value" id="metric-info">0</div>
-                <div class="metric-label">Hints</div>
-            </div>
-        </div>
+    <script id="sarif-example" data-src="lint-results-demoDebug.sarif" type="application/json"></script>
+    <!--<script id="sarif-example" type="application/gzip+base64">H4sICJmRi2kAA3NtYWxsLnNhcmlmAMVVTW/bMAz9K4IwoIel9up2wJqlWbvusAIdMDTdaRkCxWJsDbZkSHTSrMh/H2U7qfPdw4A5h+iDfHokn6hn/sbFKeSCd3mKWLhuGFoxCxKFaTkuHdjYaASNQWzy0Ain3CnGLnTCqsmpKyAOc+EQbDioYFAst6rpaRScBe+C385o3uFTsE7RqMurZVqxpXa8+/OZozEZ7z5zaRVZ+ZEWOZDljZbWKMnulcY1iA9B1EBkUGMoSctfhZWxkSAf4ck7uNRY/AIutqrAypMO81stU1YtLDpcwkSUGd4aPVFJacXSIYMpED0O1hrrDQtrCrCo/MmEJxLPgN8aayFGDc7RyXeUN6srDJGpPzXYr8Wi0zD9oSm98gGcKW0M7jDX2pjZlfUr2M6E1Uon+/l+BzsxNhc6hjaxx3lhjtAZFJBlhM1WGTlGRhuE12WOmHgynGIlwLq0vsh3u8qbk4dIYGdVHVpPccgH5ThXOOQdRiGVmWSUS3bdbC9T6smt15nmJq4CqUkU6dypWGT3zao/VFAoExFje620ijBEUYTO+uuhdEiHhJmYmxJDMlZThfOR3wie8oxXsSaNs0OCJLFTSGfvO/X01mRlTrvReYeDli+7NFntXRJMdVef8GEnWkRoWhUFYCtbjL7e5xLR6KFmzSfqO9dV8mrIr98qGboqg6Nxbci3TevgRjMlMSWnmRXFqOkcu8z96VcvhdmLl4JKUtwCZGGfLxZeJ52WNrYv1LY6HlNYVZydPAS1CIKych3VsxNGtQNhHUPDxsDqzbY+ljfrHytkKrKS/moW7qA2LjakcXbZksbFmjLOoyPK2C+M5or4Vkw1IL4jPxzy/rc5uymKXkO1X9dv0zz24Y4cIPpwyGvQDA/7rdWCvJrWN6jmh10zkyiSZ//e/69Md0hl2eK2BULtwj85ykiSmXJMMHr4cqNZrpxrut5HJulFIoGyHIRuPEi1Q/6prZKq5f0/iUQbEjmPWhKJ1iVytHnskkhv9RrtEcC6XuqsbuimF76ANHXyv7+XESPqlwgAAA==</script>-->
+    <!-- Placeholder for embedded report (populated by CI/CD or other tools) -->
+    <script id="sarif-report" type="application/gzip+base64"></script>
 
-        <div class="filter-section">
-            <div class="search-row">
-                <div class="search-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    </svg>
-                </div>
-                <input type="text" id="filter-text" class="filter-input">
-                <span class="search-hint" id="search-hint">Type <kbd>/</kbd> to search</span>
-            </div>
-            <div class="filter-group">
-                <div class="filter-label">Severity</div>
-                <div class="pills-container" id="severity-pills">
-                    <button class="pill active" data-value="all">All</button>
-                    <button class="pill" data-value="error" data-severity="error">Error</button>
-                    <button class="pill" data-value="warning" data-severity="warning">Warning</button>
-                    <button class="pill" data-value="info" data-severity="info">Hint</button>
-                </div>
-            </div>
-            <div class="filter-group">
-                <div class="filter-label">Category</div>
-                <div class="pills-container" id="category-pills">
-                    <button class="pill active" data-value="all">All</button>
-                </div>
-            </div>
-            <div class="filter-group">
-                <div class="filter-label">Issue ID</div>
-                <div class="pills-container" id="issue-id-pills">
-                    <button class="pill active" data-value="all">All</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="issue-list" class="issue-list"></div>
-        <div id="empty-filter-state" class="empty-state hidden">
-            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                <line x1="8" y1="11" x2="14" y2="11"></line>
-            </svg>
-            <span class="empty-state-title">No matching issues found!</span>
-            <span class="empty-state-subtitle">Try adjusting your filters or search query.</span>
-        </div>
-    </div>
-</main>
-
-<div id="toast" class="toast hidden"></div>
-
-<div id="drag-overlay" class="hidden">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-        <line x1="12" y1="11" x2="12" y2="17"></line>
-        <line x1="9" y1="14" x2="15" y2="14"></line>
-    </svg>
-    <h2 style="font-size: 1.5rem; font-weight: 600;">Drop to Load New File</h2>
-</div>
-
-<script id="sarif-example" data-src="lint-results-demoDebug.sarif" type="application/json"></script>
-<!--<script id="sarif-example" type="application/gzip+base64">H4sICJmRi2kAA3NtYWxsLnNhcmlmAMVVTW/bMAz9K4IwoIel9up2wJqlWbvusAIdMDTdaRkCxWJsDbZkSHTSrMh/H2U7qfPdw4A5h+iDfHokn6hn/sbFKeSCd3mKWLhuGFoxCxKFaTkuHdjYaASNQWzy0Ain3CnGLnTCqsmpKyAOc+EQbDioYFAst6rpaRScBe+C385o3uFTsE7RqMurZVqxpXa8+/OZozEZ7z5zaRVZ+ZEWOZDljZbWKMnulcY1iA9B1EBkUGMoSctfhZWxkSAf4ck7uNRY/AIutqrAypMO81stU1YtLDpcwkSUGd4aPVFJacXSIYMpED0O1hrrDQtrCrCo/MmEJxLPgN8aayFGDc7RyXeUN6srDJGpPzXYr8Wi0zD9oSm98gGcKW0M7jDX2pjZlfUr2M6E1Uon+/l+BzsxNhc6hjaxx3lhjtAZFJBlhM1WGTlGRhuE12WOmHgynGIlwLq0vsh3u8qbk4dIYGdVHVpPccgH5ThXOOQdRiGVmWSUS3bdbC9T6smt15nmJq4CqUkU6dypWGT3zao/VFAoExFje620ijBEUYTO+uuhdEiHhJmYmxJDMlZThfOR3wie8oxXsSaNs0OCJLFTSGfvO/X01mRlTrvReYeDli+7NFntXRJMdVef8GEnWkRoWhUFYCtbjL7e5xLR6KFmzSfqO9dV8mrIr98qGboqg6Nxbci3TevgRjMlMSWnmRXFqOkcu8z96VcvhdmLl4JKUtwCZGGfLxZeJ52WNrYv1LY6HlNYVZydPAS1CIKych3VsxNGtQNhHUPDxsDqzbY+ljfrHytkKrKS/moW7qA2LjakcXbZksbFmjLOoyPK2C+M5or4Vkw1IL4jPxzy/rc5uymKXkO1X9dv0zz24Y4cIPpwyGvQDA/7rdWCvJrWN6jmh10zkyiSZ//e/69Md0hl2eK2BULtwj85ykiSmXJMMHr4cqNZrpxrut5HJulFIoGyHIRuPEi1Q/6prZKq5f0/iUQbEjmPWhKJ1iVytHnskkhv9RrtEcC6XuqsbuimF76ANHXyv7+XESPqlwgAAA==</script>-->
-
-<script>
-    const debounce = (fn, delay) => {
-        let timeoutId;
-        return (...args) => {
-            clearTimeout(timeoutId);
-            timeoutId = setTimeout(() => fn(...args), delay);
+    <script>
+        const debounce = (fn, delay) => {
+            let timeoutId;
+            return (...args) => {
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => fn(...args), delay);
+            };
         };
-    };
 
-    async function decodeBase64GzipJson(b64) {
-        if (!("DecompressionStream" in window)) {
-            showError("DecompressionStream('gzip') not supported in this browser.");
-            return null;
-        }
-        try {
-            const cleanB64 = b64.trim();
-            const binaryString = atob(cleanB64);
-            const bytes = Uint8Array.from(binaryString, c => c.charCodeAt(0));
-            const stream = new Blob([bytes]).stream()
-                .pipeThrough(new DecompressionStream("gzip"));
-            const text = await new Response(stream).text();
-            return JSON.parse(text);
-        } catch (err) {
-            console.error("Decompression failed", err);
-            showError("Failed to decompress example file: " + err.message);
-            return null;
-        }
-    }
-
-    async function copyToClipboard(text) {
-        try {
-            await navigator.clipboard.writeText(text);
-            showToast(`Path copied to clipboard!`, false);
-        } catch (err) {
-            console.error('Failed to copy: ', err);
-            showToast('Failed to copy to clipboard', true);
-        }
-    }
-
-    const toast = document.getElementById('toast');
-    function showToast(msg, isError = false) {
-        toast.textContent = msg;
-        toast.className = 'toast';
-        if (isError) toast.classList.add('toast-error');
-        else toast.classList.add('toast-info');
-        toast.classList.remove('hidden');
-        setTimeout(() => toast.classList.add('hidden'), 3000);
-    }
-
-    function showError(msg) { showToast(msg, true); }
-
-    function sanitize(str) {
-        if (!str) return '';
-        const div = document.createElement('div');
-        div.textContent = str;
-        return div.innerHTML;
-    }
-
-    const themeToggle = document.getElementById('theme-toggle');
-    const iconSun = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
-    const iconMoon = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
-
-    function initTheme() {
-        const savedTheme = localStorage.getItem('theme');
-        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        applyTheme(savedTheme || (systemDark ? 'dark' : 'light'), false);
-    }
-
-    function applyTheme(theme, persist = true) {
-        document.documentElement.setAttribute('data-theme', theme);
-        themeToggle.innerHTML = theme === 'dark' ? iconSun : iconMoon;
-        if (persist) localStorage.setItem('theme', theme);
-    }
-
-    themeToggle.addEventListener('click', () => {
-        const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
-        applyTheme(currentTheme === 'dark' ? 'light' : 'dark', true);
-    });
-
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-        if (!localStorage.getItem('theme')) applyTheme(e.matches ? 'dark' : 'light', false);
-    });
-
-    initTheme();
-
-    const state = {
-        rawIssues: [],
-        filteredIssues: [],
-        categories: new Set(),
-        uniqueIssueIds: new Set(),
-        rules: new Map(),
-        filename: '',
-        driverInfo: { name: '', version: '' },
-        reportDate: null,
-        fileLastModified: null,
-        filters: {
-            text: '',
-            categories: new Set(['all']),
-            issueIds: new Set(['all']),
-            severities: new Set(['all'])
-        }
-    };
-
-    const dropZone = document.getElementById('drop-zone');
-    const fileInput = document.getElementById('file-input');
-    const resultsContainer = document.getElementById('results-container');
-    const reportInfoContainer = document.getElementById('report-info');
-    const resetButton = document.getElementById('reset-button');
-    const issueList = document.getElementById('issue-list');
-    const emptyFilterState = document.getElementById('empty-filter-state');
-    const filterText = document.getElementById('filter-text');
-    const searchHint = document.getElementById('search-hint');
-    const severityPillsContainer = document.getElementById('severity-pills');
-    const categoryPillsContainer = document.getElementById('category-pills');
-    const issueIdPillsContainer = document.getElementById('issue-id-pills');
-    const dragOverlay = document.getElementById('drag-overlay');
-    const exampleLoadWrapper = document.getElementById('load-example-wrapper');
-    const metricTotal = document.getElementById('metric-total');
-    const metricErrors = document.getElementById('metric-errors');
-    const metricWarnings = document.getElementById('metric-warnings');
-    const metricInfo = document.getElementById('metric-info');
-
-    window.addEventListener('keydown', (e) => {
-        if (e.key === '/' && document.activeElement !== filterText && resultsContainer.style.display !== 'none') {
-            e.preventDefault();
-            filterText.focus();
-        }
-    });
-
-    filterText.addEventListener('focus', () => searchHint.style.opacity = '0');
-    filterText.addEventListener('blur', () => {
-        if (filterText.value === '') searchHint.style.opacity = '1';
-    });
-
-    dropZone.addEventListener('click', (e) => {
-        if (e.target.closest('#load-example-wrapper')) return;
-        fileInput.click();
-    });
-
-    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-        dropZone.addEventListener(eventName, e => { e.preventDefault(); e.stopPropagation(); }, false);
-    });
-
-    ['dragenter', 'dragover'].forEach(eventName => {
-        dropZone.addEventListener(eventName, e => {
-            if (e.dataTransfer && Array.from(e.dataTransfer.types).includes('Files')) dropZone.classList.add('highlight');
-        }, false);
-    });
-
-    ['dragleave', 'drop'].forEach(eventName => {
-        dropZone.addEventListener(eventName, () => dropZone.classList.remove('highlight'), false);
-    });
-
-    dropZone.addEventListener('drop', e => handleFiles(e.dataTransfer.files));
-    fileInput.addEventListener('change', e => handleFiles(e.target.files));
-    resetButton.addEventListener('click', () => fileInput.click());
-
-    exampleLoadWrapper.addEventListener('click', async (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const el = document.getElementById('sarif-example');
-        if (!el) return showError("Example data not found.");
-
-        const src = el.getAttribute('data-src');
-        const type = el.getAttribute('type');
-        let json = null;
-
-        try {
-            if (src) {
-                const response = await fetch(src);
-                if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                json = await response.json();
-            } else if (type === 'application/json') {
-                json = JSON.parse(el.textContent);
-            } else if (type === 'application/gzip+base64') {
-                json = await decodeBase64GzipJson(el.textContent);
-            } else {
-                throw new Error("Unknown example format type.");
+        async function decodeBase64GzipJson(b64) {
+            if (!("DecompressionStream" in window)) {
+                showError("DecompressionStream('gzip') not supported in this browser.");
+                return null;
             }
-        } catch (err) {
-            return showError(`Failed to load: ${err.message}`);
-        }
-
-        if (json) {
             try {
-                resetApp();
-                state.filename = src || "Now in Android";
-                state.fileLastModified = Date.now();
-                processSarif(json);
-                showResultsUI();
+                const cleanB64 = b64.trim();
+                const binaryString = atob(cleanB64);
+                const bytes = Uint8Array.from(binaryString, c => c.charCodeAt(0));
+                const stream = new Blob([bytes]).stream()
+                    .pipeThrough(new DecompressionStream("gzip"));
+                const text = await new Response(stream).text();
+                return JSON.parse(text);
             } catch (err) {
-                showError("Error processing example: " + err.message);
+                console.error("Decompression failed", err);
+                showError("Failed to decompress example file: " + err.message);
+                return null;
             }
         }
-    });
 
-    let dragCounter = 0;
-    window.addEventListener('dragenter', e => {
-        e.preventDefault();
-        if (!e.dataTransfer || !Array.from(e.dataTransfer.types).includes('Files')) return;
-        dragCounter++;
-        dragOverlay.classList.remove('hidden');
-    });
-
-    window.addEventListener('dragleave', e => {
-        e.preventDefault();
-        if (!e.dataTransfer || !Array.from(e.dataTransfer.types).includes('Files')) return;
-        dragCounter--;
-        if (dragCounter <= 0) { dragCounter = 0; dragOverlay.classList.add('hidden'); }
-    });
-
-    window.addEventListener('dragover', e => e.preventDefault());
-    window.addEventListener('drop', e => {
-        e.preventDefault();
-        dragCounter = 0;
-        dragOverlay.classList.add('hidden');
-        if (e.dataTransfer && e.dataTransfer.files.length > 0) handleFiles(e.dataTransfer.files);
-    });
-
-    issueList.addEventListener('click', e => {
-        const btn = e.target.closest('.issue-location');
-        if (btn) { e.preventDefault(); const path = btn.getAttribute('data-path'); if (path) copyToClipboard(path); }
-    });
-
-    filterText.addEventListener('input', debounce(e => {
-        state.filters.text = e.target.value.toLowerCase();
-        applyFilters();
-    }, 200));
-
-    severityPillsContainer.addEventListener('click', e => handlePillClick(e, 'severities', severityPillsContainer));
-    categoryPillsContainer.addEventListener('click', e => handlePillClick(e, 'categories', categoryPillsContainer));
-    issueIdPillsContainer.addEventListener('click', e => handlePillClick(e, 'issueIds', issueIdPillsContainer));
-
-    function handlePillClick(e, filterType, container) {
-        const target = e.target.closest('.pill');
-        if (!target) return;
-        const value = target.getAttribute('data-value');
-        const filterSet = state.filters[filterType];
-        if (value === 'all') {
-            filterSet.clear();
-            filterSet.add('all');
-        } else {
-            if (filterSet.has('all')) filterSet.delete('all');
-            if (filterSet.has(value)) filterSet.delete(value);
-            else filterSet.add(value);
-            if (filterSet.size === 0) filterSet.add('all');
+        async function copyToClipboard(text) {
+            try {
+                await navigator.clipboard.writeText(text);
+                showToast(`Path copied to clipboard!`, false);
+            } catch (err) {
+                console.error('Failed to copy: ', err);
+                showToast('Failed to copy to clipboard', true);
+            }
         }
-        updatePillVisuals(container, filterSet);
-        applyFilters();
-    }
 
-    function updatePillVisuals(container, filterSet) {
-        Array.from(container.children).forEach(pill => {
-            if (filterSet.has(pill.getAttribute('data-value'))) pill.classList.add('active');
-            else pill.classList.remove('active');
+        const toast = document.getElementById('toast');
+        function showToast(msg, isError = false) {
+            toast.textContent = msg;
+            toast.className = 'toast';
+            if (isError) toast.classList.add('toast-error');
+            else toast.classList.add('toast-info');
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), isError ? 10000 : 3000);
+        }
+
+        function showError(msg) { showToast(msg, true); }
+
+        function sanitize(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        function formatMarkdown(text) {
+            if (!text) return '';
+            let html = sanitize(text);
+            const parts = html.split(/(`[^`]+`)/);
+            for (let i = 0; i < parts.length; i++) {
+                if (parts[i].startsWith('`') && parts[i].endsWith('`') && parts[i].length > 1) {
+                    const content = parts[i].substring(1, parts[i].length - 1);
+                    parts[i] = `<code class="formatted-code">${content}</code>`;
+                } else {
+                    let s = parts[i];
+                    s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>'); 
+                    s = s.replace(/__([^_]+)__/g, '<u>$1</u>');      
+                    s = s.replace(/~~([^~]+)~~/g, '<del>$1</del>');   
+                    s = s.replace(/\*([^*]+)\*/g, '<em>$1</em>');     
+                    parts[i] = s;
+                }
+            }
+            return parts.join('');
+        }
+
+        const themeToggle = document.getElementById('theme-toggle');
+        const iconSun = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
+        const iconMoon = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
+
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            applyTheme(savedTheme || (systemDark ? 'dark' : 'light'), false);
+        }
+
+        function applyTheme(theme, persist = true) {
+            document.documentElement.setAttribute('data-theme', theme);
+            themeToggle.innerHTML = theme === 'dark' ? iconSun : iconMoon;
+            if (persist) localStorage.setItem('theme', theme);
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+            applyTheme(currentTheme === 'dark' ? 'light' : 'dark', true);
         });
-    }
 
-    function handleFiles(files) {
-        if (!files || files.length === 0) return;
-        const file = files[0];
-        const fileName = file.name.toLowerCase();
-        if (!fileName.endsWith('.sarif') && !fileName.endsWith('.json')) {
-            return showError("Invalid file format. Please use .sarif or .json files.");
-        }
-        resetApp();
-        state.filename = file.name;
-        state.fileLastModified = file.lastModified;
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            try {
-                processSarif(JSON.parse(e.target.result));
-                showResultsUI();
-            } catch (err) {
-                state.filename = '';
-                reportInfoContainer.innerHTML = '';
-                showError(err.message || "Could not parse JSON.");
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+            if (!localStorage.getItem('theme')) applyTheme(e.matches ? 'dark' : 'light', false);
+        });
+
+        initTheme();
+
+        const state = {
+            rawIssues: [],
+            filteredIssues: [],
+            categories: new Set(),
+            uniqueIssueIds: new Set(),
+            rules: new Map(),
+            filename: '',
+            driverInfo: { name: '', version: '' },
+            reportDate: null,
+            fileLastModified: null,
+            filters: {
+                text: '',
+                categories: new Set(['all']),
+                issueIds: new Set(['all']),
+                severities: new Set(['all'])
             }
         };
-        reader.onerror = () => showError("Error reading file.");
-        reader.readAsText(file);
-    }
 
-    function processSarif(sarif) {
-        if (!sarif?.runs || !Array.isArray(sarif.runs)) throw new Error("Invalid SARIF: Missing 'runs' array.");
-        const run = sarif.runs[0] || {};
-        const driver = run.tool?.driver || {};
-        state.driverInfo = { name: driver.fullName || driver.name || "Unknown Tool", version: driver.semanticVersion || driver.version || "" };
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+        const resultsContainer = document.getElementById('results-container');
+        const reportInfoContainer = document.getElementById('report-info');
+        const resetButton = document.getElementById('reset-button');
+        const issueList = document.getElementById('issue-list');
+        const emptyFilterState = document.getElementById('empty-filter-state');
+        const filterText = document.getElementById('filter-text');
+        const searchHint = document.getElementById('search-hint');
+        const severityPillsContainer = document.getElementById('severity-pills');
+        const categoryPillsContainer = document.getElementById('category-pills');
+        const issueIdPillsContainer = document.getElementById('issue-id-pills');
+        const dragOverlay = document.getElementById('drag-overlay');
+        const exampleLoadWrapper = document.getElementById('load-example-wrapper');
+        const metricTotal = document.getElementById('metric-total');
+        const metricErrors = document.getElementById('metric-errors');
+        const metricWarnings = document.getElementById('metric-warnings');
+        const metricInfo = document.getElementById('metric-info');
 
-        let dateVal = run.invocations?.[0]?.endTimeUtc || run.invocations?.[0]?.startTimeUtc || sarif.time;
-        state.reportDate = dateVal ? new Date(dateVal) : (state.fileLastModified ? new Date(state.fileLastModified) : new Date());
-
-        const getDesc = (obj) => obj?.markdown || obj?.text || "";
-
-        state.rules.clear();
-        (driver.rules || []).forEach(rule => {
-            let tags = rule.tags || rule.properties?.tags || [rule.properties?.category] || ["General"];
-            state.rules.set(rule.id, {
-                name: rule.shortDescription?.text || rule.name || rule.id,
-                categories: Array.isArray(tags) ? tags : ["General"],
-                defaultLevel: rule.defaultConfiguration?.level || "warning",
-                shortDescription: getDesc(rule.shortDescription),
-                fullDescription: getDesc(rule.fullDescription) || getDesc(rule.shortDescription)
+        // URL Synchronization Logic
+        function updateURL() {
+            const params = new URLSearchParams();
+            if (state.filters.text) params.set('query', state.filters.text);
+            
+            ['categories', 'issueIds', 'severities'].forEach(key => {
+                const set = state.filters[key];
+                if (!set.has('all') && set.size > 0) {
+                    const paramName = key === 'issueIds' ? 'issueId' : (key === 'severities' ? 'severity' : 'category');
+                    params.set(paramName, Array.from(set).join(','));
+                }
             });
+
+            const newUrl = `${window.location.pathname}?${params.toString()}`;
+            try {
+                window.history.replaceState({ path: newUrl }, '', newUrl);
+            } catch (e) {
+                // Silently fail in restricted environments (blob:, sandboxed iframes)
+            }
+        }
+
+        function readURL() {
+            const params = new URLSearchParams(window.location.search);
+            
+            const query = params.get('query');
+            if (query) {
+                state.filters.text = query;
+                filterText.value = query;
+                searchHint.style.opacity = '0';
+            } else {
+                state.filters.text = '';
+                filterText.value = '';
+                searchHint.style.opacity = '1';
+            }
+
+            const readSet = (paramName, targetSet) => {
+                const val = params.get(paramName);
+                targetSet.clear();
+                if (val) {
+                    val.split(',').forEach(v => targetSet.add(v.trim()));
+                } else {
+                    targetSet.add('all');
+                }
+            };
+
+            readSet('severity', state.filters.severities);
+            readSet('category', state.filters.categories);
+            readSet('issueId', state.filters.issueIds);
+        }
+
+        window.addEventListener('popstate', () => {
+            readURL();
+            if (state.rawIssues.length > 0) {
+                updatePillVisuals(severityPillsContainer, state.filters.severities);
+                updatePillVisuals(categoryPillsContainer, state.filters.categories);
+                updatePillVisuals(issueIdPillsContainer, state.filters.issueIds);
+                applyFilters();
+            }
         });
 
-        state.rawIssues = (run.results || []).map(result => {
-            const ruleId = result.ruleId;
-            const rd = state.rules.get(ruleId) || { categories: ['Unknown'], name: ruleId };
-            const loc = result.locations?.[0]?.physicalLocation;
+        // Initialize from URL immediately
+        readURL();
 
-            const related = (result.relatedLocations || []).map(rel => {
-                const pLoc = rel.physicalLocation;
+        window.addEventListener('keydown', (e) => {
+            if (e.key === '/' && document.activeElement !== filterText && resultsContainer.style.display !== 'none') {
+                e.preventDefault();
+                filterText.focus();
+            }
+        });
+
+        filterText.addEventListener('focus', () => searchHint.style.opacity = '0');
+        filterText.addEventListener('blur', () => {
+            if (filterText.value === '') searchHint.style.opacity = '1';
+        });
+
+        dropZone.addEventListener('click', (e) => {
+            if (e.target.closest('#load-example-wrapper')) return;
+            fileInput.click();
+        });
+
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, e => { e.preventDefault(); e.stopPropagation(); }, false);
+        });
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, e => {
+                if (e.dataTransfer && Array.from(e.dataTransfer.types).includes('Files')) dropZone.classList.add('highlight');
+            }, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, () => dropZone.classList.remove('highlight'), false);
+        });
+
+        dropZone.addEventListener('drop', e => handleFiles(e.dataTransfer.files));
+        fileInput.addEventListener('change', e => handleFiles(e.target.files));
+        resetButton.addEventListener('click', () => fileInput.click());
+
+        exampleLoadWrapper.addEventListener('click', async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const el = document.getElementById('sarif-example');
+            if (!el) return showError("Example data not found.");
+
+            const src = el.getAttribute('data-src');
+            const type = el.getAttribute('type');
+            const title = el.getAttribute('title');
+            let json = null;
+
+            try {
+                if (src) {
+                    const response = await fetch(src);
+                    if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    json = await response.json();
+                } else if (type === 'application/json') {
+                    json = JSON.parse(el.textContent);
+                } else if (type === 'application/gzip+base64') {
+                    json = await decodeBase64GzipJson(el.textContent);
+                } else {
+                    throw new Error("Unknown example format type.");
+                }
+            } catch (err) {
+                return showError(`Failed to load: ${err.message}`);
+            }
+
+            if (json) {
+                try {
+                    resetApp();
+                    state.filename = title || src || "Unknown";
+                    state.fileLastModified = Date.now();
+                    processSarif(json);
+                    readURL(); // Re-read URL after resetApp clears it, effectively persisting filters
+                    updatePillVisuals(severityPillsContainer, state.filters.severities);
+                    showResultsUI();
+                } catch (err) {
+                    showError("Error processing example: " + err.message);
+                }
+            }
+        });
+
+        let dragCounter = 0;
+        window.addEventListener('dragenter', e => {
+            e.preventDefault();
+            if (!e.dataTransfer || !Array.from(e.dataTransfer.types).includes('Files')) return;
+            dragCounter++;
+            dragOverlay.classList.remove('hidden');
+        });
+
+        window.addEventListener('dragleave', e => {
+            e.preventDefault();
+            if (!e.dataTransfer || !Array.from(e.dataTransfer.types).includes('Files')) return;
+            dragCounter--;
+            if (dragCounter <= 0) { dragCounter = 0; dragOverlay.classList.add('hidden'); }
+        });
+
+        window.addEventListener('dragover', e => e.preventDefault());
+        window.addEventListener('drop', e => {
+            e.preventDefault();
+            dragCounter = 0;
+            dragOverlay.classList.add('hidden');
+            if (e.dataTransfer && e.dataTransfer.files.length > 0) handleFiles(e.dataTransfer.files);
+        });
+
+        issueList.addEventListener('click', e => {
+            const btn = e.target.closest('.issue-location');
+            if (btn) { e.preventDefault(); const path = btn.getAttribute('data-path'); if (path) copyToClipboard(path); }
+        });
+
+        filterText.addEventListener('input', debounce(e => {
+            state.filters.text = e.target.value.toLowerCase();
+            applyFilters();
+        }, 200));
+
+        severityPillsContainer.addEventListener('click', e => handlePillClick(e, 'severities', severityPillsContainer));
+        categoryPillsContainer.addEventListener('click', e => handlePillClick(e, 'categories', categoryPillsContainer));
+        issueIdPillsContainer.addEventListener('click', e => handlePillClick(e, 'issueIds', issueIdPillsContainer));
+
+        function handlePillClick(e, filterType, container) {
+            const target = e.target.closest('.pill');
+            if (!target) return;
+            const value = target.getAttribute('data-value');
+            const filterSet = state.filters[filterType];
+            if (value === 'all') {
+                filterSet.clear();
+                filterSet.add('all');
+            } else {
+                if (filterSet.has('all')) filterSet.delete('all');
+                if (filterSet.has(value)) filterSet.delete(value);
+                else filterSet.add(value);
+                if (filterSet.size === 0) filterSet.add('all');
+            }
+            updatePillVisuals(container, filterSet);
+            applyFilters();
+        }
+
+        function updatePillVisuals(container, filterSet) {
+            Array.from(container.children).forEach(pill => {
+                if (filterSet.has(pill.getAttribute('data-value'))) pill.classList.add('active');
+                else pill.classList.remove('active');
+            });
+        }
+
+        function handleFiles(files) {
+            if (!files || files.length === 0) return;
+            const file = files[0];
+            const fileName = file.name.toLowerCase();
+            if (!fileName.endsWith('.sarif') && !fileName.endsWith('.json')) {
+                return showError("Invalid file format. Please use .sarif or .json files.");
+            }
+            resetApp();
+            state.filename = file.name;
+            state.fileLastModified = file.lastModified;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    processSarif(JSON.parse(e.target.result));
+                    readURL(); // Restore filters from URL
+                    updatePillVisuals(severityPillsContainer, state.filters.severities); // Sync UI
+                    showResultsUI();
+                } catch (err) {
+                    state.filename = '';
+                    reportInfoContainer.innerHTML = '';
+                    showError(err.message || "Could not parse JSON.");
+                }
+            };
+            reader.onerror = () => showError("Error reading file.");
+            reader.readAsText(file);
+        }
+
+        function processSarif(sarif) {
+            if (!sarif?.runs || !Array.isArray(sarif.runs)) throw new Error("Invalid SARIF: Missing 'runs' array.");
+            const run = sarif.runs[0] || {};
+            const driver = run.tool?.driver || {};
+            state.driverInfo = { name: driver.fullName || driver.name || "Unknown Tool", version: driver.semanticVersion || driver.version || "" };
+
+            let dateVal = run.invocations?.[0]?.endTimeUtc || run.invocations?.[0]?.startTimeUtc || sarif.time;
+            state.reportDate = dateVal ? new Date(dateVal) : (state.fileLastModified ? new Date(state.fileLastModified) : new Date());
+
+            const getDesc = (obj) => obj?.markdown || obj?.text || "";
+
+            state.rules.clear();
+            (driver.rules || []).forEach(rule => {
+                let tags = rule.tags || rule.properties?.tags || [rule.properties?.category] || ["General"];
+                state.rules.set(rule.id, {
+                    name: rule.shortDescription?.text || rule.name || rule.id,
+                    categories: Array.isArray(tags) ? tags : ["General"],
+                    defaultLevel: rule.defaultConfiguration?.level || "warning",
+                    shortDescription: getDesc(rule.shortDescription),
+                    fullDescription: getDesc(rule.fullDescription) || getDesc(rule.shortDescription)
+                });
+            });
+
+            state.rawIssues = (run.results || []).map(result => {
+                const ruleId = result.ruleId;
+                const rd = state.rules.get(ruleId) || { categories: ['Unknown'], name: ruleId };
+                const loc = result.locations?.[0]?.physicalLocation;
+                
+                const related = (result.relatedLocations || []).map(rel => {
+                    const pLoc = rel.physicalLocation;
+                    return {
+                        file: pLoc?.artifactLocation?.uri || "Unknown",
+                        line: pLoc?.region?.startLine || 0,
+                        message: rel.message?.markdown || rel.message?.text || ""
+                    };
+                });
+
                 return {
-                    file: pLoc?.artifactLocation?.uri || "Unknown",
-                    line: pLoc?.region?.startLine || 0,
-                    message: rel.message?.text || ""
+                    id: ruleId,
+                    name: rd.name,
+                    categories: rd.categories,
+                    message: result.message?.markdown || result.message?.text || "No message",
+                    file: loc?.artifactLocation?.uri || "Unknown",
+                    line: loc?.region?.startLine || 0,
+                    level: result.level || rd.defaultLevel || "warning",
+                    snippet: loc?.contextRegion?.snippet?.text ? { text: loc.contextRegion.snippet.text, startLine: loc.contextRegion.startLine || 1 } : null,
+                    region: loc?.region || {},
+                    relatedLocations: related
                 };
             });
 
-            return {
-                id: ruleId,
-                name: rd.name,
-                categories: rd.categories,
-                message: result.message?.text || "No message",
-                file: loc?.artifactLocation?.uri || "Unknown",
-                line: loc?.region?.startLine || 0,
-                level: result.level || rd.defaultLevel || "warning",
-                snippet: loc?.contextRegion?.snippet?.text ? { text: loc.contextRegion.snippet.text, startLine: loc.contextRegion.startLine || 1 } : null,
-                region: loc?.region || {},
-                relatedLocations: related
-            };
-        });
+            const uniqueCats = new Set();
+            const uniqueIds = new Set();
+            state.rawIssues.forEach(i => { uniqueIds.add(i.id); i.categories.forEach(c => uniqueCats.add(c)); });
+            state.categories = uniqueCats;
+            state.uniqueIssueIds = uniqueIds;
+            renderCategoryPills();
+            renderIssueIdPills();
+            updateMetrics();
+            applyFilters();
+        }
 
-        const uniqueCats = new Set();
-        const uniqueIds = new Set();
-        state.rawIssues.forEach(i => { uniqueIds.add(i.id); i.categories.forEach(c => uniqueCats.add(c)); });
-        state.categories = uniqueCats;
-        state.uniqueIssueIds = uniqueIds;
-        renderCategoryPills();
-        renderIssueIdPills();
-        updateMetrics();
-        applyFilters();
-    }
+        function showResultsUI() {
+            dropZone.classList.add('hidden');
+            resultsContainer.style.display = 'block';
+            resetButton.classList.remove('hidden');
+            const toolStr = `${state.driverInfo.name} ${state.driverInfo.version ? 'v' + state.driverInfo.version : ''}`;
+            const dateStr = state.reportDate?.toLocaleString() || '';
+            reportInfoContainer.innerHTML = `
+                <div class="info-line-primary">${sanitize(state.filename)}</div>
+                <div class="info-line-secondary">${sanitize(toolStr)}</div>
+                <div class="info-line-tertiary" title="${sanitize(dateStr)}">${sanitize(dateStr)}</div>
+            `;
+        }
 
-    function showResultsUI() {
-        dropZone.classList.add('hidden');
-        resultsContainer.style.display = 'block';
-        resetButton.classList.remove('hidden');
-        const toolStr = `${state.driverInfo.name} ${state.driverInfo.version ? 'v' + state.driverInfo.version : ''}`;
-        const dateStr = state.reportDate?.toLocaleString() || '';
-        reportInfoContainer.innerHTML = `
-            <div class="info-line-primary">${sanitize(state.filename)}</div>
-            <div class="info-line-secondary">${sanitize(toolStr)}</div>
-            <div class="info-line-tertiary" title="${sanitize(dateStr)}">${sanitize(dateStr)}</div>
-        `;
-    }
+        function resetApp() {
+            Object.assign(state, { rawIssues: [], filteredIssues: [], categories: new Set(), uniqueIssueIds: new Set(), rules: new Map(), filename: '', driverInfo: { name: '', version: '' }, reportDate: null, fileLastModified: null });
+            state.filters = { text: '', categories: new Set(['all']), issueIds: new Set(['all']), severities: new Set(['all']) };
+            dropZone.classList.remove('hidden');
+            resultsContainer.style.display = 'none';
+            resetButton.classList.add('hidden');
+            reportInfoContainer.innerHTML = '';
+            fileInput.value = ''; filterText.value = '';
+            categoryPillsContainer.innerHTML = '<button class="pill active" data-value="all"><span class="pill-label">All</span></button>';
+            issueIdPillsContainer.innerHTML = '<button class="pill active" data-value="all"><span class="pill-label">All</span></button>';
+            updatePillVisuals(severityPillsContainer, state.filters.severities);
+        }
 
-    function resetApp() {
-        Object.assign(state, { rawIssues: [], filteredIssues: [], categories: new Set(), uniqueIssueIds: new Set(), rules: new Map(), filename: '', driverInfo: { name: '', version: '' }, reportDate: null, fileLastModified: null });
-        state.filters = { text: '', categories: new Set(['all']), issueIds: new Set(['all']), severities: new Set(['all']) };
-        dropZone.classList.remove('hidden');
-        resultsContainer.style.display = 'none';
-        resetButton.classList.add('hidden');
-        reportInfoContainer.innerHTML = '';
-        fileInput.value = ''; filterText.value = '';
-        categoryPillsContainer.innerHTML = '<button class="pill active" data-value="all">All</button>';
-        issueIdPillsContainer.innerHTML = '<button class="pill active" data-value="all">All</button>';
-        updatePillVisuals(severityPillsContainer, state.filters.severities);
-    }
-
-    function renderCategoryPills() {
-        categoryPillsContainer.innerHTML = '<button class="pill active" data-value="all">All</button>';
-        Array.from(state.categories).sort().forEach(cat => {
-            const p = document.createElement('button'); p.className = 'pill'; p.setAttribute('data-value', cat); p.textContent = cat; categoryPillsContainer.appendChild(p);
-        });
-    }
-
-    function renderIssueIdPills() {
-        issueIdPillsContainer.innerHTML = '<button class="pill active" data-value="all">All</button>';
-        Array.from(state.uniqueIssueIds).sort().forEach(id => {
-            const rd = state.rules.get(id);
-            const p = document.createElement('button');
-            p.className = 'pill';
-            p.setAttribute('data-value', id);
-            p.textContent = id;
-            if (rd?.shortDescription) p.setAttribute('title', rd.shortDescription);
-            issueIdPillsContainer.appendChild(p);
-        });
-    }
-
-    function applyFilters() {
-        const query = state.filters.text;
-        const match = state.rawIssues.filter(i => i.id.toLowerCase().includes(query) || i.message.toLowerCase().includes(query) || i.file.toLowerCase().includes(query));
-        updatePillCounts(match);
-        state.filteredIssues = match.filter(i => {
-            const lvl = (i.level || 'warning').toLowerCase();
-            const sMatch = state.filters.severities.has('all') || (state.filters.severities.has('error') && lvl === 'error') || (state.filters.severities.has('warning') && lvl === 'warning') || (state.filters.severities.has('info') && (lvl === 'note' || lvl === 'none'));
-            return sMatch && (state.filters.categories.has('all') || i.categories.some(c => state.filters.categories.has(c))) && (state.filters.issueIds.has('all') || state.filters.issueIds.has(i.id));
-        });
-        renderList();
-    }
-
-    function updatePillCounts(issues) {
-        const counts = { cats: {}, ids: {}, sevs: { error: 0, warning: 0, info: 0 } };
-        issues.forEach(i => {
-            counts.ids[i.id] = (counts.ids[i.id] || 0) + 1;
-            i.categories.forEach(c => counts.cats[c] = (counts.cats[c] || 0) + 1);
-            const l = (i.level || 'warning').toLowerCase();
-            if (l === 'error') counts.sevs.error++; else if (l === 'warning') counts.sevs.warning++; else counts.sevs.info++;
-        });
-        const update = (c, val, count, label) => {
-            const p = c.querySelector(`[data-value="${val}"]`);
-            if (p) { p.textContent = label ? `${label} (${count})` : `${val} (${count})`; if (count === 0 && val !== 'all') p.classList.add('hidden'); else p.classList.remove('hidden'); }
-        };
-        update(severityPillsContainer, 'error', counts.sevs.error, 'Error');
-        update(severityPillsContainer, 'warning', counts.sevs.warning, 'Warning');
-        update(severityPillsContainer, 'info', counts.sevs.info, 'Hint');
-        Array.from(state.categories).forEach(c => update(categoryPillsContainer, c, counts.cats[c] || 0));
-        Array.from(state.uniqueIssueIds).forEach(id => update(issueIdPillsContainer, id, counts.ids[id] || 0));
-    }
-
-    function updateMetrics() {
-        const issues = state.rawIssues;
-        metricTotal.textContent = issues.length;
-        metricErrors.textContent = issues.filter(i => i.level === 'error').length;
-        metricWarnings.textContent = issues.filter(i => i.level === 'warning').length;
-        metricInfo.textContent = issues.filter(i => i.level === 'note' || i.level === 'none').length;
-    }
-
-    function renderList() {
-        issueList.innerHTML = '';
-        if (state.filteredIssues.length === 0) return emptyFilterState.classList.remove('hidden');
-        emptyFilterState.classList.add('hidden');
-
-        const groups = {};
-        state.filteredIssues.forEach(i => { if (!groups[i.id]) groups[i.id] = { id: i.id, categories: i.categories, instances: [] }; groups[i.id].instances.push(i); });
-
-        const fragment = document.createDocumentFragment();
-        Object.values(groups).sort((a, b) => a.id.localeCompare(b.id)).forEach(group => {
-            const rd = state.rules.get(group.id);
-            const lvl = (group.instances[0].level || 'warning').toLowerCase();
-            const sCls = lvl === 'error' ? 'severity-error' : (lvl === 'note' || lvl === 'none' ? 'severity-info' : 'severity-warning');
-            const g = document.createElement('div'); g.className = 'issue-group';
-            g.innerHTML = `
-                <div class="issue-group-header">
-                    <div class="issue-group-title" style="color: var(--${sCls})" ${rd?.fullDescription ? `title="${sanitize(rd.fullDescription)}"` : ''}>
-                        <span class="severity-badge ${sCls}"></span>${sanitize(group.id)} <span class="issue-group-count">${group.instances.length}</span>
-                    </div>
-                    <div class="categories-wrapper">${group.categories.map(c => `<span class="category-badge">${sanitize(c)}</span>`).join('')}</div>
-                </div>`;
-            const content = document.createElement('div'); content.className = 'issue-group-content';
-            group.instances.forEach(i => {
-                let snippet = '';
-                if (i.snippet) {
-                    const lines = i.snippet.text.split('\n');
-                    const lHtml = lines.map((text, idx) => {
-                        const cur = i.snippet.startLine + idx;
-                        let content = sanitize(text);
-                        if (cur >= i.region.startLine && cur <= (i.region.endLine || i.region.startLine)) {
-                            let start = cur === i.region.startLine ? Math.max(0, (i.region.startColumn || 1) - 1) : 0;
-                            let end = cur === (i.region.endLine || i.region.startLine) && i.region.endColumn ? Math.min(text.length, i.region.endColumn - 1) : text.length;
-                            content = `${sanitize(text.substring(0, start))}<span class="code-highlight">${sanitize(text.substring(start, end))}</span>${sanitize(text.substring(end))}`;
-                        }
-                        return `<div class="code-line"><span class="code-line-number">${cur}</span><span class="code-content">${content}</span></div>`;
-                    }).join('');
-                    snippet = `<div class="issue-code-snippet">${lHtml}</div>`;
-                }
-
-                const last = i.file.lastIndexOf('/');
-
-                let relatedHtml = '';
-                if (i.relatedLocations?.length > 0) {
-                    relatedHtml = i.relatedLocations.map(rel => {
-                        const rLast = rel.file.lastIndexOf('/');
-                        return `
-                            <div style="margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.25rem; padding-left: 0.75rem; border-left: 2px solid var(--border);">
-                                ${rel.message ? `<div style="font-size: 0.75rem; color: var(--text-tertiary); font-style: italic;">${sanitize(rel.message)}</div>` : ''}
-                                <button class="issue-location" data-path="${sanitize(rel.file)}:${rel.line}">
-                                    <span class="path-dir">${sanitize(rel.file.substring(0, rLast + 1))}</span>
-                                    <span class="path-name">${sanitize(rel.file.substring(rLast + 1))}</span>
-                                    <span class="line-number">:${rel.line}</span>
-                                </button>
-                            </div>
-                        `;
-                    }).join('');
-                }
-
-                const card = document.createElement('div'); card.className = 'issue-card';
-                card.innerHTML = `
-                    <div class="issue-message"><span>${sanitize(i.message)}</span></div>
-                    <button class="issue-location" data-path="${sanitize(i.file)}:${i.line}">
-                        <span class="path-dir">${sanitize(i.file.substring(0, last + 1))}</span>
-                        <span class="path-name">${sanitize(i.file.substring(last + 1))}</span>
-                        <span class="line-number">:${i.line}</span>
-                    </button>
-                    ${relatedHtml}
-                    ${snippet}`;
-                content.appendChild(card);
+        function renderCategoryPills() {
+            categoryPillsContainer.innerHTML = '<button class="pill active" data-value="all"><span class="pill-label">All</span></button>';
+            Array.from(state.categories).sort().forEach(cat => {
+                const p = document.createElement('button'); 
+                p.className = 'pill'; 
+                p.setAttribute('data-value', cat); 
+                p.innerHTML = `<span class="pill-label">${sanitize(cat)}</span><span class="pill-count"></span>`;
+                categoryPillsContainer.appendChild(p);
             });
-            g.appendChild(content); fragment.appendChild(g);
-        });
-        issueList.appendChild(fragment);
-    }
-</script>
+        }
+
+        function renderIssueIdPills() {
+            issueIdPillsContainer.innerHTML = '<button class="pill active" data-value="all"><span class="pill-label">All</span></button>';
+            Array.from(state.uniqueIssueIds).sort().forEach(id => {
+                const rd = state.rules.get(id);
+                const p = document.createElement('button');
+                p.className = 'pill';
+                p.setAttribute('data-value', id);
+                p.innerHTML = `<span class="pill-label">${sanitize(id)}</span><span class="pill-count"></span>`;
+                if (rd?.shortDescription) p.setAttribute('title', rd.shortDescription);
+                issueIdPillsContainer.appendChild(p);
+            });
+        }
+
+        function applyFilters() {
+            const query = state.filters.text;
+            const match = state.rawIssues.filter(i => i.id.toLowerCase().includes(query) || i.message.toLowerCase().includes(query) || i.file.toLowerCase().includes(query));
+            updatePillCounts(match);
+            state.filteredIssues = match.filter(i => {
+                const lvl = (i.level || 'warning').toLowerCase();
+                const sMatch = state.filters.severities.has('all') || (state.filters.severities.has('error') && lvl === 'error') || (state.filters.severities.has('warning') && lvl === 'warning') || (state.filters.severities.has('info') && (lvl === 'note' || lvl === 'none'));
+                return sMatch && (state.filters.categories.has('all') || i.categories.some(c => state.filters.categories.has(c))) && (state.filters.issueIds.has('all') || state.filters.issueIds.has(i.id));
+            });
+            updateURL();
+            renderList();
+        }
+
+        function updatePillCounts(issues) {
+            const counts = { cats: {}, ids: {}, sevs: { error: 0, warning: 0, info: 0 } };
+            issues.forEach(i => {
+                counts.ids[i.id] = (counts.ids[i.id] || 0) + 1;
+                i.categories.forEach(c => counts.cats[c] = (counts.cats[c] || 0) + 1);
+                const l = (i.level || 'warning').toLowerCase();
+                if (l === 'error') counts.sevs.error++; else if (l === 'warning') counts.sevs.warning++; else counts.sevs.info++;
+            });
+            const update = (c, val, count, label) => {
+                const p = c.querySelector(`[data-value="${val}"]`);
+                if (p) { 
+                    const name = label || val;
+                    p.innerHTML = `<span class="pill-label">${sanitize(name)}</span><span class="pill-count">(${count})</span>`;
+                    if (count === 0 && val !== 'all') p.classList.add('hidden'); else p.classList.remove('hidden'); 
+                    
+                    // Restore active class if it was set via URL
+                    const type = c === severityPillsContainer ? 'severities' : (c === categoryPillsContainer ? 'categories' : 'issueIds');
+                    if (state.filters[type].has(val)) p.classList.add('active'); else p.classList.remove('active');
+                }
+            };
+            update(severityPillsContainer, 'error', counts.sevs.error, 'Error');
+            update(severityPillsContainer, 'warning', counts.sevs.warning, 'Warning');
+            update(severityPillsContainer, 'info', counts.sevs.info, 'Hint');
+            Array.from(state.categories).forEach(c => update(categoryPillsContainer, c, counts.cats[c] || 0));
+            Array.from(state.uniqueIssueIds).forEach(id => update(issueIdPillsContainer, id, counts.ids[id] || 0));
+        }
+
+        function updateMetrics() {
+            const issues = state.rawIssues;
+            metricTotal.textContent = issues.length;
+            metricErrors.textContent = issues.filter(i => i.level === 'error').length;
+            metricWarnings.textContent = issues.filter(i => i.level === 'warning').length;
+            metricInfo.textContent = issues.filter(i => i.level === 'note' || i.level === 'none').length;
+        }
+
+        function renderList() {
+            issueList.innerHTML = '';
+            if (state.filteredIssues.length === 0) return emptyFilterState.classList.remove('hidden');
+            emptyFilterState.classList.add('hidden');
+
+            const groups = {};
+            state.filteredIssues.forEach(i => { 
+                // Group by ID + Level to handle severity overrides for the same rule
+                const key = i.id + '::' + i.level;
+                if (!groups[key]) groups[key] = { id: i.id, level: i.level, categories: i.categories, instances: [] }; 
+                groups[key].instances.push(i); 
+            });
+
+            const fragment = document.createDocumentFragment();
+            Object.values(groups).sort((a, b) => {
+                const diff = a.id.localeCompare(b.id);
+                if (diff !== 0) return diff;
+                
+                // If Rule IDs are the same, sort by severity (Error > Warning > Info)
+                const getWeight = (lvl) => {
+                    const l = (lvl || '').toLowerCase();
+                    if (l === 'error') return 3;
+                    if (l === 'warning') return 2;
+                    return 1;
+                };
+                return getWeight(b.level) - getWeight(a.level);
+            }).forEach(group => {
+                const rd = state.rules.get(group.id);
+                const lvl = (group.level || 'warning').toLowerCase();
+                const sCls = lvl === 'error' ? 'severity-error' : (lvl === 'note' || lvl === 'none' ? 'severity-info' : 'severity-warning');
+                const g = document.createElement('div'); g.className = 'issue-group';
+
+                // Add header content
+                const header = document.createElement('div');
+                header.className = 'issue-group-header';
+                header.innerHTML = `
+                        <div class="issue-group-title" style="color: var(--${sCls})" ${rd?.fullDescription ? `title="${sanitize(rd.fullDescription)}"` : ''}>
+                            <span class="severity-badge ${sCls}"></span>
+                            <span class="issue-rule-id">${sanitize(group.id)}</span>
+                            <span class="issue-group-count">${group.instances.length}</span>
+                        </div>
+                        <div class="categories-wrapper">${group.categories.map(c => `<span class="category-badge">${sanitize(c)}</span>`).join('')}</div>`;
+                
+                g.appendChild(header);
+
+                const content = document.createElement('div'); content.className = 'issue-group-content';
+                group.instances.forEach(i => {
+                    let snippet = '';
+                    if (i.snippet) {
+                        const lines = i.snippet.text.split('\n');
+                        const lHtml = lines.map((text, idx) => {
+                            const cur = i.snippet.startLine + idx;
+                            let content = sanitize(text);
+                            if (cur >= i.region.startLine && cur <= (i.region.endLine || i.region.startLine)) {
+                                let start = cur === i.region.startLine ? Math.max(0, (i.region.startColumn || 1) - 1) : 0;
+                                let end = cur === (i.region.endLine || i.region.startLine) && i.region.endColumn ? Math.min(text.length, i.region.endColumn - 1) : text.length;
+                                content = `${sanitize(text.substring(0, start))}<span class="code-highlight">${sanitize(text.substring(start, end))}</span>${sanitize(text.substring(end))}`;
+                            }
+                            return `<div class="code-line"><span class="code-line-number">${cur}</span><span class="code-content">${content}</span></div>`;
+                        }).join('');
+                        snippet = `<div class="issue-code-snippet">${lHtml}</div>`;
+                    }
+                    
+                    const last = i.file.lastIndexOf('/');
+                    
+                    let relatedHtml = '';
+                    if (i.relatedLocations?.length > 0) {
+                        relatedHtml = i.relatedLocations.map(rel => {
+                            const rLast = rel.file.lastIndexOf('/');
+                            return `
+                                <div style="margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.25rem; padding-left: 0.75rem; border-left: 2px solid var(--border);">
+                                    ${rel.message ? `<div style="font-size: 0.75rem; color: var(--text-tertiary); font-style: italic;">${formatMarkdown(rel.message)}</div>` : ''}
+                                    <button class="issue-location" data-path="${sanitize(rel.file)}:${rel.line}">
+                                        <span class="path-dir">${sanitize(rel.file.substring(0, rLast + 1))}</span>
+                                        <span class="path-name">${sanitize(rel.file.substring(rLast + 1))}</span>
+                                        <span class="line-number">:${rel.line}</span>
+                                    </button>
+                                </div>
+                            `;
+                        }).join('');
+                    }
+
+                    const card = document.createElement('div'); card.className = 'issue-card';
+                    card.innerHTML = `
+                        <!-- Apply markdown formatting only to the issue message (i.message) -->
+                        <div class="issue-message"><span>${formatMarkdown(i.message)}</span></div>
+                        <button class="issue-location" data-path="${sanitize(i.file)}:${i.line}">
+                            <span class="path-dir">${sanitize(i.file.substring(0, last + 1))}</span>
+                            <span class="path-name">${sanitize(i.file.substring(last + 1))}</span>
+                            <span class="line-number">:${i.line}</span>
+                        </button>
+                        ${relatedHtml}
+                        ${snippet}`;
+                    content.appendChild(card);
+                });
+                g.appendChild(content); fragment.appendChild(g);
+            });
+            issueList.appendChild(fragment);
+        }
+
+        // Auto-load embedded report if present
+        async function tryLoadEmbeddedReport() {
+            const el = document.getElementById('sarif-report');
+            if (!el) return;
+            
+            const content = el.textContent.trim();
+            if (!content) return;
+
+            const type = el.getAttribute('type');
+            let json = null;
+
+            try {
+                if (type === 'application/json') {
+                    json = JSON.parse(content);
+                } else if (type === 'application/gzip+base64') {
+                    json = await decodeBase64GzipJson(content);
+                } else {
+                    console.warn("Unknown embedded report type:", type);
+                }
+            } catch (err) {
+                console.error("Failed to load embedded report:", err);
+                showError("Failed to load embedded report: " + err.message);
+                return;
+            }
+
+            if (json) {
+                resetApp();
+                state.filename = "Embedded Report";
+                state.fileLastModified = Date.now();
+                try {
+                    processSarif(json);
+                    readURL(); 
+                    updatePillVisuals(severityPillsContainer, state.filters.severities);
+                    showResultsUI();
+                } catch (err) {
+                    showError("Error processing embedded report: " + err.message);
+                }
+            }
+        }
+
+        tryLoadEmbeddedReport();
+    </script>
 </body>
 </html>
