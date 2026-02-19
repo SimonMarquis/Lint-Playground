@@ -1,8 +1,15 @@
 # 🛝 Lint Playground
 
-### [🔍 Android Lint SARIF Viewer](https://simonmarquis.github.io/Lint-Playground/)
+### [🔍 Android Lint SARIF Viewer](https://simonmarquis.github.io/Lint-Playground/?utm_source=github-readme)
 
-<a href="https://simonmarquis.github.io/Lint-Playground/"><img src="docs/screenshot.png" alt="screenshot" width="400" /></a>
+<a href="https://simonmarquis.github.io/Lint-Playground/?utm_source=github-readme">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/screenshot-dark.png">
+    <source media="(prefers-color-scheme: light)" srcset="docs/screenshot-light.png">
+    <!--suppress CheckImageSize -->
+    <img alt="Screenshot" src="docs/screenshot-dark.png" width="400">
+  </picture>
+</a>
 
 ### ▶️ Run configurations
 

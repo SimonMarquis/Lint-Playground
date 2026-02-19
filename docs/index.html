@@ -16,7 +16,7 @@
     <meta property="og:url" content="https://simonmarquis.github.io/Lint-Playground/">
     <meta property="og:title" content="Android Lint SARIF Viewer">
     <meta property="og:description" content="A modern, offline-first viewer for Android Lint SARIF reports. Analyze your lint issues, filter by severity, and visualize code snippets directly in your browser.">
-    <meta property="og:image" content="https://simonmarquis.github.io/Lint-Playground/screenshot.png">
+    <meta property="og:image" content="https://simonmarquis.github.io/Lint-Playground/screenshot-dark.png">
     <meta property="og:locale" content="en_US">
 
     <link rel="canonical" href="https://simonmarquis.github.io/Lint-Playground/">
@@ -51,7 +51,7 @@
             --primary-bg: rgba(0, 135, 90, 0.08);
             --bg-body: #e4e7eb;
             --bg-surface: #ffffff;
-            --bg-elevation: #f1f5f9;
+            --bg-elevation: #e2e8f0;
             --text-main: #1f1f1f;
             --text-secondary: #4b5563;
             --text-tertiary: #6b7280;
@@ -596,7 +596,6 @@
         .issue-group-header {
             background-color: var(--bg-elevation);
             padding: 0.8rem 1rem;
-            border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -613,10 +612,6 @@
 
         summary.issue-group-header::-webkit-details-marker {
             display: none; /* Hide default arrow in Safari/Legacy */
-        }
-
-        .rule-details[open] summary.issue-group-header {
-            border-bottom-color: transparent;
         }
         
         .issue-group-title {
@@ -658,7 +653,6 @@
         }
 
         .rule-details[open] .rule-description-content {
-            border-bottom: 1px solid var(--border);
             animation: fadeIn 0.2s ease-out;
         }
 
@@ -688,6 +682,7 @@
         }
 
         .issue-group-content {
+            border-top: 1px solid var(--border);
             padding: 1rem;
             display: flex;
             flex-direction: column;
