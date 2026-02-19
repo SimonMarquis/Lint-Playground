@@ -49,5 +49,7 @@ classDef jvm fill:#7F52FF,stroke:#fff,stroke-width:2px,color:#fff;
 
 ### 🔗 Links
 
-- https://googlesamples.github.io/android-custom-lint-rules/
-- https://cs.android.com/android-studio/platform/tools/base/+/mirror-goog-studio-main:lint/
+- [SARIF specification](https://sarifweb.azurewebsites.net/#Specification)
+- [SARIF validator](https://sarifweb.azurewebsites.net/Validation)
+- [Android Lint documentation](https://googlesamples.github.io/android-custom-lint-rules/)
+- [Android Lint source code](https://cs.android.com/android-studio/platform/tools/base/+/mirror-goog-studio-main:lint/)
