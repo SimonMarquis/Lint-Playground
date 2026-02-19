@@ -2,8 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Android Lint SARIF Viewer</title>
+    
+    <meta name="title" content="Android Lint SARIF Viewer">
+    <meta name="description" content="A modern, offline-first viewer for Android Lint SARIF reports. Analyze your lint issues, filter by severity, and visualize code snippets directly in your browser.">
+    <meta name="keywords" content="Android Lint, SARIF, Viewer, Static Analysis, Kotlin, Java, Android Studio, Code Quality, DevOps, CI/CD">
+    <meta name="author" content="Simon Marquis">
+    <meta name="theme-color" content="#3ddc84">
+    <meta name="color-scheme" content="dark light">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simonmarquis.github.io/Lint-Playground/">
+    <meta property="og:title" content="Android Lint SARIF Viewer">
+    <meta property="og:description" content="A modern, offline-first viewer for Android Lint SARIF reports. Analyze your lint issues, filter by severity, and visualize code snippets directly in your browser.">
+    <meta property="og:image" content="https://simonmarquis.github.io/Lint-Playground/screenshot.png">
+    <meta property="og:locale" content="en_US">
+
+    <link rel="canonical" href="https://simonmarquis.github.io/Lint-Playground/">
+
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='24px' viewBox='0 -960 960 960' width='24px' fill='%233ddc84'%3E%3Cpath d='M480-200q66 0 113-47t47-113v-160q0-66-47-113t-113-47q-66 0-113 47t-47 113v160q0 66 47 113t113 47Zm-80-120h160v-80H400v80Zm0-160h160v-80H400v80Zm80 40Zm0 320q-65 0-120.5-32T272-240H160v-80h84q-3-20-3.5-40t-.5-40h-80v-80h80q0-20 .5-40t3.5-40h-84v-80h112q14-23 31.5-43t40.5-35l-64-66 56-56 86 86q28-9 57-9t57 9l88-86 56 56-66 66q23 15 41.5 34.5T688-640h112v80h-84q3 20 3.5 40t.5 40h80v80h-80q0 20-.5 40t-3.5 40h84v80H688q-32 56-87.5 88T480-120Z'/%3E%3C/svg%3E"/>
     <style>
         :root {
@@ -315,28 +332,31 @@
             background-color: var(--bg-surface);
             padding: 1rem;
             border-radius: 8px;
-            /* Default: colored with alpha (40% opacity used for border visibility) */
-            border: 1px solid var(--border); /* Fallback */
+            border: 1px solid var(--border); 
             border: 1px solid color-mix(in srgb, var(--card-accent) 40%, transparent);
             transition: box-shadow 0.2s ease, border-color 0.2s ease;
-            position: relative; /* Context for icon positioning */
+            position: relative; 
             overflow: hidden;
+            cursor: pointer;
+            user-select: none;
         }
 
         .metric-card.is-error { --card-accent: var(--severity-error); }
         .metric-card.is-warning { --card-accent: var(--severity-warning); }
         .metric-card.is-info { --card-accent: var(--severity-info); }
 
-        .metric-card:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        .metric-card:hover, .metric-card.active {
+            box-shadow: 0 4px 12px color-mix(in srgb, var(--card-accent) 30%, transparent);
+        }
+
+        .metric-card.active {
             border-color: var(--card-accent);
         }
         
-        .metric-card:hover .metric-icon {
+        .metric-card:hover .metric-icon, .metric-card.active .metric-icon {
             opacity: 1;
         }
         
-        /* New Icon Style for Metric Cards */
         .metric-icon {
             position: absolute;
             top: 1rem;
@@ -364,8 +384,8 @@
             color: var(--card-accent);
             position: relative;
             z-index: 1;
-            line-height: 1; /* Fixes large top gap to match padding */
-            margin-bottom: 0.25rem; /* Adds definition between number and label */
+            line-height: 1; 
+            margin-bottom: 0.25rem; 
         }
 
         .metric-label {
@@ -375,12 +395,12 @@
             letter-spacing: 0.05em;
             position: relative;
             z-index: 1;
-            line-height: 1.2; /* Tighter baseline for consistent bottom spacing */
+            line-height: 1.2; 
         }
 
         .filter-section {
             background-color: var(--bg-surface);
-            padding: 1.5rem;
+            padding: 1rem;
             border-radius: 8px;
             border: 1px solid var(--border);
             margin-bottom: 1.5rem;
@@ -496,8 +516,8 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            min-width: 0; /* Allow shrinking */
-            max-width: 100%; /* Prevent overflow */
+            min-width: 0; 
+            max-width: 100%; 
             line-height: 1.2;
             vertical-align: middle;
         }
@@ -575,7 +595,7 @@
         
         .issue-group-header {
             background-color: var(--bg-elevation);
-            padding: 1rem 1.25rem;
+            padding: 0.8rem 1rem;
             border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
@@ -583,7 +603,20 @@
             flex-wrap: wrap; 
             gap: 0.5rem;
             user-select: none;
-            transition: background-color 0.2s ease;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+        }
+
+        summary.issue-group-header {
+            cursor: pointer;
+            list-style: none; /* Hide default arrow */
+        }
+
+        summary.issue-group-header::-webkit-details-marker {
+            display: none; /* Hide default arrow in Safari/Legacy */
+        }
+
+        .rule-details[open] summary.issue-group-header {
+            border-bottom-color: transparent;
         }
         
         .issue-group-title {
@@ -598,13 +631,49 @@
             min-width: 0;
             margin-right: 0.5rem;
         }
-        
+
         .issue-rule-id {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            min-width: 0;
-            flex: 0 1 auto;
+        }
+
+        .chevron-icon {
+            transition: transform 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .rule-details[open] .chevron-icon {
+            transform: rotate(90deg);
+        }
+
+        .rule-description-content {
+            padding: 0 1rem 1rem;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-bottom: 0;
+            word-break: break-word;
+            overflow-wrap: anywhere;
+            background-color: var(--bg-elevation);
+        }
+
+        .rule-details[open] .rule-description-content {
+            border-bottom: 1px solid var(--border);
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .issue-group-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            flex-shrink: 0;
         }
 
         .issue-group-count {
@@ -631,14 +700,11 @@
             border-radius: 8px;
             padding: 1rem;
             transition: transform 0.1s ease;
-            /* Removed position relative */
         }
 
         .issue-card:hover {
             border-color: var(--text-tertiary);
         }
-        
-        /* Removed .issue-card-icon style */
 
         .categories-wrapper {
             display: flex;
@@ -668,12 +734,26 @@
             display: inline-block;
             flex-shrink: 0;
             margin-top: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease, opacity 0.2s ease;
+        }
+
+        .severity-badge:hover {
+            opacity: 1;
         }
 
         .issue-group-title .severity-badge {
             margin-top: 0;
             width: 12px;
             height: 12px;
+        }
+
+        .issue-group.content-hidden .severity-badge {
+            background-color: transparent;
+        }
+
+        .issue-group.content-hidden .issue-group-content {
+            display: none;
         }
 
         .severity-error {
@@ -699,14 +779,15 @@
             display: flex;
             align-items: flex-start;
             gap: 0.75rem;
+            word-break: break-word;
+            overflow-wrap: anywhere;
         }
 
-        /* Formatting Styles for Markdown */
-        .issue-message strong { font-weight: 700; color: var(--text-main); }
-        .issue-message em { font-style: italic; }
-        .issue-message u { text-decoration: underline; text-underline-offset: 3px; }
-        .issue-message del { opacity: 0.7; }
-        .issue-message .formatted-code {
+        .markdown-content strong { font-weight: 700; color: var(--text-main); }
+        .markdown-content em { font-style: italic; }
+        .markdown-content u { text-decoration: underline; text-underline-offset: 3px; }
+        .markdown-content del { opacity: 0.7; }
+        .markdown-content .formatted-code {
             background-color: var(--bg-elevation);
             border: 1px solid var(--border);
             padding: 0.1rem 0.35rem;
@@ -716,6 +797,25 @@
             color: var(--primary);
             white-space: pre-wrap;
             word-break: break-word;
+        }
+
+        .markdown-content pre {
+            background-color: var(--code-bg);
+            border: 1px solid var(--code-border);
+            padding: 0.75rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 0.75rem 0;
+        }
+
+        .markdown-content pre code {
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.85em;
+            color: var(--code-text);
+            white-space: pre;
+            background: none;
+            padding: 0;
+            border: none;
         }
 
         .issue-location {
@@ -779,20 +879,14 @@
             background-color: var(--code-bg);
             border: 1px solid var(--code-border);
             border-radius: 6px;
-            /* Modified padding: remove left padding from container to allow sticky element to sit flush */
-            padding: 0.75rem 0.75rem 0.75rem 0;
+            padding: 0.75rem 0;
             font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
             font-size: 0.85rem;
             overflow-x: auto;
             line-height: 1.4;
-            position: relative; /* Context for sticky */
-            display: grid; /* Ensures all lines stretch to the width of the longest line */
-        }
-
-        .code-line {
-            display: flex;
-            gap: 1rem;
-            /* min-width: fit-content; Removed as grid handles width stretching */
+            position: relative;
+            display: grid;
+            grid-template-columns: max-content minmax(max-content, 1fr);
         }
 
         .code-line-number {
@@ -801,11 +895,8 @@
             text-align: right;
             user-select: none;
             border-right: 1px solid var(--border);
-            /* Add left padding here instead of container */
             padding-right: 0.75rem;
             padding-left: 0.75rem;
-            flex-shrink: 0;
-            /* Sticky positioning */
             position: sticky;
             left: 0;
             background-color: var(--code-bg);
@@ -815,6 +906,8 @@
         .code-content {
             color: var(--code-text);
             white-space: pre;
+            padding-left: 1rem;
+            padding-right: 0.75rem;
         }
 
         .code-highlight {
@@ -981,14 +1074,14 @@
 
         <div id="results-container">
             <div class="metrics-grid">
-                <div class="metric-card">
+                <div class="metric-card active" data-value="all">
                     <div class="metric-icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
                     </div>
                     <div class="metric-value" id="metric-total">0</div>
                     <div class="metric-label">Total Issues</div>
                 </div>
-                <div class="metric-card is-error">
+                <div class="metric-card is-error" data-value="error">
                     <div class="metric-icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
                             <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
@@ -999,14 +1092,14 @@
                     <div class="metric-value" id="metric-errors">0</div>
                     <div class="metric-label">Errors</div>
                 </div>
-                <div class="metric-card is-warning">
+                <div class="metric-card is-warning" data-value="warning">
                     <div class="metric-icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
                     </div>
                     <div class="metric-value" id="metric-warnings">0</div>
                     <div class="metric-label">Warnings</div>
                 </div>
-                <div class="metric-card is-info">
+                <div class="metric-card is-info" data-value="info">
                     <div class="metric-icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
                     </div>
@@ -1139,9 +1232,17 @@
         function formatMarkdown(text) {
             if (!text) return '';
             let html = sanitize(text);
-            const parts = html.split(/(`[^`]+`)/);
+            const parts = html.split(/(```[\s\S]*?```|`[^`]+`)/);
             for (let i = 0; i < parts.length; i++) {
-                if (parts[i].startsWith('`') && parts[i].endsWith('`') && parts[i].length > 1) {
+                if (parts[i].startsWith('```') && parts[i].endsWith('```')) {
+                    const match = parts[i].match(/```(\w*)\n?([\s\S]*?)```/);
+                    if (match) {
+                        const lang = match[1];
+                        const content = match[2].trimEnd();
+                        const cls = lang ? ` class="language-${lang}"` : '';
+                        parts[i] = `<pre><code${cls}>${content}</code></pre>`;
+                    }
+                } else if (parts[i].startsWith('`') && parts[i].endsWith('`') && parts[i].length > 1) {
                     const content = parts[i].substring(1, parts[i].length - 1);
                     parts[i] = `<code class="formatted-code">${content}</code>`;
                 } else {
@@ -1220,7 +1321,6 @@
         const metricWarnings = document.getElementById('metric-warnings');
         const metricInfo = document.getElementById('metric-info');
 
-        // URL Synchronization Logic
         function updateURL() {
             const params = new URLSearchParams();
             if (state.filters.text) params.set('query', state.filters.text);
@@ -1233,7 +1333,8 @@
                 }
             });
 
-            const newUrl = `${window.location.pathname}?${params.toString()}`;
+            const queryString = params.toString();
+            const newUrl = queryString ? `${window.location.pathname}?${queryString}` : window.location.pathname;
             try {
                 window.history.replaceState({ path: newUrl }, '', newUrl);
             } catch (e) {
@@ -1273,14 +1374,13 @@
         window.addEventListener('popstate', () => {
             readURL();
             if (state.rawIssues.length > 0) {
-                updatePillVisuals(severityPillsContainer, state.filters.severities);
+                updateSeverityVisuals();
                 updatePillVisuals(categoryPillsContainer, state.filters.categories);
                 updatePillVisuals(issueIdPillsContainer, state.filters.issueIds);
                 applyFilters();
             }
         });
 
-        // Initialize from URL immediately
         readURL();
 
         window.addEventListener('keydown', (e) => {
@@ -1316,13 +1416,18 @@
 
         dropZone.addEventListener('drop', e => handleFiles(e.dataTransfer.files));
         fileInput.addEventListener('change', e => handleFiles(e.target.files));
-        resetButton.addEventListener('click', () => fileInput.click());
+        resetButton.addEventListener('click', () => {
+            fileInput.click();
+        });
 
         exampleLoadWrapper.addEventListener('click', async (e) => {
             e.preventDefault();
             e.stopPropagation();
+
             const el = document.getElementById('sarif-example');
-            if (!el) return showError("Example data not found.");
+            if (!el) {
+                return showError("Example data not found.");
+            }
 
             const src = el.getAttribute('data-src');
             const type = el.getAttribute('type');
@@ -1351,8 +1456,8 @@
                     state.filename = title || src || "Unknown";
                     state.fileLastModified = Date.now();
                     processSarif(json);
-                    readURL(); // Re-read URL after resetApp clears it, effectively persisting filters
-                    updatePillVisuals(severityPillsContainer, state.filters.severities);
+                    readURL(); 
+                    updateSeverityVisuals();
                     showResultsUI();
                 } catch (err) {
                     showError("Error processing example: " + err.message);
@@ -1384,6 +1489,14 @@
         });
 
         issueList.addEventListener('click', e => {
+            const badge = e.target.closest('.severity-badge');
+            if (badge) {
+                e.preventDefault();
+                e.stopPropagation();
+                const group = badge.closest('.issue-group');
+                if (group) group.classList.toggle('content-hidden');
+                return;
+            }
             const btn = e.target.closest('.issue-location');
             if (btn) { e.preventDefault(); const path = btn.getAttribute('data-path'); if (path) copyToClipboard(path); }
         });
@@ -1393,12 +1506,13 @@
             applyFilters();
         }, 200));
 
-        severityPillsContainer.addEventListener('click', e => handlePillClick(e, 'severities', severityPillsContainer));
-        categoryPillsContainer.addEventListener('click', e => handlePillClick(e, 'categories', categoryPillsContainer));
-        issueIdPillsContainer.addEventListener('click', e => handlePillClick(e, 'issueIds', issueIdPillsContainer));
+        document.querySelector('.metrics-grid').addEventListener('click', e => handlePillClick(e, 'severities'));
+        severityPillsContainer.addEventListener('click', e => handlePillClick(e, 'severities'));
+        categoryPillsContainer.addEventListener('click', e => handlePillClick(e, 'categories'));
+        issueIdPillsContainer.addEventListener('click', e => handlePillClick(e, 'issueIds'));
 
-        function handlePillClick(e, filterType, container) {
-            const target = e.target.closest('.pill');
+        function handlePillClick(e, filterType) {
+            const target = e.target.closest('.pill') || e.target.closest('.metric-card');
             if (!target) return;
             const value = target.getAttribute('data-value');
             const filterSet = state.filters[filterType];
@@ -1411,8 +1525,20 @@
                 else filterSet.add(value);
                 if (filterSet.size === 0) filterSet.add('all');
             }
-            updatePillVisuals(container, filterSet);
+            
+            if (filterType === 'severities') {
+                updateSeverityVisuals();
+            } else if (filterType === 'categories') {
+                updatePillVisuals(categoryPillsContainer, filterSet);
+            } else if (filterType === 'issueIds') {
+                updatePillVisuals(issueIdPillsContainer, filterSet);
+            }
             applyFilters();
+        }
+
+        function updateSeverityVisuals() {
+            updatePillVisuals(severityPillsContainer, state.filters.severities);
+            updatePillVisuals(document.querySelector('.metrics-grid'), state.filters.severities);
         }
 
         function updatePillVisuals(container, filterSet) {
@@ -1429,15 +1555,17 @@
             if (!fileName.endsWith('.sarif') && !fileName.endsWith('.json')) {
                 return showError("Invalid file format. Please use .sarif or .json files.");
             }
-            resetApp();
-            state.filename = file.name;
-            state.fileLastModified = file.lastModified;
+
             const reader = new FileReader();
             reader.onload = (e) => {
                 try {
-                    processSarif(JSON.parse(e.target.result));
-                    readURL(); // Restore filters from URL
-                    updatePillVisuals(severityPillsContainer, state.filters.severities); // Sync UI
+                    const json = JSON.parse(e.target.result);
+                    resetApp();
+                    state.filename = file.name;
+                    state.fileLastModified = file.lastModified;
+                    processSarif(json);
+                    readURL(); 
+                    updateSeverityVisuals();
                     showResultsUI();
                 } catch (err) {
                     state.filename = '';
@@ -1445,7 +1573,9 @@
                     showError(err.message || "Could not parse JSON.");
                 }
             };
-            reader.onerror = () => showError("Error reading file.");
+            reader.onerror = () => {
+                showError("Error reading file.");
+            };
             reader.readAsText(file);
         }
 
@@ -1534,7 +1664,7 @@
             fileInput.value = ''; filterText.value = '';
             categoryPillsContainer.innerHTML = '<button class="pill active" data-value="all"><span class="pill-label">All</span></button>';
             issueIdPillsContainer.innerHTML = '<button class="pill active" data-value="all"><span class="pill-label">All</span></button>';
-            updatePillVisuals(severityPillsContainer, state.filters.severities);
+            updateSeverityVisuals();
         }
 
         function renderCategoryPills() {
@@ -1556,7 +1686,6 @@
                 p.className = 'pill';
                 p.setAttribute('data-value', id);
                 p.innerHTML = `<span class="pill-label">${sanitize(id)}</span><span class="pill-count"></span>`;
-                if (rd?.shortDescription) p.setAttribute('title', rd.shortDescription);
                 issueIdPillsContainer.appendChild(p);
             });
         }
@@ -1587,11 +1716,14 @@
                 if (p) { 
                     const name = label || val;
                     p.innerHTML = `<span class="pill-label">${sanitize(name)}</span><span class="pill-count">(${count})</span>`;
-                    if (count === 0 && val !== 'all') p.classList.add('hidden'); else p.classList.remove('hidden'); 
                     
-                    // Restore active class if it was set via URL
                     const type = c === severityPillsContainer ? 'severities' : (c === categoryPillsContainer ? 'categories' : 'issueIds');
-                    if (state.filters[type].has(val)) p.classList.add('active'); else p.classList.remove('active');
+                    const isActive = state.filters[type].has(val);
+                    const queryStr = state.filters.text.toLowerCase();
+                    const matchesQuery = queryStr && name.toLowerCase().includes(queryStr);
+                    
+                    if (count === 0 && val !== 'all' && !isActive && !matchesQuery) p.classList.add('hidden'); else p.classList.remove('hidden'); 
+                    if (isActive) p.classList.add('active'); else p.classList.remove('active');
                 }
             };
             update(severityPillsContainer, 'error', counts.sevs.error, 'Error');
@@ -1616,7 +1748,6 @@
 
             const groups = {};
             state.filteredIssues.forEach(i => { 
-                // Group by ID + Level to handle severity overrides for the same rule
                 const key = i.id + '::' + i.level;
                 if (!groups[key]) groups[key] = { id: i.id, level: i.level, categories: i.categories, instances: [] }; 
                 groups[key].instances.push(i); 
@@ -1626,8 +1757,6 @@
             Object.values(groups).sort((a, b) => {
                 const diff = a.id.localeCompare(b.id);
                 if (diff !== 0) return diff;
-                
-                // If Rule IDs are the same, sort by severity (Error > Warning > Info)
                 const getWeight = (lvl) => {
                     const l = (lvl || '').toLowerCase();
                     if (l === 'error') return 3;
@@ -1637,22 +1766,49 @@
                 return getWeight(b.level) - getWeight(a.level);
             }).forEach(group => {
                 const rd = state.rules.get(group.id);
+                const descText = rd?.fullDescription || rd?.shortDescription;
+                const hasDescription = !!descText;
+
                 const lvl = (group.level || 'warning').toLowerCase();
                 const sCls = lvl === 'error' ? 'severity-error' : (lvl === 'note' || lvl === 'none' ? 'severity-info' : 'severity-warning');
-                const g = document.createElement('div'); g.className = 'issue-group';
+                
+                const g = document.createElement('div'); 
+                g.className = 'issue-group';
 
-                // Add header content
-                const header = document.createElement('div');
-                header.className = 'issue-group-header';
-                header.innerHTML = `
-                        <div class="issue-group-title" style="color: var(--${sCls})" ${rd?.fullDescription ? `title="${sanitize(rd.fullDescription)}"` : ''}>
+                const headerHtml = `
+                        <div class="issue-group-title" style="color: var(--${sCls})">
                             <span class="severity-badge ${sCls}"></span>
                             <span class="issue-rule-id">${sanitize(group.id)}</span>
-                            <span class="issue-group-count">${group.instances.length}</span>
+                            ${hasDescription ? `<svg class="chevron-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" ` +
+                                `stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">` +
+                                `<polyline points="9 18 15 12 9 6"></polyline></svg>` : ''}
                         </div>
-                        <div class="categories-wrapper">${group.categories.map(c => `<span class="category-badge">${sanitize(c)}</span>`).join('')}</div>`;
-                
-                g.appendChild(header);
+                        <div class="issue-group-meta">
+                            <div class="categories-wrapper">${group.categories.map(c => `<span class="category-badge">${sanitize(c)}</span>`).join('')}</div>
+                            <span class="issue-group-count">${group.instances.length}</span>
+                        </div>`;
+
+                if (hasDescription) {
+                    const details = document.createElement('details');
+                    details.className = 'rule-details';
+                    
+                    const summary = document.createElement('summary');
+                    summary.className = 'issue-group-header';
+                    summary.innerHTML = headerHtml;
+                    
+                    const descContent = document.createElement('div');
+                    descContent.className = 'rule-description-content markdown-content';
+                    descContent.innerHTML = formatMarkdown(descText);
+                    
+                    details.appendChild(summary);
+                    details.appendChild(descContent);
+                    g.appendChild(details);
+                } else {
+                    const header = document.createElement('div');
+                    header.className = 'issue-group-header';
+                    header.innerHTML = headerHtml;
+                    g.appendChild(header);
+                }
 
                 const content = document.createElement('div'); content.className = 'issue-group-content';
                 group.instances.forEach(i => {
@@ -1667,7 +1823,7 @@
                                 let end = cur === (i.region.endLine || i.region.startLine) && i.region.endColumn ? Math.min(text.length, i.region.endColumn - 1) : text.length;
                                 content = `${sanitize(text.substring(0, start))}<span class="code-highlight">${sanitize(text.substring(start, end))}</span>${sanitize(text.substring(end))}`;
                             }
-                            return `<div class="code-line"><span class="code-line-number">${cur}</span><span class="code-content">${content}</span></div>`;
+                            return `<span class="code-line-number">${cur}</span><span class="code-content">${content}</span>`;
                         }).join('');
                         snippet = `<div class="issue-code-snippet">${lHtml}</div>`;
                     }
@@ -1693,8 +1849,7 @@
 
                     const card = document.createElement('div'); card.className = 'issue-card';
                     card.innerHTML = `
-                        <!-- Apply markdown formatting only to the issue message (i.message) -->
-                        <div class="issue-message"><span>${formatMarkdown(i.message)}</span></div>
+                        <div class="issue-message markdown-content"><span>${formatMarkdown(i.message)}</span></div>
                         <button class="issue-location" data-path="${sanitize(i.file)}:${i.line}">
                             <span class="path-dir">${sanitize(i.file.substring(0, last + 1))}</span>
                             <span class="path-name">${sanitize(i.file.substring(last + 1))}</span>
@@ -1709,47 +1864,35 @@
             issueList.appendChild(fragment);
         }
 
-        // Auto-load embedded report if present
-        async function tryLoadEmbeddedReport() {
+        async function tryLoadInitialData() {
             const el = document.getElementById('sarif-report');
-            if (!el) return;
-            
-            const content = el.textContent.trim();
-            if (!content) return;
+            const embeddedContent = el ? el.textContent.trim() : null;
 
-            const type = el.getAttribute('type');
-            let json = null;
-
-            try {
-                if (type === 'application/json') {
-                    json = JSON.parse(content);
-                } else if (type === 'application/gzip+base64') {
-                    json = await decodeBase64GzipJson(content);
-                } else {
-                    console.warn("Unknown embedded report type:", type);
-                }
-            } catch (err) {
-                console.error("Failed to load embedded report:", err);
-                showError("Failed to load embedded report: " + err.message);
-                return;
-            }
-
-            if (json) {
-                resetApp();
-                state.filename = "Embedded Report";
-                state.fileLastModified = Date.now();
+            if (embeddedContent) {
+                const type = el.getAttribute('type');
+                let json = null;
                 try {
-                    processSarif(json);
-                    readURL(); 
-                    updatePillVisuals(severityPillsContainer, state.filters.severities);
-                    showResultsUI();
+                    if (type === 'application/json') {
+                        json = JSON.parse(embeddedContent);
+                    } else if (type === 'application/gzip+base64') {
+                        json = await decodeBase64GzipJson(embeddedContent);
+                    }
+                    if (json) {
+                        resetApp();
+                        state.filename = "Embedded Report";
+                        state.fileLastModified = Date.now();
+                        processSarif(json);
+                        readURL(); 
+                        updateSeverityVisuals();
+                        showResultsUI();
+                    }
                 } catch (err) {
                     showError("Error processing embedded report: " + err.message);
                 }
             }
         }
 
-        tryLoadEmbeddedReport();
+        tryLoadInitialData();
     </script>
 </body>
 </html>
