@@ -11,6 +11,11 @@
   </picture>
 </a>
 
+- **📦 Zero Dependencies:** Single-file, self-contained, offline-first HTML viewer.
+- **🔍 Advanced Filtering:** Filter by severity, category, rule ID, or Regex.
+- **⚙️ CI/CD Ready:** Embed report data to generate portable HTML artifacts.
+- **💅 Modern UI:** Markdown support and highlighted inline code snippets.
+
 ### ▶️ Run configurations
 
 - `🕵️ Lint`: [txt](app/build/reports/lint-results-debug.txt), [xml](app/build/reports/lint-results-debug.xml), [html](app/build/reports/lint-results-debug.html), [sarif](app/build/reports/lint-results-debug.sarif)
