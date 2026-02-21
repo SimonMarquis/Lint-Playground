@@ -28,7 +28,6 @@
     <style>
         :root {
             --primary: #3ddc84;
-            --primary-dark: #32b36b;
             --primary-bg: rgba(61, 220, 132, 0.1);
             --bg-body: #121212;
             --bg-surface: #1e1e1e;
@@ -40,17 +39,14 @@
             --code-bg: #171717;
             --code-text: #d4d4d4;
             --code-border: #333333;
-            --severity-fatal: #d32f2f;
             --severity-error: #ef5350;
             --severity-warning: #ffca28;
             --severity-info: #42a5f5;
-            --severity-ignore: #78909c;
             --header-height: 76px;
         }
 
         [data-theme="light"] {
             --primary: #00875A;
-            --primary-dark: #006c4c;
             --primary-bg: rgba(0, 135, 90, 0.08);
             --bg-body: #e4e7eb;
             --bg-surface: #ffffff;
@@ -62,22 +58,14 @@
             --code-bg: #f6f8fa;
             --code-text: #24292e;
             --code-border: #e1e4e8;
-            --severity-fatal: #b71c1c;
             --severity-error: #d32f2f;
             --severity-warning: #ea580c;
             --severity-info: #0284c7;
-            --severity-ignore: #90a4ae;
         }
 
-        html {
-            scrollbar-gutter: stable;
-        }
+        html { scrollbar-gutter: stable; }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -88,1055 +76,318 @@
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
+        .svg-icon { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+        .svg-icon-fill { fill: currentColor; stroke: none; }
+
         header {
-            background-color: var(--bg-surface);
-            border-bottom: 1px solid var(--border);
-            padding: 1rem 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            position: sticky;
-            top: 0;
-            z-index: 50;
-            transition: background-color 0.3s ease, border-color 0.3s ease;
-            gap: 1rem;
-            height: var(--header-height);
+            background-color: var(--bg-surface); border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem; display: flex; align-items: center; position: sticky;
+            top: 0; z-index: 50; transition: background-color 0.3s ease, border-color 0.3s ease;
+            gap: 1rem; height: var(--header-height);
         }
 
         h1 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--text-main);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            white-space: nowrap;
-            overflow: hidden; text-overflow: ellipsis;
-            min-width: 0;
-            flex: 0 1 auto;
-            user-select: none;
+            font-size: 1.25rem; font-weight: 600; color: var(--text-main);
+            display: flex; align-items: center; gap: 0.5rem;
+            min-width: 0; flex: 0 1 auto; user-select: none;
         }
 
         h1 svg { flex-shrink: 0; }
-        h1 span { color: var(--primary); }
+        .title-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+        .title-prefix { color: var(--text-main); margin-right: 0.5rem; }
+        .title-suffix { color: var(--primary); }
 
-        .status-badge {
-            font-size: 0.75rem;
-            background-color: var(--bg-elevation);
-            border: 1px solid var(--border);
-            color: var(--text-secondary);
-            padding: 0.2rem 0.6rem;
-            border-radius: 12px;
-            font-weight: 500;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            flex-shrink: 0;
-            margin-right: auto;
-        }
-
-        .header-controls {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            flex-shrink: 0;
-            margin-left: auto;
-        }
+        .header-controls { display: flex; align-items: center; gap: 1rem; flex-shrink: 0; margin-left: auto; }
 
         #report-info {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            justify-content: center;
-            margin-right: 0.5rem;
-            text-align: right;
-            line-height: 1.3;
-            max-width: 250px;
-            min-height: 3.2rem;
+            display: flex; flex-direction: column; align-items: flex-end; justify-content: center;
+            margin-right: 0.5rem; text-align: right; line-height: 1.3;
+            max-width: 250px; min-height: 3.2rem;
         }
 
-        .info-line-primary {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--text-main);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            width: 100%;
+        .info-line-primary, .info-line-secondary, .info-line-tertiary {
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%;
         }
 
-        .info-line-secondary {
-            font-size: 0.7rem;
-            color: var(--text-secondary);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            width: 100%;
-        }
-
-        .info-line-tertiary {
-            font-size: 0.65rem;
-            color: var(--text-tertiary);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            width: 100%;
-        }
+        .info-line-primary { font-size: 0.85rem; font-weight: 600; color: var(--text-main); }
+        .info-line-secondary { font-size: 0.7rem; color: var(--text-secondary); }
+        .info-line-tertiary { font-size: 0.65rem; color: var(--text-tertiary); }
 
         @media (max-width: 768px) {
-            .status-badge { display: none; }
             #report-info { max-width: 150px; }
+            .title-prefix { display: none; }
         }
-
         @media (max-width: 480px) {
             header { padding: 0.75rem 1rem; }
             h1 { font-size: 1rem; }
             .header-controls { gap: 0.5rem; }
             #report-info { display: none; }
         }
+        @media (max-width: 360px) { .title-suffix { display: none; } }
 
-        .theme-toggle {
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: var(--text-secondary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.5rem;
-            border-radius: 50%;
-            transition: color 0.2s ease, background-color 0.2s ease;
-        }
-
-        .theme-toggle:hover {
-            color: var(--text-main);
-            background-color: var(--bg-elevation);
-        }
-
-        .theme-toggle .icon-sun,
-        .theme-toggle .icon-moon {
-            display: none;
-        }
-
-        [data-theme="dark"] .theme-toggle .icon-sun {
-            display: block;
-        }
-
-        [data-theme="light"] .theme-toggle .icon-moon {
-            display: block;
-        }
-
-        .header-link {
-            color: var(--text-secondary);
-            padding: 0.5rem;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .theme-toggle, .header-link, .open-button {
+            background: none; border: none; cursor: pointer; color: var(--text-secondary);
+            display: flex; align-items: center; justify-content: center;
+            padding: 0.5rem; border-radius: 50%;
             transition: color 0.2s ease, background-color 0.2s ease;
             text-decoration: none;
         }
 
-        .header-link:hover {
-            color: var(--text-main);
-            background-color: var(--bg-elevation);
-        }
+        .theme-toggle:hover, .header-link:hover, .open-button:hover { color: var(--text-main); background-color: var(--bg-elevation); }
 
-        main {
-            padding: 2rem;
-            width: 100%;
-            max-width: 100%;
-        }
+        .theme-toggle .icon-sun, .theme-toggle .icon-moon { display: none; }
+        [data-theme="dark"] .theme-toggle .icon-sun, [data-theme="light"] .theme-toggle .icon-moon { display: block; }
+
+        main { padding: 2rem; }
 
         #drop-zone {
-            border: 2px dashed var(--border);
-            border-radius: 12px;
-            padding: 4rem 2rem;
-            text-align: center;
-            background-color: var(--bg-surface);
-            transition: all 0.2s ease;
-            cursor: pointer;
-            margin-bottom: 2rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            max-width: 1200px;
-            margin-left: auto;
-            margin-right: auto;
+            border: 2px dashed var(--border); border-radius: 12px; padding: 4rem 2rem; text-align: center;
+            background-color: var(--bg-surface); transition: all 0.2s ease; cursor: pointer;
+            margin: 0 auto 2rem; display: flex; flex-direction: column; align-items: center;
+            justify-content: center; max-width: 1200px;
         }
+        #drop-zone:hover { border-color: var(--text-secondary); background-color: var(--bg-elevation); }
+        #drop-zone.highlight { border-color: var(--primary); background-color: var(--primary-bg); }
+        #drop-zone > svg { width: 48px; height: 48px; margin-bottom: 1rem; stroke: var(--text-secondary); }
 
-        #drop-zone:hover {
-            border-color: var(--text-secondary);
-            background-color: var(--bg-elevation);
-        }
-
-        #drop-zone.highlight {
-            border-color: var(--primary);
-            background-color: var(--primary-bg);
-        }
-
-        #drop-zone > svg {
-            width: 48px;
-            height: 48px;
-            margin-bottom: 1rem;
-            stroke: var(--text-secondary);
-        }
-
-        .drop-text-main {
-            font-size: 1.2rem;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-        }
+        .drop-text-main { font-size: 1.2rem; font-weight: 500; margin-bottom: 0.5rem; }
 
         .or-separator {
-            display: flex;
-            align-items: center;
-            width: 100%;
-            max-width: 280px;
-            margin: 1rem 0;
-            color: var(--text-tertiary);
-            font-size: 0.8rem;
-            user-select: none;
+            display: flex; align-items: center; width: 100%; max-width: 280px;
+            margin: 1rem 0; color: var(--text-tertiary); font-size: 0.8rem; user-select: none;
         }
-
-        .or-separator::before, .or-separator::after {
-            content: "";
-            flex: 1;
-            height: 1px;
-            background: var(--border);
-        }
-
-        .or-separator span {
-            padding: 0 1rem;
-        }
+        .or-separator::before, .or-separator::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+        .or-separator span { padding: 0 1rem; }
 
         .drop-actions {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            text-decoration: underline dotted;
-            text-underline-offset: 3px;
-            transition: color 0.2s ease;
-            user-select: none;
-            cursor: pointer;
-            display: inline-block;
+            font-size: 0.85rem; color: var(--text-secondary); text-decoration: underline dotted;
+            text-underline-offset: 3px; transition: color 0.2s ease; user-select: none;
+            cursor: pointer; display: inline-block;
         }
+        .drop-actions:hover { color: var(--primary); text-decoration-style: solid; }
+        .drop-actions strong { font-weight: 700; }
 
-        .drop-actions:hover {
-            color: var(--primary);
-            text-decoration-style: solid;
-        }
+        #file-input { display: none; }
+        #results-container { display: none; max-width: 1200px; margin: 0 auto; }
 
-        .drop-actions strong {
-            font-weight: 700;
-        }
-
-        #results-container {
-            display: none;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
+        .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
 
         .metric-card {
-            --card-accent: var(--text-main);
-            background-color: var(--bg-surface);
-            padding: 1rem;
-            border-radius: 8px;
-            border: 1px solid var(--border);
+            --card-accent: var(--text-main); background-color: var(--bg-surface); padding: 1rem; border-radius: 8px;
             border: 1px solid color-mix(in srgb, var(--card-accent) 40%, transparent);
-            transition: box-shadow 0.2s ease, border-color 0.2s ease;
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-            user-select: none;
+            transition: box-shadow 0.2s ease, border-color 0.2s ease; position: relative; overflow: hidden;
+            cursor: pointer; user-select: none;
         }
-
         .metric-card.is-error { --card-accent: var(--severity-error); }
         .metric-card.is-warning { --card-accent: var(--severity-warning); }
         .metric-card.is-info { --card-accent: var(--severity-info); }
-
-        .metric-card:hover, .metric-card.active {
-            box-shadow: 0 4px 12px color-mix(in srgb, var(--card-accent) 30%, transparent);
-        }
-
-        .metric-card.active {
-            border-color: var(--card-accent);
-        }
-
-        .metric-card:hover .metric-icon, .metric-card.active .metric-icon {
-            opacity: 1;
-        }
+        .metric-card:hover, .metric-card.is-active { box-shadow: 0 4px 12px color-mix(in srgb, var(--card-accent) 30%, transparent); }
+        .metric-card.is-active { border-color: var(--card-accent); }
+        .metric-card:hover .metric-icon, .metric-card.is-active .metric-icon { opacity: 1; }
 
         .metric-icon {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            width: 24px;
-            height: 24px;
-            color: var(--card-accent);
-            opacity: 0.5;
-            pointer-events: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 0.2s ease;
+            position: absolute; top: 1rem; right: 1rem; width: 24px; height: 24px; color: var(--card-accent);
+            opacity: 0.5; pointer-events: none; display: flex; align-items: center; justify-content: center; transition: opacity 0.2s ease;
         }
+        .metric-icon svg { width: 100%; height: 100%; stroke-width: 2; }
 
-        .metric-icon svg {
-            width: 100%;
-            height: 100%;
-            stroke-width: 2;
-        }
+        .metric-value { font-size: 2rem; font-weight: 700; color: var(--card-accent); position: relative; z-index: 1; line-height: 1; margin-bottom: 0.25rem; }
+        .metric-label { color: var(--card-accent); font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; position: relative; z-index: 1; line-height: 1.2; }
 
-        .metric-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--card-accent);
-            position: relative;
-            z-index: 1;
-            line-height: 1;
-            margin-bottom: 0.25rem;
-        }
+        .filter-section, .issue-group { background-color: var(--bg-surface); border-radius: 8px; border: 1px solid var(--border); transition: box-shadow 0.2s ease, border-color 0.2s ease; }
+        .filter-section { padding: 1rem; margin-bottom: 1.5rem; }
+        .filter-section:hover, .issue-group:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.3); border-color: var(--text-tertiary); }
 
-        .metric-label {
-            color: var(--card-accent);
-            font-size: 0.875rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            position: relative;
-            z-index: 1;
-            line-height: 1.2;
-        }
-
-        .filter-section {
-            background-color: var(--bg-surface);
-            padding: 1rem;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            margin-bottom: 1.5rem;
-            transition: box-shadow 0.2s ease, border-color 0.2s ease;
-        }
-
-        .filter-section:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            border-color: var(--text-tertiary);
-        }
-
-        .search-row {
-            margin-bottom: 1.5rem;
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
+        .search-row { margin-bottom: 1.5rem; position: relative; display: flex; align-items: center; }
 
         .filter-input {
-            width: 100%;
-            background-color: var(--bg-body);
-            border: 1px solid var(--border);
-            color: var(--text-main);
-            padding: 0.75rem 48px 0.75rem 40px;
-            border-radius: 6px;
-            font-size: 1rem;
+            width: 100%; background-color: var(--bg-body); border: 1px solid var(--border); color: var(--text-main);
+            padding: 0.75rem 48px 0.75rem 40px; border-radius: 6px; font-size: 1rem;
         }
-
-        .filter-input:focus {
-            outline: none;
-            border-color: var(--text-tertiary);
-            box-shadow: 0 0 0 1px var(--text-tertiary);
-        }
-
-        .filter-input.is-invalid, .filter-input.is-invalid:focus {
-            border-color: var(--severity-error);
-            box-shadow: 0 0 0 1px var(--severity-error);
-        }
-
-        .filter-input.is-regex {
-            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-        }
+        .filter-input:focus { outline: none; border-color: var(--text-tertiary); box-shadow: 0 0 0 1px var(--text-tertiary); }
+        .filter-input.is-invalid, .filter-input.is-invalid:focus { border-color: var(--severity-error); box-shadow: 0 0 0 1px var(--severity-error); }
+        .filter-input.is-regex { font-family: 'Consolas', 'Monaco', 'Courier New', monospace; }
 
         .regex-toggle {
-            position: absolute;
-            right: 8px;
-            background: none;
-            border: 1px solid transparent;
-            color: var(--text-secondary);
-            border-radius: 4px;
-            padding: 4px 6px;
-            font-family: monospace;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            user-select: none;
-            font-size: 0.9rem;
+            position: absolute; right: 8px; background: none; border: 1px solid transparent; color: var(--text-secondary);
+            border-radius: 4px; padding: 4px 6px; font-family: monospace; font-weight: 700; cursor: pointer;
+            transition: all 0.2s ease; user-select: none; font-size: 0.9rem;
         }
+        .regex-toggle:hover { background-color: var(--bg-elevation); color: var(--text-main); }
+        .regex-toggle.is-active { background-color: var(--primary-bg); color: var(--primary); border-color: var(--primary); }
 
-        .regex-toggle:hover {
-            background-color: var(--bg-elevation);
-            color: var(--text-main);
-        }
-
-        .regex-toggle.active {
-            background-color: var(--primary-bg);
-            color: var(--primary);
-            border-color: var(--primary);
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 12px;
-            color: var(--text-secondary);
-            pointer-events: none;
-            display: flex;
-            align-items: center;
-        }
-
-        .search-hint {
-            position: absolute;
-            left: 40px;
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-            pointer-events: none;
-            user-select: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: opacity 0.1s ease;
-        }
+        .search-icon { position: absolute; left: 12px; color: var(--text-secondary); pointer-events: none; display: flex; align-items: center; }
+        .search-hint { position: absolute; left: 40px; font-size: 0.95rem; color: var(--text-secondary); pointer-events: none; user-select: none; display: flex; align-items: center; gap: 8px; transition: opacity 0.1s ease; }
 
         kbd {
-            background-color: var(--bg-elevation);
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            padding: 1px 6px;
-            font-family: inherit;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            line-height: 1.2;
-            box-shadow: 0 1px 0 var(--border);
+            background-color: var(--bg-elevation); border: 1px solid var(--border); border-radius: 4px;
+            padding: 1px 6px; font-family: inherit; font-size: 0.85rem; color: var(--text-secondary);
+            line-height: 1.2; box-shadow: 0 1px 0 var(--border);
         }
 
-        .filter-group {
-            display: flex;
-            align-items: flex-start;
-            gap: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .filter-group:last-child {
-            margin-bottom: 0;
-        }
+        .filter-group { display: flex; align-items: flex-start; gap: 0.5rem; margin-bottom: 0.5rem; }
+        .filter-group:last-child { margin-bottom: 0; }
 
         .filter-label {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            font-weight: 600;
-            min-width: 80px;
-            white-space: nowrap;
-            flex-shrink: 0;
-            height: 24px;
-            display: flex;
-            align-items: center;
+            font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em;
+            font-weight: 600; min-width: 80px; white-space: nowrap; flex-shrink: 0; height: 24px; display: flex; align-items: center;
         }
 
-        .pills-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.35rem;
-            flex: 1;
-        }
+        .pill-container { display: flex; flex-wrap: wrap; gap: 0.35rem; flex: 1; }
 
         .pill {
-            appearance: none;
-            font-family: inherit;
-            background-color: var(--bg-elevation);
-            color: var(--text-secondary);
-            border: 1px solid transparent;
-            padding: 0.25rem 0.6rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            cursor: pointer;
-            transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-            user-select: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 0;
-            max-width: 100%;
-            line-height: 1.2;
-            vertical-align: middle;
+            appearance: none; font-family: inherit; background-color: var(--bg-elevation); color: var(--text-secondary);
+            border: 1px solid transparent; padding: 0.25rem 0.6rem; border-radius: 20px; font-size: 0.75rem;
+            cursor: pointer; transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+            user-select: none; display: inline-flex; align-items: center; justify-content: center; min-width: 0;
+            max-width: 100%; line-height: 1.2; vertical-align: middle;
         }
+        .pill:hover { background-color: var(--border); color: var(--text-main); }
+        .pill:focus { outline: 2px solid var(--text-tertiary); outline-offset: 2px; border-color: var(--text-tertiary); }
 
-        .pill-label {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            min-width: 0;
-            flex: 0 1 auto;
-        }
+        .pill-label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; flex: 0 1 auto; }
+        .pill-count { white-space: nowrap; padding-left: 0.35rem; flex: 0 0 auto; font-variant-numeric: tabular-nums; }
 
-        .pill-count {
-            white-space: nowrap;
-            padding-left: 0.35rem;
-            flex: 0 0 auto;
-            font-variant-numeric: tabular-nums;
-        }
+        .pill.is-active { background-color: var(--primary-bg); color: var(--primary); border-color: var(--primary); text-shadow: 0 0 0.65px currentColor; font-weight: normal; }
+        .pill[data-severity="error"].is-active { --pill-color: var(--severity-error); }
+        .pill[data-severity="warning"].is-active { --pill-color: var(--severity-warning); }
+        .pill[data-severity="info"].is-active { --pill-color: var(--severity-info); }
+        .pill[data-severity].is-active { background-color: color-mix(in srgb, var(--pill-color) 15%, transparent); color: var(--pill-color); border-color: var(--pill-color); }
 
-        .pill:hover {
-            background-color: var(--border);
-            color: var(--text-main);
-        }
-
-        .pill:focus {
-            outline: 2px solid var(--text-tertiary);
-            outline-offset: 2px;
-            border-color: var(--text-tertiary);
-        }
-
-        .pill.active {
-            background-color: var(--primary-bg);
-            color: var(--primary);
-            border-color: var(--primary);
-            text-shadow: 0 0 0.65px currentColor;
-            font-weight: normal;
-        }
-
-        .pill[data-severity="error"].active {
-            background-color: rgba(239, 83, 80, 0.15);
-            color: var(--severity-error);
-            border-color: var(--severity-error);
-        }
-        .pill[data-severity="warning"].active {
-            background-color: rgba(255, 202, 40, 0.15);
-            color: var(--severity-warning);
-            border-color: var(--severity-warning);
-        }
-        .pill[data-severity="info"].active {
-            background-color: rgba(66, 165, 245, 0.15);
-            color: var(--severity-info);
-            border-color: var(--severity-info);
-        }
-
-        .issue-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .issue-group {
-            background-color: var(--bg-surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            overflow: hidden;
-            content-visibility: auto;
-            contain-intrinsic-size: 500px;
-            transition: box-shadow 0.2s ease, border-color 0.2s ease;
-        }
-
-        .issue-group:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            border-color: var(--text-tertiary);
-        }
+        .issue-list { display: flex; flex-direction: column; gap: 1.5rem; }
+        .issue-group { overflow: hidden; content-visibility: auto; contain-intrinsic-size: 500px; border-radius: 12px; }
 
         .issue-group-header {
-            background-color: var(--bg-elevation);
-            padding: 0.8rem 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            user-select: none;
+            background-color: var(--bg-elevation); padding: 0.8rem 1rem; display: flex; align-items: center;
+            justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; user-select: none;
             transition: background-color 0.2s ease, border-color 0.2s ease;
         }
+        summary.issue-group-header { cursor: pointer; list-style: none; }
+        summary.issue-group-header::-webkit-details-marker { display: none; }
 
-        summary.issue-group-header {
-            cursor: pointer;
-            list-style: none; /* Hide default arrow */
-        }
+        .issue-group-title { display: flex; align-items: center; gap: 0.75rem; font-family: monospace; font-weight: 700; color: var(--primary); font-size: 1.1rem; flex: 1 1 auto; min-width: 0; margin-right: 0.5rem; }
+        .issue-rule-id { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        summary.issue-group-header::-webkit-details-marker {
-            display: none; /* Hide default arrow in Safari/Legacy */
-        }
+        .chevron-icon { transition: transform 0.2s ease; flex-shrink: 0; }
+        .rule-details[open] .chevron-icon { transform: rotate(90deg); }
 
-        .issue-group-title {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-family: monospace;
-            font-weight: 700;
-            color: var(--primary);
-            font-size: 1.1rem;
-            flex: 1 1 auto;
-            min-width: 0;
-            margin-right: 0.5rem;
-        }
+        .rule-description-content { padding: 0 1rem 1rem; font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 0; word-break: break-word; overflow-wrap: anywhere; background-color: var(--bg-elevation); }
+        .rule-details[open] .rule-description-content { animation: fadeIn 0.2s ease-out; }
 
-        .issue-rule-id {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .chevron-icon {
-            transition: transform 0.2s ease;
-            flex-shrink: 0;
-        }
+        .issue-group-meta { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; justify-content: flex-end; flex-shrink: 0; }
+        .issue-group-count { background-color: var(--bg-body); color: var(--text-secondary); padding: 0.1rem 0.6rem; border-radius: 12px; font-size: 0.8rem; font-weight: 600; border: 1px solid var(--border); flex-shrink: 0; }
+        .issue-group-content { border-top: 1px solid var(--border); padding: 1rem; display: flex; flex-direction: column; gap: 0.8rem; }
 
-        .rule-details[open] .chevron-icon {
-            transform: rotate(90deg);
-        }
+        .issue-card { background-color: var(--bg-body); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; transition: transform 0.1s ease; }
+        .issue-card:hover { border-color: var(--text-tertiary); }
 
-        .rule-description-content {
-            padding: 0 1rem 1rem;
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-            margin-bottom: 0;
-            word-break: break-word;
-            overflow-wrap: anywhere;
-            background-color: var(--bg-elevation);
-        }
+        .category-wrapper { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: flex-end; max-width: 100%; flex-shrink: 0; }
+        .category-badge { background-color: var(--bg-surface); border: 1px solid var(--border); color: var(--text-secondary); padding: 0.2rem 0.6rem; border-radius: 100px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
 
-        .rule-details[open] .rule-description-content {
-            animation: fadeIn 0.2s ease-out;
-        }
+        .severity-badge { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex-shrink: 0; margin-top: 0.5rem; cursor: pointer; opacity: 0.9; transition: opacity 0.2s ease; background-color: var(--badge-color, transparent); box-shadow: 0 0 6px var(--badge-color, transparent); }
+        .severity-badge:hover { opacity: 1; }
+        .issue-group-title .severity-badge { margin-top: 0; width: 12px; height: 12px; }
+        .issue-group.is-collapsed .severity-badge { background-color: transparent; box-shadow: none; }
+        .severity-error { --badge-color: var(--severity-error); }
+        .severity-warning { --badge-color: var(--severity-warning); }
+        .severity-info { --badge-color: var(--severity-info); }
+        .issue-group.is-collapsed .issue-group-content { display: none; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .issue-group-meta {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-            flex-shrink: 0;
-        }
-
-        .issue-group-count {
-            background-color: var(--bg-body);
-            color: var(--text-secondary);
-            padding: 0.1rem 0.6rem;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            border: 1px solid var(--border);
-            flex-shrink: 0;
-        }
-
-        .issue-group-content {
-            border-top: 1px solid var(--border);
-            padding: 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-        }
-
-        .issue-card {
-            background-color: var(--bg-body);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 1rem;
-            transition: transform 0.1s ease;
-        }
-
-        .issue-card:hover {
-            border-color: var(--text-tertiary);
-        }
-
-        .categories-wrapper {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-            max-width: 100%;
-            flex-shrink: 0;
-        }
-
-        .category-badge {
-            background-color: var(--bg-surface);
-            border: 1px solid var(--border);
-            color: var(--text-secondary);
-            padding: 0.2rem 0.6rem;
-            border-radius: 100px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .severity-badge {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            display: inline-block;
-            flex-shrink: 0;
-            margin-top: 0.5rem;
-            cursor: pointer;
-            transition: background-color 0.2s ease, opacity 0.2s ease;
-        }
-
-        .severity-badge:hover {
-            opacity: 1;
-        }
-
-        .issue-group-title .severity-badge {
-            margin-top: 0;
-            width: 12px;
-            height: 12px;
-        }
-
-        .issue-group.content-hidden .severity-badge {
-            background-color: transparent;
-        }
-
-        .issue-group.content-hidden .issue-group-content {
-            display: none;
-        }
-
-        .severity-error {
-            background-color: var(--severity-error);
-            box-shadow: 0 0 6px var(--severity-error);
-            opacity: 0.9;
-        }
-        .severity-warning {
-            background-color: var(--severity-warning);
-            box-shadow: 0 0 6px var(--severity-warning);
-            opacity: 0.9;
-        }
-        .severity-info {
-            background-color: var(--severity-info);
-            box-shadow: 0 0 6px var(--severity-info);
-            opacity: 0.9;
-        }
-
-        .issue-message {
-            font-size: 1rem;
-            margin-bottom: 0.75rem;
-            color: var(--text-main);
-            display: flex;
-            align-items: flex-start;
-            gap: 0.75rem;
-            word-break: break-word;
-            overflow-wrap: anywhere;
-        }
+        .issue-message { font-size: 1rem; margin-bottom: 0.75rem; color: var(--text-main); display: flex; align-items: flex-start; gap: 0.75rem; word-break: break-word; overflow-wrap: anywhere; }
 
         .markdown-content strong { font-weight: 700; color: var(--text-main); }
         .markdown-content em { font-style: italic; }
         .markdown-content u { text-decoration: underline; text-underline-offset: 3px; }
         .markdown-content del { opacity: 0.7; }
-        .markdown-content .formatted-code {
-            background-color: var(--bg-elevation);
-            border: 1px solid var(--border);
-            padding: 0.1rem 0.35rem;
-            border-radius: 4px;
-            font-family: 'Consolas', 'Monaco', monospace;
-            font-size: 0.85em;
-            color: var(--primary);
-            white-space: pre-wrap;
-            word-break: break-word;
-        }
+        .markdown-content .formatted-code { background-color: var(--bg-elevation); border: 1px solid var(--border); padding: 0.1rem 0.35rem; border-radius: 4px; font-family: 'Consolas', 'Monaco', monospace; font-size: 0.85em; color: var(--primary); white-space: pre-wrap; word-break: break-word; }
+        .markdown-content pre { background-color: var(--code-bg); border: 1px solid var(--code-border); padding: 0.75rem; border-radius: 6px; overflow-x: auto; margin: 0.75rem 0; }
+        .markdown-content pre code { font-family: 'Consolas', 'Monaco', monospace; font-size: 0.85em; color: var(--code-text); white-space: pre; background: none; padding: 0; border: none; }
 
-        .markdown-content pre {
-            background-color: var(--code-bg);
-            border: 1px solid var(--code-border);
-            padding: 0.75rem;
-            border-radius: 6px;
-            overflow-x: auto;
-            margin: 0.75rem 0;
-        }
+        .issue-location { appearance: none; background-color: var(--bg-surface); padding: 0.5rem 0.75rem; border-radius: 6px; font-family: monospace; font-size: 0.85rem; color: var(--text-secondary); display: flex; align-items: center; text-decoration: none; border: 1px solid transparent; transition: all 0.2s ease; cursor: pointer; width: 100%; text-align: left; overflow: hidden; }
+        .issue-location:hover { border-color: var(--text-tertiary); color: var(--text-main); background-color: var(--bg-elevation); }
+        .issue-location:focus { outline: 2px solid var(--text-tertiary); outline-offset: 2px; border-color: var(--text-tertiary); }
 
-        .markdown-content pre code {
-            font-family: 'Consolas', 'Monaco', monospace;
-            font-size: 0.85em;
-            color: var(--code-text);
-            white-space: pre;
-            background: none;
-            padding: 0;
-            border: none;
-        }
+        .path-dir { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; flex-shrink: 1; color: var(--text-tertiary); direction: ltr; }
+        .path-name { white-space: nowrap; flex-shrink: 0; color: var(--text-secondary); font-weight: 600; }
+        .line-number { color: var(--text-tertiary); white-space: nowrap; flex-shrink: 0; }
 
-        .issue-location {
-            appearance: none;
-            background: none;
-            background-color: var(--bg-surface);
-            padding: 0.5rem 0.75rem;
-            border-radius: 6px;
-            font-family: monospace;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            display: flex;
-            align-items: center;
-            gap: 0;
-            text-decoration: none;
-            border: 1px solid transparent;
-            transition: all 0.2s ease;
-            cursor: pointer;
-            width: 100%;
-            text-align: left;
-            overflow: hidden;
-        }
+        .issue-code-snippet { margin-top: 0.8rem; background-color: var(--code-bg); border: 1px solid var(--code-border); border-radius: 6px; padding: 0.75rem 0; font-family: 'Consolas', 'Monaco', 'Courier New', monospace; font-size: 0.85rem; overflow-x: auto; line-height: 1.4; position: relative; display: grid; grid-template-columns: max-content minmax(max-content, 1fr); }
+        .code-line-number { color: var(--text-tertiary); min-width: 3ch; text-align: right; user-select: none; border-right: 1px solid var(--border); padding-right: 0.75rem; padding-left: 0.75rem; position: sticky; left: 0; background-color: var(--code-bg); z-index: 1; }
+        .code-content { color: var(--code-text); white-space: pre; padding-left: 1rem; padding-right: 0.75rem; }
+        .code-highlight { text-decoration: underline wavy var(--severity-error) 1.5px; background-color: color-mix(in srgb, var(--severity-error) 10%, transparent); }
 
-        .path-dir {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            min-width: 0;
-            flex-shrink: 1;
-            color: var(--text-tertiary);
-            direction: ltr;
-        }
+        .related-location-card { margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.25rem; padding-left: 0.75rem; border-left: 2px solid var(--border); }
+        .related-location-msg { font-size: 0.75rem; color: var(--text-tertiary); font-style: italic; }
 
-        .path-name {
-            white-space: nowrap;
-            flex-shrink: 0;
-            color: var(--text-secondary);
-            font-weight: 600;
-        }
+        .is-hidden { display: none !important; }
 
-        .line-number {
-            color: var(--text-tertiary);
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
+        .toast { position: fixed; bottom: 2rem; right: 2rem; padding: 1rem 2rem; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); z-index: 100; animation: slideIn 0.3s ease; font-weight: 500; border: 1px solid transparent; }
+        .toast.is-error { background-color: color-mix(in srgb, var(--severity-error) 15%, var(--bg-surface)); color: var(--severity-error); border-color: var(--severity-error); }
+        .toast.is-info { background-color: var(--bg-elevation); color: var(--text-main); border-color: var(--primary); }
+        @keyframes slideIn { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-        .issue-location:hover {
-            border-color: var(--text-tertiary);
-            color: var(--text-main);
-            background-color: var(--bg-elevation);
-        }
-
-        .issue-location:focus {
-            outline: 2px solid var(--text-tertiary);
-            outline-offset: 2px;
-            border-color: var(--text-tertiary);
-        }
-
-        .issue-code-snippet {
-            margin-top: 0.8rem;
-            background-color: var(--code-bg);
-            border: 1px solid var(--code-border);
-            border-radius: 6px;
-            padding: 0.75rem 0;
-            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-            font-size: 0.85rem;
-            overflow-x: auto;
-            line-height: 1.4;
-            position: relative;
-            display: grid;
-            grid-template-columns: max-content minmax(max-content, 1fr);
-        }
-
-        .code-line-number {
-            color: var(--text-tertiary);
-            min-width: 3ch;
-            text-align: right;
-            user-select: none;
-            border-right: 1px solid var(--border);
-            padding-right: 0.75rem;
-            padding-left: 0.75rem;
-            position: sticky;
-            left: 0;
-            background-color: var(--code-bg);
-            z-index: 1;
-        }
-
-        .code-content {
-            color: var(--code-text);
-            white-space: pre;
-            padding-left: 1rem;
-            padding-right: 0.75rem;
-        }
-
-        .code-highlight {
-            text-decoration: underline;
-            text-decoration-style: wavy;
-            text-decoration-color: var(--severity-error);
-            text-decoration-thickness: 1.5px;
-            background-color: rgba(239, 83, 80, 0.1);
-        }
-
-        .related-location-card {
-            margin-top: 0.5rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.25rem;
-            padding-left: 0.75rem;
-            border-left: 2px solid var(--border);
-        }
-
-        .related-location-msg {
-            font-size: 0.75rem;
-            color: var(--text-tertiary);
-            font-style: italic;
-        }
-
-        .hidden { display: none !important; }
-
-        .toast {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            padding: 1rem 2rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-            z-index: 100;
-            animation: slideIn 0.3s ease;
-            font-weight: 500;
-            border: 1px solid transparent;
-        }
-
-        .toast-error {
-            background-color: #3e2727;
-            color: #ff8a80;
-            border-color: #ff5252;
-        }
-
-        .toast-info {
-            background-color: var(--bg-elevation);
-            color: var(--text-main);
-            border-color: var(--primary);
-        }
-
-        @keyframes slideIn {
-            from { transform: translateY(100%); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 4rem 2rem;
-            color: var(--text-secondary);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .empty-state-title {
-            font-weight: 600;
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-            margin-top: 0.5rem;
-        }
-
-        .empty-state-subtitle {
-            font-size: 0.9rem;
-            color: var(--text-tertiary);
-        }
-
-        .empty-state svg {
-            color: var(--text-secondary);
-        }
-
-        .open-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: var(--text-secondary);
-            padding: 0.5rem;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: color 0.2s ease, background-color 0.2s ease;
-        }
-
-        .open-btn:hover {
-            color: var(--text-main);
-            background-color: var(--bg-elevation);
-        }
+        .empty-state { text-align: center; padding: 4rem 2rem; color: var(--text-secondary); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem; }
+        .empty-state-title { font-weight: 600; font-size: 1.1rem; color: var(--text-secondary); margin-top: 0.5rem; }
+        .empty-state-subtitle { font-size: 0.9rem; color: var(--text-tertiary); }
+        .empty-state svg { color: var(--text-secondary); }
 
         #drag-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(18, 18, 18, 0.9);
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(4px);
-            border: 4px dashed var(--primary);
-            color: var(--primary);
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999;
+            background-color: color-mix(in srgb, var(--bg-body) 90%, transparent);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            backdrop-filter: blur(4px); border: 4px dashed var(--primary); color: var(--primary);
         }
-
-        [data-theme="light"] #drag-overlay {
-            background-color: rgba(255, 255, 255, 0.9);
-        }
-
-        #drag-overlay svg {
-            width: 64px;
-            height: 64px;
-            stroke: var(--primary);
-            margin-bottom: 1rem;
-        }
+        #drag-overlay svg { width: 64px; height: 64px; stroke: var(--primary); margin-bottom: 1rem; }
     </style>
 </head>
 <body>
 
+<svg style="display: none;" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <symbol id="icon-logo" viewBox="0 0 24 24"><path d="M20 8h-2.81c-.45-.78-1.07-1.45-1.82-1.96L17 4.41 15.59 3l-2.17 2.17C12.96 5.06 12.49 5 12 5c-.49 0-.96.06-1.41.17L8.41 3 7 4.41l1.62 1.63C7.88 6.55 7.26 7.22 6.81 8H4v2h2.09c-.05.33-.09.66-.09 1v1H4v2h2v1c0 .34.04.67.09 1H4v2h2.81c1.04 1.79 2.97 3 5.19 3s4.15-1.21 5.19-3H20v-2h-2.09c.05-.33.09-.66.09-1v-1h2v-2h-2v-1c0-.34-.04-.67-.09-1H20V8zm-6 8h-4v-2h4v2zm0-4h-4v-2h4v2z"/></symbol>
+        <symbol id="icon-open" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path><line x1="12" y1="11" x2="12" y2="17"></line><line x1="9" y1="14" x2="15" y2="14"></line></symbol>
+        <symbol id="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></symbol>
+        <symbol id="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></symbol>
+        <symbol id="icon-github" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></symbol>
+        <symbol id="icon-list" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></symbol>
+        <symbol id="icon-error" viewBox="0 0 24 24"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon><line x1="9" y1="9" x2="15" y2="15"></line><line x1="15" y1="9" x2="9" y2="15"></line></symbol>
+        <symbol id="icon-warning" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></symbol>
+        <symbol id="icon-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></symbol>
+        <symbol id="icon-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></symbol>
+        <symbol id="icon-empty-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="8" y1="11" x2="14" y2="11"></line></symbol>
+        <symbol id="icon-empty-report" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></symbol>
+        <symbol id="icon-chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></symbol>
+    </defs>
+</svg>
+
 <header>
     <h1>
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" style="color:var(--primary)">
-            <path d="M20 8h-2.81c-.45-.78-1.07-1.45-1.82-1.96L17 4.41 15.59 3l-2.17 2.17C12.96 5.06 12.49 5 12 5c-.49 0-.96.06-1.41.17L8.41 3 7 4.41l1.62 1.63C7.88 6.55 7.26 7.22 6.81 8H4v2h2.09c-.05.33-.09.66-.09 1v1H4v2h2v1c0 .34.04.67.09 1H4v2h2.81c1.04 1.79 2.97 3 5.19 3s4.15-1.21 5.19-3H20v-2h-2.09c.05-.33.09-.66.09-1v-1h2v-2h-2v-1c0-.34-.04-.67-.09-1H20V8zm-6 8h-4v-2h4v2zm0-4h-4v-2h4v2z"/>
-        </svg>
-        Android Lint <span>SARIF Viewer</span>
+        <svg class="svg-icon-fill" width="28" height="28" style="color:var(--primary)"><use href="#icon-logo"/></svg>
+        <span class="title-text">
+            <span class="title-prefix">Android Lint</span><span class="title-suffix">SARIF Viewer</span>
+        </span>
     </h1>
-    <span class="status-badge">🚧 Work in Progress 🚧</span>
     <div class="header-controls">
         <div id="report-info"></div>
 
-        <button id="open-button" class="open-btn" title="Load New File">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-                <line x1="12" y1="11" x2="12" y2="17"></line>
-                <line x1="9" y1="14" x2="15" y2="14"></line>
-            </svg>
+        <button id="open-button" class="open-button" title="Load New File">
+            <svg class="svg-icon" width="20" height="20"><use href="#icon-open"/></svg>
         </button>
         <button id="theme-toggle" class="theme-toggle" title="Toggle Theme">
-            <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="5"></circle>
-                <line x1="12" y1="1" x2="12" y2="3"></line>
-                <line x1="12" y1="21" x2="12" y2="23"></line>
-                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                <line x1="1" y1="12" x2="3" y2="12"></line>
-                <line x1="21" y1="12" x2="23" y2="12"></line>
-                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-            </svg>
-            <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-            </svg>
+            <svg class="icon-sun svg-icon" width="20" height="20"><use href="#icon-sun"/></svg>
+            <svg class="icon-moon svg-icon" width="20" height="20"><use href="#icon-moon"/></svg>
         </button>
         <a href="https://github.com/SimonMarquis/Lint-Playground?utm_source=sarif-viewer" target="_blank" rel="noopener noreferrer" class="header-link" title="View on GitHub">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
-            </svg>
+            <svg class="svg-icon" width="20" height="20"><use href="#icon-github"/></svg>
         </a>
     </div>
 </header>
 
 <main>
     <div id="drop-zone">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-            <line x1="12" y1="11" x2="12" y2="17"></line>
-            <line x1="9" y1="14" x2="15" y2="14"></line>
-        </svg>
+        <svg class="svg-icon"><use href="#icon-open"/></svg>
         <div class="drop-text-main">Drop your SARIF file here</div>
 
         <div class="or-separator">
@@ -1146,40 +397,28 @@
         <div class="drop-actions" id="load-example-wrapper">
             load report from <strong>android/nowinandroid</strong> project
         </div>
-        <input type="file" id="file-input" accept=".sarif,.json" style="display:none">
+        <input type="file" id="file-input" accept=".sarif,.json">
     </div>
 
     <div id="results-container">
-        <div class="metrics-grid">
-            <div class="metric-card active" data-value="all">
-                <div class="metric-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                </div>
+        <div class="metric-grid">
+            <div class="metric-card is-active" data-value="all">
+                <div class="metric-icon"><svg class="svg-icon"><use href="#icon-list"/></svg></div>
                 <div class="metric-value" id="metric-total">0</div>
                 <div class="metric-label">Total Issues</div>
             </div>
             <div class="metric-card is-error" data-value="error">
-                <div class="metric-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                        <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
-                        <line x1="9" y1="9" x2="15" y2="15"></line>
-                        <line x1="15" y1="9" x2="9" y2="15"></line>
-                    </svg>
-                </div>
+                <div class="metric-icon"><svg class="svg-icon"><use href="#icon-error"/></svg></div>
                 <div class="metric-value" id="metric-errors">0</div>
                 <div class="metric-label">Errors</div>
             </div>
             <div class="metric-card is-warning" data-value="warning">
-                <div class="metric-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-                </div>
+                <div class="metric-icon"><svg class="svg-icon"><use href="#icon-warning"/></svg></div>
                 <div class="metric-value" id="metric-warnings">0</div>
                 <div class="metric-label">Warnings</div>
             </div>
             <div class="metric-card is-info" data-value="info">
-                <div class="metric-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                </div>
+                <div class="metric-icon"><svg class="svg-icon"><use href="#icon-info"/></svg></div>
                 <div class="metric-value" id="metric-info">0</div>
                 <div class="metric-label">Hints</div>
             </div>
@@ -1187,20 +426,15 @@
 
         <div class="filter-section">
             <div class="search-row">
-                <div class="search-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    </svg>
-                </div>
+                <div class="search-icon"><svg class="svg-icon" width="20" height="20"><use href="#icon-search"/></svg></div>
                 <input type="text" id="filter-text" class="filter-input">
                 <span class="search-hint" id="search-hint">Type <kbd>/</kbd> to search</span>
                 <button id="regex-toggle" class="regex-toggle" title="Use Regular Expression">.*</button>
             </div>
             <div class="filter-group">
                 <div class="filter-label">Severity</div>
-                <div class="pills-container" id="severity-pills">
-                    <button class="pill active" data-value="all">All</button>
+                <div class="pill-container" id="severity-pills">
+                    <button class="pill is-active" data-value="all">All</button>
                     <button class="pill" data-value="error" data-severity="error">Error</button>
                     <button class="pill" data-value="warning" data-severity="warning">Warning</button>
                     <button class="pill" data-value="info" data-severity="info">Hint</button>
@@ -1208,52 +442,33 @@
             </div>
             <div class="filter-group">
                 <div class="filter-label">Category</div>
-                <div class="pills-container" id="category-pills">
-                    <button class="pill active" data-value="all">All</button>
+                <div class="pill-container" id="category-pills">
+                    <button class="pill is-active" data-value="all">All</button>
                 </div>
             </div>
             <div class="filter-group">
                 <div class="filter-label">Issue ID</div>
-                <div class="pills-container" id="issue-id-pills">
-                    <button class="pill active" data-value="all">All</button>
+                <div class="pill-container" id="issue-id-pills">
+                    <button class="pill is-active" data-value="all">All</button>
                 </div>
             </div>
         </div>
 
         <div id="issue-list" class="issue-list"></div>
 
-        <div id="empty-filter-state" class="empty-state hidden">
-            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                <line x1="8" y1="11" x2="14" y2="11"></line>
-            </svg>
+        <div id="empty-filter-state" class="empty-state is-hidden">
+            <svg class="svg-icon" width="64" height="64" style="stroke-width: 1.5"><use href="#icon-empty-search"/></svg>
             <span class="empty-state-title">No matching issues found!</span>
             <span class="empty-state-subtitle">Try adjusting your filters or search query.</span>
         </div>
 
-        <div id="empty-report-state" class="empty-state hidden">
-            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                <polyline points="22 4 12 14.01 9 11.01"></polyline>
-            </svg>
+        <div id="empty-report-state" class="empty-state is-hidden">
+            <svg class="svg-icon" width="64" height="64" style="stroke-width: 1.5"><use href="#icon-empty-report"/></svg>
             <span class="empty-state-title">No issues found!</span>
             <span class="empty-state-subtitle">This report contains no lint issues. Great job!</span>
         </div>
     </div>
 </main>
-
-<template id="tpl-location">
-    <button class="issue-location">
-        <span class="path-dir"></span><span class="path-name"></span><span class="line-number"></span>
-    </button>
-</template>
-
-<template id="tpl-issue-card">
-    <div class="issue-card">
-        <div class="issue-message markdown-content"></div>
-    </div>
-</template>
 
 <template id="tpl-issue-group">
     <div class="issue-group">
@@ -1262,12 +477,10 @@
                 <div class="issue-group-title">
                     <span class="severity-badge"></span>
                     <span class="issue-rule-id"></span>
-                    <svg class="chevron-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="9 18 15 12 9 6"></polyline>
-                    </svg>
+                    <svg class="chevron-icon svg-icon" width="18" height="18" style="stroke-width: 2.5"><use href="#icon-chevron"/></svg>
                 </div>
                 <div class="issue-group-meta">
-                    <div class="categories-wrapper"></div>
+                    <div class="category-wrapper"></div>
                     <span class="issue-group-count"></span>
                 </div>
             </summary>
@@ -1277,14 +490,10 @@
     </div>
 </template>
 
-<div id="toast" class="toast hidden"></div>
+<div id="toast" class="toast is-hidden"></div>
 
-<div id="drag-overlay" class="hidden">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-        <line x1="12" y1="11" x2="12" y2="17"></line>
-        <line x1="9" y1="14" x2="15" y2="14"></line>
-    </svg>
+<div id="drag-overlay" class="is-hidden">
+    <svg class="svg-icon"><use href="#icon-open"/></svg>
     <h2 style="font-size: 1.5rem; font-weight: 600;">Drop to Load New File</h2>
 </div>
 
@@ -1295,28 +504,58 @@
 
 <script>
     const Perf = {
-        start(name) {
-            performance.mark(`${name}-start`);
-        },
-        end(name) {
+        start: (name) => performance.mark(`${name}-start`),
+        end: (name) => {
             performance.mark(`${name}-end`);
             performance.measure(name, `${name}-start`, `${name}-end`);
-            const measures = performance.getEntriesByName(name);
-            const measure = measures[measures.length - 1];
-            const duration = parseFloat(measure.duration.toFixed(2));
-            console.log(`⏱️ [${name}] took ${duration}ms`);
-
+            console.log(`⏱️ [${name}] took ${performance.getEntriesByName(name).pop().duration.toFixed(2)}ms`);
             performance.clearMarks(`${name}-start`);
             performance.clearMarks(`${name}-end`);
             performance.clearMeasures(name);
         },
-        groupStart(name, collapsed = false) {
-            if (collapsed) console.groupCollapsed(name);
-            else console.group(name);
+        groupStart: (name, collapsed = false) => collapsed ? console.groupCollapsed(name) : console.group(name),
+        groupEnd: () => console.groupEnd()
+    };
+
+    const DOM = {
+        themeToggle: document.getElementById('theme-toggle'),
+        dropZone: document.getElementById('drop-zone'),
+        fileInput: document.getElementById('file-input'),
+        resultsContainer: document.getElementById('results-container'),
+        reportInfo: document.getElementById('report-info'),
+        openButton: document.getElementById('open-button'),
+        issueList: document.getElementById('issue-list'),
+        emptyFilterState: document.getElementById('empty-filter-state'),
+        emptyReportState: document.getElementById('empty-report-state'),
+        filterText: document.getElementById('filter-text'),
+        searchHint: document.getElementById('search-hint'),
+        regexToggle: document.getElementById('regex-toggle'),
+        dragOverlay: document.getElementById('drag-overlay'),
+        loadExampleWrapper: document.getElementById('load-example-wrapper'),
+        toast: document.getElementById('toast'),
+        metrics: {
+            grid: document.querySelector('.metric-grid'),
+            total: document.getElementById('metric-total'),
+            error: document.getElementById('metric-errors'),
+            warning: document.getElementById('metric-warnings'),
+            info: document.getElementById('metric-info')
         },
-        groupEnd() {
-            console.groupEnd();
+        filters: {
+            severities: document.getElementById('severity-pills'),
+            categories: document.getElementById('category-pills'),
+            issueIds: document.getElementById('issue-id-pills')
+        },
+        templates: {
+            group: document.getElementById('tpl-issue-group')
         }
+    };
+
+    const FILTER_ALL = 'all';
+
+    const FILTER_CONFIG = {
+        severities: { param: 'severity', container: DOM.filters.severities },
+        categories: { param: 'category', container: DOM.filters.categories },
+        issueIds: { param: 'issueId', container: DOM.filters.issueIds }
     };
 
     const debounce = (fn, delay) => {
@@ -1332,57 +571,46 @@
         };
     };
 
-    function parseJsonPerf(text) {
+    function parseJson(text) {
         Perf.start('JSON Parse');
         const json = JSON.parse(text);
         Perf.end('JSON Parse');
         return json;
     }
 
-    async function decodeBase64GzipJson(b64) {
-        if (!("DecompressionStream" in window)) {
-            showError("DecompressionStream('gzip') not supported in this browser.");
-            return null;
-        }
+    async function decodeGzipJson(base64) {
+        if (!("DecompressionStream" in window)) return showError("DecompressionStream('gzip') not supported in this browser."), null;
         try {
             Perf.start('Base64 Decode & Unzip');
-            const cleanB64 = b64.trim();
-            const binaryString = atob(cleanB64);
-            const bytes = Uint8Array.from(binaryString, c => c.charCodeAt(0));
-            const stream = new Blob([bytes]).stream()
-                .pipeThrough(new DecompressionStream("gzip"));
+            const bytes = Uint8Array.from(atob(base64.trim()), c => c.charCodeAt(0));
+            const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream("gzip"));
             const text = await new Response(stream).text();
             Perf.end('Base64 Decode & Unzip');
-
-            return parseJsonPerf(text);
+            return parseJson(text);
         } catch (err) {
             console.error("Decompression failed", err);
-            showError("Failed to decompress example file: " + err.message);
-            return null;
+            return showError(`Failed to decompress embedded file: ${err.message}`), null;
         }
     }
 
     async function copyToClipboard(text) {
         try {
             await navigator.clipboard.writeText(text);
-            showToast(`Path copied to clipboard!`, false);
+            showToast('Path copied to clipboard!', false);
         } catch (err) {
             console.error('Failed to copy: ', err);
             showToast('Failed to copy to clipboard', true);
         }
     }
 
-    const toast = document.getElementById('toast');
-    function showToast(msg, isError = false) {
-        toast.textContent = msg;
-        toast.className = 'toast';
-        if (isError) toast.classList.add('toast-error');
-        else toast.classList.add('toast-info');
-        toast.classList.remove('hidden');
-        setTimeout(() => toast.classList.add('hidden'), isError ? 10000 : 3000);
+    function showToast(message, isError = false) {
+        DOM.toast.textContent = message;
+        DOM.toast.className = `toast ${isError ? 'is-error' : 'is-info'}`;
+        DOM.toast.classList.remove('is-hidden');
+        setTimeout(() => DOM.toast.classList.add('is-hidden'), isError ? 10000 : 3000);
     }
 
-    function showError(msg) { showToast(msg, true); }
+    function showError(message) { showToast(message, true); }
 
     function sanitize(str) {
         if (!str) return '';
@@ -1398,42 +626,25 @@
                 const [, lang, content] = part.match(/```(\w*)\n?([\s\S]*?)```/) || [];
                 return content ? `<pre><code${lang ? ` class="language-${lang}"` : ''}>${content.trimEnd()}</code></pre>` : part;
             }
-            if (part.startsWith('`') && part.endsWith('`') && part.length > 1) {
-                return `<code class="formatted-code">${part.slice(1, -1)}</code>`;
-            }
-            return part.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
-                       .replace(/__([^_]+)__/g, '<u>$1</u>')
-                       .replace(/~~([^~]+)~~/g, '<del>$1</del>')
-                       .replace(/\*([^*]+)\*/g, '<em>$1</em>');
+            if (part.startsWith('`') && part.endsWith('`') && part.length > 1) return `<code class="formatted-code">${part.slice(1, -1)}</code>`;
+            return part.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>').replace(/__([^_]+)__/g, '<u>$1</u>')
+                       .replace(/~~([^~]+)~~/g, '<del>$1</del>').replace(/\*([^*]+)\*/g, '<em>$1</em>').replace(/\n/g, '<br>');
         }).join('');
     }
 
     function getSeverity(level) {
-        const l = (level || 'warning').toLowerCase();
-        return l === 'error' ? 'error' : (l === 'note' || l === 'none' ? 'info' : 'warning');
+        const severity = (level || 'warning').toLowerCase();
+        if (severity === 'error') return 'error';
+        if (severity === 'note' || severity === 'none') return 'info';
+        return 'warning';
     }
 
-    const tplGroup = document.getElementById('tpl-issue-group');
-    const tplCard = document.getElementById('tpl-issue-card');
-    const tplLocation = document.getElementById('tpl-location');
-
-    function createLocationNode(file, line) {
-        const clone = tplLocation.content.cloneNode(true);
-        const btn = clone.querySelector('button');
-        btn.dataset.path = `${file}:${line}`;
-        const last = file.lastIndexOf('/');
-        clone.querySelector('.path-dir').textContent = file.substring(0, last + 1);
-        clone.querySelector('.path-name').textContent = file.substring(last + 1);
-        clone.querySelector('.line-number').textContent = `:${line}`;
-        return clone;
-    }
-
-    const themeToggle = document.getElementById('theme-toggle');
-
-    function initTheme() {
-        const savedTheme = localStorage.getItem('theme');
-        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        applyTheme(savedTheme || (systemDark ? 'dark' : 'light'), false);
+    function createLocationHtml(file, line) {
+        const lastIndex = file.lastIndexOf('/');
+        const dir = sanitize(file.substring(0, lastIndex + 1));
+        const name = sanitize(file.substring(lastIndex + 1));
+        return `<button class="issue-location" data-path="${sanitize(file)}:${line}">` +
+               `<span class="path-dir">${dir}</span><span class="path-name">${name}</span><span class="line-number">:${line}</span></button>`;
     }
 
     function applyTheme(theme, persist = true) {
@@ -1441,62 +652,26 @@
         if (persist) localStorage.setItem('theme', theme);
     }
 
-    themeToggle.addEventListener('click', () => {
-        const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
-        applyTheme(currentTheme === 'dark' ? 'light' : 'dark', true);
+    function initTheme() {
+        const saved = localStorage.getItem('theme');
+        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        applyTheme(saved || (systemPrefersDark ? 'dark' : 'light'), false);
+    }
+
+    DOM.themeToggle.addEventListener('click', () => {
+        applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark', true);
     });
 
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-        if (!localStorage.getItem('theme')) applyTheme(e.matches ? 'dark' : 'light', false);
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+        if (!localStorage.getItem('theme')) applyTheme(event.matches ? 'dark' : 'light', false);
     });
 
     initTheme();
 
     const state = {
-        rawIssues: [],
-        filteredIssues: [],
-        categories: new Set(),
-        uniqueIssueIds: new Set(),
-        rules: new Map(),
-        filename: '',
-        driverInfo: { name: '', version: '' },
-        reportDate: null,
-        fileLastModified: null,
-        filters: {
-            text: '',
-            isRegex: false,
-            categories: new Set(['all']),
-            issueIds: new Set(['all']),
-            severities: new Set(['all'])
-        }
-    };
-
-    const dropZone = document.getElementById('drop-zone');
-    const fileInput = document.getElementById('file-input');
-    const resultsContainer = document.getElementById('results-container');
-    const reportInfoContainer = document.getElementById('report-info');
-    const openButton = document.getElementById('open-button');
-    const issueList = document.getElementById('issue-list');
-    const emptyFilterState = document.getElementById('empty-filter-state');
-    const emptyReportState = document.getElementById('empty-report-state');
-    const filterText = document.getElementById('filter-text');
-    const searchHint = document.getElementById('search-hint');
-    const regexToggle = document.getElementById('regex-toggle');
-    const dragOverlay = document.getElementById('drag-overlay');
-    const exampleLoadWrapper = document.getElementById('load-example-wrapper');
-
-    const metricDOM = {
-        grid: document.querySelector('.metrics-grid'),
-        total: document.getElementById('metric-total'),
-        error: document.getElementById('metric-errors'),
-        warning: document.getElementById('metric-warnings'),
-        info: document.getElementById('metric-info')
-    };
-
-    const FILTER_DEFS = {
-        severities: { param: 'severity', container: document.getElementById('severity-pills') },
-        categories: { param: 'category', container: document.getElementById('category-pills') },
-        issueIds: { param: 'issueId', container: document.getElementById('issue-id-pills') }
+        rawIssues: [], filteredIssues: [], categories: new Set(), issueIds: new Set(),
+        rules: new Map(), filename: '', driverInfo: { name: '', version: '' }, reportDate: null, fileLastModified: null,
+        filters: { text: '', isRegex: false, categories: new Set([FILTER_ALL]), issueIds: new Set([FILTER_ALL]), severities: new Set([FILTER_ALL]) }
     };
 
     function updateURL() {
@@ -1504,110 +679,92 @@
         if (state.filters.text) params.set('query', state.filters.text);
         if (state.filters.isRegex) params.set('regex', 'true');
 
-        Object.entries(FILTER_DEFS).forEach(([key, { param }]) => {
+        Object.entries(FILTER_CONFIG).forEach(([key, config]) => {
             const set = state.filters[key];
-            if (!set.has('all') && set.size > 0) {
-                params.set(param, Array.from(set).join(','));
-            }
+            if (!set.has(FILTER_ALL) && set.size > 0) params.set(config.param, Array.from(set).join(','));
         });
 
         const queryString = params.toString();
         const newUrl = queryString ? `${window.location.pathname}?${queryString}` : window.location.pathname;
-        try {
-            window.history.replaceState({ path: newUrl }, '', newUrl);
-        } catch (e) {
-            // Silently fail in restricted environments
-        }
+        try { window.history.replaceState({ path: newUrl }, '', newUrl); } catch (e) {}
     }
 
     function readURL() {
         const params = new URLSearchParams(window.location.search);
-
-        const query = params.get('query') || '';
-        state.filters.text = query;
-        filterText.value = query;
-        searchHint.style.opacity = query ? '0' : '1';
+        state.filters.text = params.get('query') || '';
+        DOM.filterText.value = state.filters.text;
+        DOM.searchHint.style.opacity = state.filters.text ? '0' : '1';
 
         state.filters.isRegex = params.get('regex') === 'true';
-        regexToggle.classList.toggle('active', state.filters.isRegex);
-        filterText.classList.toggle('is-regex', state.filters.isRegex);
+        DOM.regexToggle.classList.toggle('is-active', state.filters.isRegex);
+        DOM.filterText.classList.toggle('is-regex', state.filters.isRegex);
 
-        Object.entries(FILTER_DEFS).forEach(([key, { param }]) => {
-            const val = params.get(param);
-            const targetSet = state.filters[key];
-            targetSet.clear();
-            if (val) val.split(',').forEach(v => targetSet.add(v.trim()));
-            else targetSet.add('all');
+        Object.entries(FILTER_CONFIG).forEach(([key, config]) => {
+            const value = params.get(config.param);
+            state.filters[key].clear();
+            if (value) value.split(',').forEach(v => state.filters[key].add(v.trim()));
+            else state.filters[key].add(FILTER_ALL);
         });
     }
 
     window.addEventListener('popstate', () => {
         readURL();
-        if (state.rawIssues.length > 0) {
-            updatePillVisuals([FILTER_DEFS.severities.container, metricDOM.grid], state.filters.severities);
-            Object.entries(FILTER_DEFS).forEach(([key, { container }]) => {
-                if (key !== 'severities') updatePillVisuals([container], state.filters[key]);
-            });
-            applyFilters();
-        }
+        if (state.rawIssues.length === 0) return;
+        updatePillVisuals([FILTER_CONFIG.severities.container, DOM.metrics.grid], state.filters.severities);
+        Object.entries(FILTER_CONFIG).forEach(([key, config]) => {
+            if (key !== 'severities') updatePillVisuals([config.container], state.filters[key]);
+        });
+        applyFilters();
     });
 
     readURL();
 
-    window.addEventListener('keydown', (e) => {
-        if (e.key === '/' && document.activeElement !== filterText && resultsContainer.style.display !== 'none') {
-            e.preventDefault();
-            filterText.focus();
+    window.addEventListener('keydown', event => {
+        if (event.key === '/' && document.activeElement !== DOM.filterText && DOM.resultsContainer.style.display !== 'none') {
+            event.preventDefault(); DOM.filterText.focus();
         }
     });
 
-    filterText.addEventListener('focus', () => searchHint.style.opacity = '0');
-    filterText.addEventListener('blur', () => {
-        if (filterText.value === '') searchHint.style.opacity = '1';
-    });
+    DOM.filterText.addEventListener('focus', () => DOM.searchHint.style.opacity = '0');
+    DOM.filterText.addEventListener('blur', () => { if (!DOM.filterText.value) DOM.searchHint.style.opacity = '1'; });
 
-    filterText.addEventListener('input', debounce(() => {
-        state.filters.text = filterText.value;
+    DOM.filterText.addEventListener('input', debounce(() => {
+        state.filters.text = DOM.filterText.value;
         applyFilters();
     }, 200));
 
-    regexToggle.addEventListener('click', () => {
+    DOM.regexToggle.addEventListener('click', () => {
         state.filters.isRegex = !state.filters.isRegex;
-        regexToggle.classList.toggle('active', state.filters.isRegex);
-        filterText.classList.toggle('is-regex', state.filters.isRegex);
+        DOM.regexToggle.classList.toggle('is-active', state.filters.isRegex);
+        DOM.filterText.classList.toggle('is-regex', state.filters.isRegex);
         applyFilters();
     });
 
-    const hasFiles = e => e.dataTransfer && Array.from(e.dataTransfer.types).includes('Files');
+    const hasFiles = event => Array.from(event.dataTransfer?.types || []).includes('Files');
 
-    dropZone.addEventListener('click', (e) => {
-        if (e.target.closest('#load-example-wrapper')) return;
-        fileInput.click();
+    DOM.dropZone.addEventListener('click', event => {
+        if (!event.target.closest('#load-example-wrapper')) DOM.fileInput.click();
     });
 
-    fileInput.addEventListener('change', e => handleFiles(e.target.files));
-    openButton.addEventListener('click', () => fileInput.click());
+    DOM.fileInput.addEventListener('change', event => handleFiles(event.target.files));
+    DOM.openButton.addEventListener('click', () => DOM.fileInput.click());
 
     let dragCounter = 0;
     ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-        dropZone.addEventListener(eventName, e => {
-            e.preventDefault(); e.stopPropagation();
-            dropZone.classList.toggle('highlight', (eventName === 'dragenter' || eventName === 'dragover') && hasFiles(e));
-            if (eventName === 'drop') handleFiles(e.dataTransfer.files);
+        DOM.dropZone.addEventListener(eventName, event => {
+            event.preventDefault(); event.stopPropagation();
+            DOM.dropZone.classList.toggle('highlight', (eventName === 'dragenter' || eventName === 'dragover') && hasFiles(event));
+            if (eventName === 'drop') handleFiles(event.dataTransfer.files);
         });
 
-        window.addEventListener(eventName, e => {
-            e.preventDefault();
-            if (eventName === 'dragover' || !hasFiles(e)) return;
-
+        window.addEventListener(eventName, event => {
+            event.preventDefault();
+            if (eventName === 'dragover' || !hasFiles(event)) return;
             if (eventName === 'dragenter') dragCounter++;
             else if (eventName === 'dragleave') dragCounter--;
-            else if (eventName === 'drop') {
-                dragCounter = 0;
-                handleFiles(e.dataTransfer.files);
-            }
+            else if (eventName === 'drop') dragCounter = 0, handleFiles(event.dataTransfer.files);
 
-            dragOverlay.classList.toggle('hidden', dragCounter <= 0);
+            DOM.dragOverlay.classList.toggle('is-hidden', dragCounter <= 0);
             if (dragCounter < 0) dragCounter = 0;
         });
     });
@@ -1618,19 +775,17 @@
         state.fileLastModified = lastModified || Date.now();
         processSarif(json);
         readURL();
-        updatePillVisuals([FILTER_DEFS.severities.container, metricDOM.grid], state.filters.severities);
+        updatePillVisuals([FILTER_CONFIG.severities.container, DOM.metrics.grid], state.filters.severities);
         showResultsUI();
     }
 
     async function loadSarifFromScript(elementId, defaultFilename) {
-        const el = document.getElementById(elementId);
-        if (!el) return false;
+        const element = document.getElementById(elementId);
+        if (!element) return false;
 
-        const src = el.getAttribute('data-src');
-        const type = el.getAttribute('type');
-        const title = el.getAttribute('title');
-        const content = el.textContent.trim();
-
+        const src = element.getAttribute('data-src');
+        const type = element.getAttribute('type');
+        const content = element.textContent.trim();
         if (!src && !content) return false;
 
         Perf.start('Fetch / Process Data');
@@ -1638,194 +793,161 @@
         if (src) {
             const response = await fetch(src);
             if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-            json = parseJsonPerf(await response.text());
+            json = parseJson(await response.text());
         } else if (type === 'application/json') {
-            json = parseJsonPerf(content);
+            json = parseJson(content);
         } else if (type === 'application/gzip+base64') {
-            json = await decodeBase64GzipJson(content);
+            json = await decodeGzipJson(content);
         } else {
             Perf.end('Fetch / Process Data');
             throw new Error("Unknown data format type.");
         }
         Perf.end('Fetch / Process Data');
 
-        if (json) {
-            loadSarifData(json, title || src || defaultFilename, Date.now());
-            return true;
-        }
-        return false;
+        if (!json) return false;
+        loadSarifData(json, element.getAttribute('title') || src || defaultFilename, Date.now());
+        return true;
     }
 
-    exampleLoadWrapper.addEventListener('click', async (e) => {
-        e.preventDefault();
-        e.stopPropagation();
+    DOM.loadExampleWrapper.addEventListener('click', async event => {
+        event.preventDefault(); event.stopPropagation();
         Perf.groupStart('Loading Example');
         Perf.start('Total Load Example');
-        try {
-            const loaded = await loadSarifFromScript('sarif-example', "Unknown");
-            if (!loaded) showError("Example data not found.");
-        } catch (err) {
-            showError(`Failed to load: ${err.message}`);
-        }
+        try { if (!(await loadSarifFromScript('sarif-example', "Unknown"))) showError("Example data not found."); }
+        catch (err) { showError(`Failed to load: ${err.message}`); }
         Perf.end('Total Load Example');
         Perf.groupEnd();
     });
 
-    issueList.addEventListener('click', e => {
-        const badge = e.target.closest('.severity-badge');
+    DOM.issueList.addEventListener('click', event => {
+        const badge = event.target.closest('.severity-badge');
         if (badge) {
-            e.preventDefault();
-            e.stopPropagation();
+            event.preventDefault(); event.stopPropagation();
             const group = badge.closest('.issue-group');
-            if (group) group.classList.toggle('content-hidden');
+            if (group) group.classList.toggle('is-collapsed');
             return;
         }
-        const btn = e.target.closest('.issue-location');
-        if (btn) {
-            e.preventDefault();
-            const path = btn.getAttribute('data-path');
-            if (path) copyToClipboard(path);
+        const locationButton = event.target.closest('.issue-location');
+        if (locationButton && locationButton.getAttribute('data-path')) {
+            event.preventDefault(); copyToClipboard(locationButton.getAttribute('data-path'));
         }
     });
 
-    metricDOM.grid.addEventListener('click', e => handlePillClick(e, 'severities'));
-    Object.entries(FILTER_DEFS).forEach(([key, { container }]) => {
-        container.addEventListener('click', e => handlePillClick(e, key));
-    });
+    DOM.metrics.grid.addEventListener('click', event => handlePillClick(event, 'severities'));
+    Object.entries(FILTER_CONFIG).forEach(([key, config]) => config.container.addEventListener('click', event => handlePillClick(event, key)));
 
-    function handlePillClick(e, filterType) {
-        const target = e.target.closest('.pill') || e.target.closest('.metric-card');
+    function handlePillClick(event, filterType) {
+        const target = event.target.closest('.pill') || event.target.closest('.metric-card');
         if (!target) return;
+
         const value = target.getAttribute('data-value');
         const filterSet = state.filters[filterType];
-        if (value === 'all') {
+
+        if (value === FILTER_ALL) {
             filterSet.clear();
-            filterSet.add('all');
+            filterSet.add(FILTER_ALL);
         } else {
-            if (filterSet.has('all')) filterSet.delete('all');
+            if (filterSet.has(FILTER_ALL)) filterSet.delete(FILTER_ALL);
             if (filterSet.has(value)) filterSet.delete(value);
             else filterSet.add(value);
-            if (filterSet.size === 0) filterSet.add('all');
+            if (filterSet.size === 0) filterSet.add(FILTER_ALL);
         }
 
-        if (filterType === 'severities') updatePillVisuals([FILTER_DEFS.severities.container, metricDOM.grid], state.filters.severities);
-        else updatePillVisuals([FILTER_DEFS[filterType].container], filterSet);
+        if (filterType === 'severities') updatePillVisuals([FILTER_CONFIG.severities.container, DOM.metrics.grid], state.filters.severities);
+        else updatePillVisuals([FILTER_CONFIG[filterType].container], filterSet);
+
         applyFilters();
     }
 
     function updatePillVisuals(containers, filterSet) {
-        containers.forEach(container => {
-            Array.from(container.children).forEach(pill => {
-                pill.classList.toggle('active', filterSet.has(pill.getAttribute('data-value')));
-            });
-        });
+        containers.forEach(container => Array.from(container.children).forEach(pill => {
+            pill.classList.toggle('is-active', filterSet.has(pill.getAttribute('data-value')));
+        }));
     }
 
     function handleFiles(files) {
         if (!files || files.length === 0) return;
         const file = files[0];
         const fileName = file.name.toLowerCase();
-        if (!fileName.endsWith('.sarif') && !fileName.endsWith('.json')) {
-            return showError("Invalid file format. Please use .sarif or .json files.");
-        }
+
+        if (!fileName.endsWith('.sarif') && !fileName.endsWith('.json')) return showError("Invalid file format. Please use .sarif or .json files.");
 
         Perf.groupStart(`Loading File: ${file.name}`);
         Perf.start('Total File Load');
         Perf.start('File Read');
 
         const reader = new FileReader();
-        reader.onload = (e) => {
+        reader.onload = event => {
             Perf.end('File Read');
-            try {
-                const json = parseJsonPerf(e.target.result);
-                loadSarifData(json, file.name, file.lastModified);
-            } catch (err) {
-                handleLoadError(err);
-            } finally {
-                Perf.end('Total File Load');
-                Perf.groupEnd();
-            }
+            try { loadSarifData(parseJson(event.target.result), file.name, file.lastModified); }
+            catch (err) { state.filename = ''; DOM.reportInfo.innerHTML = ''; showError(err.message || "Could not parse JSON."); }
+            finally { Perf.end('Total File Load'); Perf.groupEnd(); }
         };
-        reader.onerror = () => {
-            Perf.end('File Read');
-            showError("Error reading file.");
-            Perf.end('Total File Load');
-            Perf.groupEnd();
-        };
+        reader.onerror = () => { Perf.end('File Read'); showError("Error reading file."); Perf.end('Total File Load'); Perf.groupEnd(); };
         reader.readAsText(file);
-    }
-
-    function handleLoadError(err) {
-        state.filename = '';
-        reportInfoContainer.innerHTML = '';
-        showError(err.message || "Could not parse JSON.");
-        console.error(err);
     }
 
     function processSarif(sarif) {
         Perf.groupStart('Processing SARIF');
         Perf.start('Total SARIF Process');
 
-        if (!sarif?.runs || !Array.isArray(sarif.runs)) {
-            Perf.groupEnd();
-            throw new Error("Invalid SARIF: Missing 'runs' array.");
-        }
+        if (!sarif?.runs || !Array.isArray(sarif.runs)) { Perf.groupEnd(); throw new Error("Invalid SARIF: Missing 'runs' array."); }
+
         const run = sarif.runs[0] || {};
         const driver = run.tool?.driver || {};
         state.driverInfo = { name: driver.fullName || driver.name || "Unknown Tool", version: driver.semanticVersion || driver.version || "" };
 
-        let dateVal = run.invocations?.[0]?.endTimeUtc || run.invocations?.[0]?.startTimeUtc || sarif.time;
-        state.reportDate = dateVal ? new Date(dateVal) : (state.fileLastModified ? new Date(state.fileLastModified) : new Date());
+        const dateValue = run.invocations?.[0]?.endTimeUtc || run.invocations?.[0]?.startTimeUtc || sarif.time;
+        state.reportDate = dateValue ? new Date(dateValue) : (state.fileLastModified ? new Date(state.fileLastModified) : new Date());
 
-        const getDesc = (obj) => obj?.markdown || obj?.text || "";
+        const getDescription = obj => obj?.markdown || obj?.text || "";
 
         Perf.start('Extract Rules');
         state.rules.clear();
         (driver.rules || []).forEach(rule => {
-            let tags = rule.tags || rule.properties?.tags || [rule.properties?.category] || ["General"];
+            const tags = rule.tags || rule.properties?.tags || [rule.properties?.category] || ["General"];
             state.rules.set(rule.id, {
                 name: rule.shortDescription?.text || rule.name || rule.id,
                 categories: Array.isArray(tags) ? tags : ["General"],
                 defaultLevel: rule.defaultConfiguration?.level || "warning",
-                shortDescription: getDesc(rule.shortDescription),
-                fullDescription: getDesc(rule.fullDescription) || getDesc(rule.shortDescription)
+                shortDescription: getDescription(rule.shortDescription),
+                fullDescription: getDescription(rule.fullDescription) || getDescription(rule.shortDescription)
             });
         });
         Perf.end('Extract Rules');
 
         Perf.start('Extract Issues');
         state.rawIssues = (run.results || []).map(result => {
-            const ruleId = result.ruleId;
-            const rd = state.rules.get(ruleId) || { categories: ['Unknown'], name: ruleId };
-            const loc = result.locations?.[0]?.physicalLocation;
+            const ruleDef = state.rules.get(result.ruleId) || { categories: ['Unknown'], name: result.ruleId };
+            const location = result.locations?.[0]?.physicalLocation;
 
             return {
-                id: ruleId,
-                name: rd.name,
-                categories: rd.categories,
+                id: result.ruleId,
+                name: ruleDef.name,
+                categories: ruleDef.categories,
                 message: result.message?.markdown || result.message?.text || "No message",
-                file: loc?.artifactLocation?.uri || "Unknown",
-                line: loc?.region?.startLine || 0,
-                level: result.level || rd.defaultLevel || "warning",
-                snippet: loc?.contextRegion?.snippet?.text ? { text: loc.contextRegion.snippet.text, startLine: loc.contextRegion.startLine || 1 } : null,
-                region: loc?.region || {},
-                relatedLocations: (result.relatedLocations || []).map(rel => ({
-                    file: rel.physicalLocation?.artifactLocation?.uri || "Unknown",
-                    line: rel.physicalLocation?.region?.startLine || 0,
-                    message: rel.message?.markdown || rel.message?.text || ""
+                file: location?.artifactLocation?.uri || "Unknown",
+                line: location?.region?.startLine || 0,
+                level: result.level || ruleDef.defaultLevel || "warning",
+                snippet: location?.contextRegion?.snippet?.text ? { text: location.contextRegion.snippet.text, startLine: location.contextRegion.startLine || 1 } : null,
+                region: location?.region || {},
+                relatedLocations: (result.relatedLocations || []).map(related => ({
+                    file: related.physicalLocation?.artifactLocation?.uri || "Unknown",
+                    line: related.physicalLocation?.region?.startLine || 0,
+                    message: related.message?.markdown || related.message?.text || ""
                 }))
             };
         });
         Perf.end('Extract Issues');
 
-        const uniqueCats = new Set();
-        const uniqueIds = new Set();
-        state.rawIssues.forEach(i => { uniqueIds.add(i.id); i.categories.forEach(c => uniqueCats.add(c)); });
-        state.categories = uniqueCats;
-        state.uniqueIssueIds = uniqueIds;
+        state.categories = new Set(state.rawIssues.flatMap(issue => issue.categories));
+        state.filters.categories.forEach(c => { if (c !== FILTER_ALL) state.categories.add(c); });
 
-        renderPills(FILTER_DEFS.categories.container, state.categories);
-        renderPills(FILTER_DEFS.issueIds.container, state.uniqueIssueIds);
+        state.issueIds = new Set(state.rawIssues.map(issue => issue.id));
+        state.filters.issueIds.forEach(id => { if (id !== FILTER_ALL) state.issueIds.add(id); });
+
+        renderPills(FILTER_CONFIG.categories.container, state.categories);
+        renderPills(FILTER_CONFIG.issueIds.container, state.issueIds);
 
         updateMetrics();
         applyFilters();
@@ -1835,11 +957,11 @@
     }
 
     function showResultsUI() {
-        dropZone.classList.add('hidden');
-        resultsContainer.style.display = 'block';
+        DOM.dropZone.classList.add('is-hidden');
+        DOM.resultsContainer.style.display = 'block';
         const toolStr = `${state.driverInfo.name} ${state.driverInfo.version ? 'v' + state.driverInfo.version : ''}`;
         const dateStr = state.reportDate?.toLocaleString() || '';
-        reportInfoContainer.innerHTML = `
+        DOM.reportInfo.innerHTML = `
             <div class="info-line-primary">${sanitize(state.filename)}</div>
             <div class="info-line-secondary">${sanitize(toolStr)}</div>
             <div class="info-line-tertiary" title="${sanitize(dateStr)}">${sanitize(dateStr)}</div>
@@ -1848,31 +970,25 @@
 
     function resetApp() {
         Object.assign(state, {
-            rawIssues: [], filteredIssues: [], categories: new Set(), uniqueIssueIds: new Set(),
-            rules: new Map(), filename: '', driverInfo: { name: '', version: '' },
-            reportDate: null, fileLastModified: null
+            rawIssues: [], filteredIssues: [], categories: new Set(), issueIds: new Set(),
+            rules: new Map(), filename: '', driverInfo: { name: '', version: '' }, reportDate: null, fileLastModified: null
         });
-        state.filters = {
-            text: '', isRegex: state.filters.isRegex, categories: new Set(['all']),
-            issueIds: new Set(['all']), severities: new Set(['all'])
-        };
-        dropZone.classList.remove('hidden');
-        resultsContainer.style.display = 'none';
-        reportInfoContainer.innerHTML = '';
-        fileInput.value = ''; filterText.value = ''; searchHint.style.opacity = '1';
 
-        Object.entries(FILTER_DEFS).forEach(([key, { container }]) => {
-            if (key !== 'severities') renderPills(container, []);
-        });
-        updatePillVisuals([FILTER_DEFS.severities.container, metricDOM.grid], state.filters.severities);
+        DOM.dropZone.classList.remove('is-hidden');
+        DOM.resultsContainer.style.display = 'none';
+        DOM.reportInfo.innerHTML = '';
+        DOM.fileInput.value = '';
+        DOM.filterText.value = state.filters.text;
+        DOM.searchHint.style.opacity = state.filters.text ? '0' : '1';
+
+        Object.entries(FILTER_CONFIG).forEach(([key, config]) => { if (key !== 'severities') renderPills(config.container, []); });
+        updatePillVisuals([FILTER_CONFIG.severities.container, DOM.metrics.grid], state.filters.severities);
     }
 
     function renderPills(container, items) {
-        container.innerHTML = ['all', ...Array.from(items).sort()].map(item => {
-            if (item === 'all') return '<button class="pill active" data-value="all">All</button>';
-            return `<button class="pill" data-value="${item}">` +
-                   `<span class="pill-label">${sanitize(item)}</span><span class="pill-count"></span>` +
-                   `</button>`;
+        container.innerHTML = [FILTER_ALL, ...Array.from(items).sort()].map(item => {
+            if (item === FILTER_ALL) return `<button class="pill is-active" data-value="${FILTER_ALL}">All</button>`;
+            return `<button class="pill" data-value="${item}"><span class="pill-label">${sanitize(item)}</span><span class="pill-count"></span></button>`;
         }).join('');
     }
 
@@ -1881,34 +997,42 @@
         Perf.start('Total Update');
         Perf.start('Filtering');
 
+        let needsPillRender = false;
+        state.filters.categories.forEach(c => {
+            if (c !== FILTER_ALL && !state.categories.has(c)) { state.categories.add(c); needsPillRender = true; }
+        });
+        state.filters.issueIds.forEach(id => {
+            if (id !== FILTER_ALL && !state.issueIds.has(id)) { state.issueIds.add(id); needsPillRender = true; }
+        });
+
+        if (needsPillRender) {
+            renderPills(FILTER_CONFIG.categories.container, state.categories);
+            renderPills(FILTER_CONFIG.issueIds.container, state.issueIds);
+        }
+
         const query = state.filters.text;
         const queryLower = query.toLowerCase();
         let regex = null;
-        filterText.classList.remove('is-invalid');
+        DOM.filterText.classList.remove('is-invalid');
 
         if (state.filters.isRegex && query) {
-            try {
-                regex = new RegExp(query, 'i');
-            } catch (e) {
-                filterText.classList.add('is-invalid');
-            }
+            try { regex = new RegExp(query, 'i'); }
+            catch (e) { DOM.filterText.classList.add('is-invalid'); }
         }
 
-        const match = state.rawIssues.filter(i => {
-            if (!query) return true;
-            const id = i.id || '', msg = i.message || '', file = i.file || '';
-            if (state.filters.isRegex) return regex ? (regex.test(id) || regex.test(msg) || regex.test(file)) : false;
-            return id.toLowerCase().includes(queryLower) || msg.toLowerCase().includes(queryLower) || file.toLowerCase().includes(queryLower);
+        const matchedIssues = state.rawIssues.filter(issue => {
+            return !query || (state.filters.isRegex && regex ? (regex.test(issue.id) || regex.test(issue.message) || regex.test(issue.file)) :
+                (issue.id.toLowerCase().includes(queryLower) || issue.message.toLowerCase().includes(queryLower) || issue.file.toLowerCase().includes(queryLower)));
         });
-        updatePillCounts(match);
 
-        state.filteredIssues = match.filter(i => {
-            const sev = getSeverity(i.level);
-            const sMatch = state.filters.severities.has('all') || state.filters.severities.has(sev);
-            return sMatch &&
-                (state.filters.categories.has('all') || i.categories.some(c => state.filters.categories.has(c))) &&
-                (state.filters.issueIds.has('all') || state.filters.issueIds.has(i.id));
+        updatePillCounts(matchedIssues);
+
+        state.filteredIssues = matchedIssues.filter(issue => {
+            return (state.filters.severities.has(FILTER_ALL) || state.filters.severities.has(getSeverity(issue.level))) &&
+                   (state.filters.categories.has(FILTER_ALL) || issue.categories.some(c => state.filters.categories.has(c))) &&
+                   (state.filters.issueIds.has(FILTER_ALL) || state.filters.issueIds.has(issue.id));
         });
+
         updateURL();
         Perf.end('Filtering');
 
@@ -1922,62 +1046,55 @@
 
     function updatePillCounts(issues) {
         const counts = { categories: {}, issueIds: {}, severities: { error: 0, warning: 0, info: 0 } };
-        issues.forEach(i => {
-            counts.issueIds[i.id] = (counts.issueIds[i.id] || 0) + 1;
-            i.categories.forEach(c => counts.categories[c] = (counts.categories[c] || 0) + 1);
-            counts.severities[getSeverity(i.level)]++;
+        issues.forEach(issue => {
+            counts.issueIds[issue.id] = (counts.issueIds[issue.id] || 0) + 1;
+            issue.categories.forEach(category => counts.categories[category] = (counts.categories[category] || 0) + 1);
+            counts.severities[getSeverity(issue.level)]++;
         });
 
         const update = (key, val, count, label) => {
-            const p = FILTER_DEFS[key].container.querySelector(`[data-value="${val}"]`);
-            if (!p) return;
+            const element = FILTER_CONFIG[key].container.querySelector(`[data-value="${val}"]`);
+            if (!element) return;
             const name = label || val;
-            p.innerHTML = `<span class="pill-label">${sanitize(name)}</span><span class="pill-count">(${count})</span>`;
+            element.innerHTML = `<span class="pill-label">${sanitize(name)}</span><span class="pill-count">(${count})</span>`;
 
             const isActive = state.filters[key].has(val);
             const matchesQuery = state.filters.text && name.toLowerCase().includes(state.filters.text.toLowerCase());
 
-            p.classList.toggle('hidden', count === 0 && val !== 'all' && !isActive && !matchesQuery);
-            p.classList.toggle('active', isActive);
+            element.classList.toggle('is-hidden', count === 0 && val !== FILTER_ALL && !isActive && !matchesQuery);
+            element.classList.toggle('is-active', isActive);
         };
 
         const SEVERITY_LABELS = { error: 'Error', warning: 'Warning', info: 'Hint' };
-        Object.keys(SEVERITY_LABELS).forEach(s => update('severities', s, counts.severities[s], SEVERITY_LABELS[s]));
-        Array.from(state.categories).forEach(c => update('categories', c, counts.categories[c] || 0));
-        Array.from(state.uniqueIssueIds).forEach(id => update('issueIds', id, counts.issueIds[id] || 0));
+        Object.keys(SEVERITY_LABELS).forEach(severity => update('severities', severity, counts.severities[severity], SEVERITY_LABELS[severity]));
+        Array.from(state.categories).forEach(category => update('categories', category, counts.categories[category] || 0));
+        Array.from(state.issueIds).forEach(id => update('issueIds', id, counts.issueIds[id] || 0));
     }
 
     function updateMetrics() {
         const counts = { error: 0, warning: 0, info: 0 };
-        state.rawIssues.forEach(i => counts[getSeverity(i.level)]++);
+        state.rawIssues.forEach(issue => counts[getSeverity(issue.level)]++);
 
-        metricDOM.total.textContent = state.rawIssues.length;
-        metricDOM.error.textContent = counts.error;
-        metricDOM.warning.textContent = counts.warning;
-        metricDOM.info.textContent = counts.info;
+        DOM.metrics.total.textContent = state.rawIssues.length;
+        DOM.metrics.error.textContent = counts.error;
+        DOM.metrics.warning.textContent = counts.warning;
+        DOM.metrics.info.textContent = counts.info;
     }
 
     function renderList() {
-        issueList.innerHTML = '';
-        emptyFilterState.classList.add('hidden');
-        emptyReportState.classList.add('hidden');
+        DOM.issueList.innerHTML = '';
+        DOM.emptyFilterState.classList.add('is-hidden');
+        DOM.emptyReportState.classList.add('is-hidden');
 
-        if (state.rawIssues.length === 0) {
-            emptyReportState.classList.remove('hidden');
-            return;
-        }
+        if (state.rawIssues.length === 0) return DOM.emptyReportState.classList.remove('is-hidden');
+        if (state.filteredIssues.length === 0) return DOM.emptyFilterState.classList.remove('is-hidden');
 
-        if (state.filteredIssues.length === 0) {
-            emptyFilterState.classList.remove('hidden');
-            return;
-        }
-
-        const groups = {};
-        state.filteredIssues.forEach(i => {
-            const key = i.id + '::' + i.level;
-            if (!groups[key]) groups[key] = { id: i.id, level: i.level, categories: i.categories, instances: [] };
-            groups[key].instances.push(i);
-        });
+        const groups = state.filteredIssues.reduce((acc, issue) => {
+            const key = `${issue.id}::${issue.level}`;
+            if (!acc[key]) acc[key] = { id: issue.id, level: issue.level, categories: issue.categories, instances: [] };
+            acc[key].instances.push(issue);
+            return acc;
+        }, {});
 
         const fragment = document.createDocumentFragment();
         const weight = { error: 3, warning: 2, info: 1 };
@@ -1986,90 +1103,73 @@
             const diff = a.id.localeCompare(b.id);
             return diff !== 0 ? diff : weight[getSeverity(b.level)] - weight[getSeverity(a.level)];
         }).forEach(group => {
-            const rd = state.rules.get(group.id);
-            const descText = rd?.fullDescription || rd?.shortDescription || "No description provided.";
-            const sCls = `severity-${getSeverity(group.level)}`;
+            const ruleDef = state.rules.get(group.id);
+            const descText = ruleDef?.fullDescription || ruleDef?.shortDescription || "No description provided.";
+            const severityClass = `severity-${getSeverity(group.level)}`;
 
-            const groupClone = tplGroup.content.cloneNode(true);
-            const titleEl = groupClone.querySelector('.issue-group-title');
+            const groupClone = DOM.templates.group.content.cloneNode(true);
+            const titleElement = groupClone.querySelector('.issue-group-title');
 
-            titleEl.style.color = `var(--${sCls})`;
-            groupClone.querySelector('.severity-badge').classList.add(sCls);
+            titleElement.style.color = `var(--${severityClass})`;
+            groupClone.querySelector('.severity-badge').classList.add(severityClass);
             groupClone.querySelector('.issue-rule-id').textContent = group.id;
 
-            const catWrapper = groupClone.querySelector('.categories-wrapper');
-            group.categories.forEach(c => {
+            const categoryWrapper = groupClone.querySelector('.category-wrapper');
+            group.categories.forEach(category => {
                 const badge = document.createElement('span');
                 badge.className = 'category-badge';
-                badge.innerHTML = sanitize(c);
-                catWrapper.appendChild(badge);
+                badge.innerHTML = sanitize(category);
+                categoryWrapper.appendChild(badge);
             });
 
             groupClone.querySelector('.issue-group-count').textContent = group.instances.length;
             groupClone.querySelector('.rule-description-content').innerHTML = formatMarkdown(descText);
 
-            const contentEl = groupClone.querySelector('.issue-group-content');
+            let cardsHtml = '';
+            group.instances.forEach(issue => {
+                cardsHtml += `<div class="issue-card"><div class="issue-message markdown-content"><span>${formatMarkdown(issue.message)}</span></div>`;
+                cardsHtml += createLocationHtml(issue.file, issue.line);
 
-            group.instances.forEach(i => {
-                const cardClone = tplCard.content.cloneNode(true);
-                const cardEl = cardClone.querySelector('.issue-card');
+                issue.relatedLocations?.forEach(related => {
+                    cardsHtml += `<div class="related-location-card">`;
+                    if (related.message) cardsHtml += `<div class="related-location-msg">${formatMarkdown(related.message)}</div>`;
+                    cardsHtml += createLocationHtml(related.file, related.line);
+                    cardsHtml += `</div>`;
+                });
 
-                cardClone.querySelector('.issue-message').innerHTML = `<span>${formatMarkdown(i.message)}</span>`;
-                cardEl.appendChild(createLocationNode(i.file, i.line));
+                if (issue.snippet) {
+                    const lineHtml = issue.snippet.text.split('\n').map((text, idx) => {
+                        const currentLine = issue.snippet.startLine + idx;
+                        let codeText = sanitize(text);
 
-                if (i.relatedLocations?.length > 0) {
-                    i.relatedLocations.forEach(rel => {
-                        const relDiv = document.createElement('div');
-                        relDiv.className = 'related-location-card';
+                        const region = issue.region;
+                        const startLine = region.startLine;
+                        const endLine = region.endLine || startLine;
 
-                        if (rel.message) {
-                            const msgDiv = document.createElement('div');
-                            msgDiv.className = 'related-location-msg';
-                            msgDiv.innerHTML = formatMarkdown(rel.message);
-                            relDiv.appendChild(msgDiv);
+                        if (currentLine >= startLine && currentLine <= endLine) {
+                            const startCol = currentLine === startLine ? Math.max(0, (region.startColumn || 1) - 1) : 0;
+                            const endCol = currentLine === endLine && region.endColumn ? Math.min(text.length, region.endColumn - 1) : text.length;
+                            codeText = `${sanitize(text.substring(0, startCol))}<span class="code-highlight">` +
+                                       `${sanitize(text.substring(startCol, endCol))}</span>${sanitize(text.substring(endCol))}`;
                         }
-                        relDiv.appendChild(createLocationNode(rel.file, rel.line));
-                        cardEl.appendChild(relDiv);
-                    });
-                }
-
-                if (i.snippet) {
-                    const lHtml = i.snippet.text.split('\n').map((text, idx) => {
-                        const cur = i.snippet.startLine + idx;
-                        let cText = sanitize(text);
-                        if (cur >= i.region.startLine && cur <= (i.region.endLine || i.region.startLine)) {
-                            const start = cur === i.region.startLine ? Math.max(0, (i.region.startColumn || 1) - 1) : 0;
-                            const end = cur === (i.region.endLine || i.region.startLine) && i.region.endColumn
-                                ? Math.min(text.length, i.region.endColumn - 1) : text.length;
-                            cText = `${sanitize(text.substring(0, start))}<span class="code-highlight">` +
-                                    `${sanitize(text.substring(start, end))}</span>${sanitize(text.substring(end))}`;
-                        }
-                        return `<span class="code-line-number">${cur}</span><span class="code-content">${cText}</span>`;
+                        return `<span class="code-line-number">${currentLine}</span><span class="code-content">${codeText}</span>`;
                     }).join('');
-
-                    const snipDiv = document.createElement('div');
-                    snipDiv.className = 'issue-code-snippet';
-                    snipDiv.innerHTML = lHtml;
-                    cardEl.appendChild(snipDiv);
+                    cardsHtml += `<div class="issue-code-snippet">${lineHtml}</div>`;
                 }
-
-                contentEl.appendChild(cardClone);
+                cardsHtml += `</div>`;
             });
 
+            groupClone.querySelector('.issue-group-content').innerHTML = cardsHtml;
             fragment.appendChild(groupClone);
         });
-        issueList.appendChild(fragment);
+        DOM.issueList.appendChild(fragment);
     }
 
     async function tryLoadInitialData() {
         Perf.groupStart('App Initialization');
         Perf.start('App Init');
-        try {
-            await loadSarifFromScript('sarif-report', "Embedded Report");
-        } catch (err) {
-            showError("Error processing embedded report: " + err.message);
-            console.error(err);
-        }
+        try { await loadSarifFromScript('sarif-report', "Embedded Report"); }
+        catch (err) { showError(`Error processing embedded report: ${err.message}`); console.error(err); }
         Perf.end('App Init');
         Perf.groupEnd();
     }
