@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Android Lint SARIF Viewer</title>
-    
+
     <meta name="title" content="Android Lint SARIF Viewer">
     <meta name="description" content="A modern, offline-first viewer for Android Lint SARIF reports. Analyze your lint issues, filter by severity, and visualize code snippets directly in your browser.">
     <meta name="keywords" content="Android Lint, SARIF, Viewer, Static Analysis, Kotlin, Java, Android Studio, Code Quality, DevOps, CI/CD">
@@ -21,7 +21,10 @@
 
     <link rel="canonical" href="https://simonmarquis.github.io/Lint-Playground/">
 
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='24px' viewBox='0 -960 960 960' width='24px' fill='%233ddc84'%3E%3Cpath d='M480-200q66 0 113-47t47-113v-160q0-66-47-113t-113-47q-66 0-113 47t-47 113v160q0 66 47 113t113 47Zm-80-120h160v-80H400v80Zm0-160h160v-80H400v80Zm80 40Zm0 320q-65 0-120.5-32T272-240H160v-80h84q-3-20-3.5-40t-.5-40h-80v-80h80q0-20 .5-40t3.5-40h-84v-80h112q14-23 31.5-43t40.5-35l-64-66 56-56 86 86q28-9 57-9t57 9l88-86 56 56-66 66q23 15 41.5 34.5T688-640h112v80h-84q3 20 3.5 40t.5 40h80v80h-80q0 20-.5 40t-3.5 40h84v80H688q-32 56-87.5 88T480-120Z'/%3E%3C/svg%3E"/>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='48px' viewBox='0 -960 960 960' width='48px' fill='%233ddc84'%3E%3Cpath d='M480-200q66 0 113-47t47-113v-160q0-66-47-113t-113-47q-66 0-113 47t-47 113v160q0 66 47 113t113 47Zm-80-120h160v-80H400v80Zm0-160h160v-80H400v80Zm80 40Zm0 320q-65 0-120.5-32T272-240H160v-80h84q-3-20-3.5-40t-.5-40h-80v-80h80q0-20 .5-40t3.5-40h-84v-80h112q14-23 31.5-43t40.5-35l-64-66 56-56 86 86q28-9 57-9t57 9l88-86 56 56-66 66q23 15 41.5 34.5T688-640h112v80h-84q3 20 3.5 40t.5 40h80v80h-80q0 20-.5 40t-3.5 40h84v80H688q-32 56-87.5 88T480-120Z'/%3E%3C/svg%3E"/>
+    <link rel="alternate icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="shortcut icon" href="favicon.ico" />
+
     <style>
         :root {
             --primary: #3ddc84;
@@ -42,7 +45,7 @@
             --severity-warning: #ffca28;
             --severity-info: #42a5f5;
             --severity-ignore: #78909c;
-            --header-height: 76px; 
+            --header-height: 76px;
         }
 
         [data-theme="light"] {
@@ -148,7 +151,7 @@
             text-align: right;
             line-height: 1.3;
             max-width: 250px;
-            min-height: 3.2rem; 
+            min-height: 3.2rem;
         }
 
         .info-line-primary {
@@ -207,6 +210,19 @@
         .theme-toggle:hover {
             color: var(--text-main);
             background-color: var(--bg-elevation);
+        }
+
+        .theme-toggle .icon-sun,
+        .theme-toggle .icon-moon {
+            display: none;
+        }
+
+        [data-theme="dark"] .theme-toggle .icon-sun {
+            display: block;
+        }
+
+        [data-theme="light"] .theme-toggle .icon-moon {
+            display: block;
         }
 
         .header-link {
@@ -332,10 +348,10 @@
             background-color: var(--bg-surface);
             padding: 1rem;
             border-radius: 8px;
-            border: 1px solid var(--border); 
+            border: 1px solid var(--border);
             border: 1px solid color-mix(in srgb, var(--card-accent) 40%, transparent);
             transition: box-shadow 0.2s ease, border-color 0.2s ease;
-            position: relative; 
+            position: relative;
             overflow: hidden;
             cursor: pointer;
             user-select: none;
@@ -352,11 +368,11 @@
         .metric-card.active {
             border-color: var(--card-accent);
         }
-        
+
         .metric-card:hover .metric-icon, .metric-card.active .metric-icon {
             opacity: 1;
         }
-        
+
         .metric-icon {
             position: absolute;
             top: 1rem;
@@ -371,7 +387,7 @@
             justify-content: center;
             transition: opacity 0.2s ease;
         }
-        
+
         .metric-icon svg {
             width: 100%;
             height: 100%;
@@ -384,8 +400,8 @@
             color: var(--card-accent);
             position: relative;
             z-index: 1;
-            line-height: 1; 
-            margin-bottom: 0.25rem; 
+            line-height: 1;
+            margin-bottom: 0.25rem;
         }
 
         .metric-label {
@@ -395,7 +411,7 @@
             letter-spacing: 0.05em;
             position: relative;
             z-index: 1;
-            line-height: 1.2; 
+            line-height: 1.2;
         }
 
         .filter-section {
@@ -424,7 +440,7 @@
             background-color: var(--bg-body);
             border: 1px solid var(--border);
             color: var(--text-main);
-            padding: 0.75rem 0.75rem 0.75rem 40px;
+            padding: 0.75rem 48px 0.75rem 40px;
             border-radius: 6px;
             font-size: 1rem;
         }
@@ -433,6 +449,42 @@
             outline: none;
             border-color: var(--text-tertiary);
             box-shadow: 0 0 0 1px var(--text-tertiary);
+        }
+
+        .filter-input.is-invalid, .filter-input.is-invalid:focus {
+            border-color: var(--severity-error);
+            box-shadow: 0 0 0 1px var(--severity-error);
+        }
+
+        .filter-input.is-regex {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+        }
+
+        .regex-toggle {
+            position: absolute;
+            right: 8px;
+            background: none;
+            border: 1px solid transparent;
+            color: var(--text-secondary);
+            border-radius: 4px;
+            padding: 4px 6px;
+            font-family: monospace;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+            font-size: 0.9rem;
+        }
+
+        .regex-toggle:hover {
+            background-color: var(--bg-elevation);
+            color: var(--text-main);
+        }
+
+        .regex-toggle.active {
+            background-color: var(--primary-bg);
+            color: var(--primary);
+            border-color: var(--primary);
         }
 
         .search-icon {
@@ -516,8 +568,8 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            min-width: 0; 
-            max-width: 100%; 
+            min-width: 0;
+            max-width: 100%;
             line-height: 1.2;
             vertical-align: middle;
         }
@@ -592,14 +644,14 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
             border-color: var(--text-tertiary);
         }
-        
+
         .issue-group-header {
             background-color: var(--bg-elevation);
             padding: 0.8rem 1rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            flex-wrap: wrap; 
+            flex-wrap: wrap;
             gap: 0.5rem;
             user-select: none;
             transition: background-color 0.2s ease, border-color 0.2s ease;
@@ -613,7 +665,7 @@
         summary.issue-group-header::-webkit-details-marker {
             display: none; /* Hide default arrow in Safari/Legacy */
         }
-        
+
         .issue-group-title {
             display: flex;
             align-items: center;
@@ -913,6 +965,21 @@
             background-color: rgba(239, 83, 80, 0.1);
         }
 
+        .related-location-card {
+            margin-top: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            padding-left: 0.75rem;
+            border-left: 2px solid var(--border);
+        }
+
+        .related-location-msg {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            font-style: italic;
+        }
+
         .hidden { display: none !important; }
 
         .toast {
@@ -972,7 +1039,7 @@
             color: var(--text-secondary);
         }
 
-        .reset-btn {
+        .open-btn {
             background: none;
             border: none;
             cursor: pointer;
@@ -985,7 +1052,7 @@
             transition: color 0.2s ease, background-color 0.2s ease;
         }
 
-        .reset-btn:hover {
+        .open-btn:hover {
             color: var(--text-main);
             background-color: var(--bg-elevation);
         }
@@ -1021,873 +1088,993 @@
 </head>
 <body>
 
-    <header>
-        <h1>
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" style="color:var(--primary)">
-                <path d="M20 8h-2.81c-.45-.78-1.07-1.45-1.82-1.96L17 4.41 15.59 3l-2.17 2.17C12.96 5.06 12.49 5 12 5c-.49 0-.96.06-1.41.17L8.41 3 7 4.41l1.62 1.63C7.88 6.55 7.26 7.22 6.81 8H4v2h2.09c-.05.33-.09.66-.09 1v1H4v2h2v1c0 .34.04.67.09 1H4v2h2.81c1.04 1.79 2.97 3 5.19 3s4.15-1.21 5.19-3H20v-2h-2.09c.05-.33.09-.66.09-1v-1h2v-2h-2v-1c0-.34-.04-.67-.09-1H20V8zm-6 8h-4v-2h4v2zm0-4h-4v-2h4v2z"/>
-            </svg>
-            Android Lint <span>SARIF Viewer</span>
-        </h1>
-        <span class="status-badge">🚧 Work in Progress 🚧</span>
-        <div class="header-controls">
-            <div id="report-info"></div>
+<header>
+    <h1>
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" style="color:var(--primary)">
+            <path d="M20 8h-2.81c-.45-.78-1.07-1.45-1.82-1.96L17 4.41 15.59 3l-2.17 2.17C12.96 5.06 12.49 5 12 5c-.49 0-.96.06-1.41.17L8.41 3 7 4.41l1.62 1.63C7.88 6.55 7.26 7.22 6.81 8H4v2h2.09c-.05.33-.09.66-.09 1v1H4v2h2v1c0 .34.04.67.09 1H4v2h2.81c1.04 1.79 2.97 3 5.19 3s4.15-1.21 5.19-3H20v-2h-2.09c.05-.33.09-.66.09-1v-1h2v-2h-2v-1c0-.34-.04-.67-.09-1H20V8zm-6 8h-4v-2h4v2zm0-4h-4v-2h4v2z"/>
+        </svg>
+        Android Lint <span>SARIF Viewer</span>
+    </h1>
+    <span class="status-badge">🚧 Work in Progress 🚧</span>
+    <div class="header-controls">
+        <div id="report-info"></div>
 
-            <button id="reset-button" class="reset-btn hidden" title="Load New File">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-                    <line x1="12" y1="11" x2="12" y2="17"></line>
-                    <line x1="9" y1="14" x2="15" y2="14"></line>
-                </svg>
-            </button>
-            <button id="theme-toggle" class="theme-toggle" title="Toggle Theme"></button>
-            <a href="https://github.com/SimonMarquis/Lint-Playground?utm_source=sarif-viewer" target="_blank" rel="noopener noreferrer" class="header-link" title="View on GitHub">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
-                </svg>
-            </a>
-        </div>
-    </header>
-
-    <main>
-        <div id="drop-zone">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <button id="open-button" class="open-btn" title="Load New File">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
                 <line x1="12" y1="11" x2="12" y2="17"></line>
                 <line x1="9" y1="14" x2="15" y2="14"></line>
             </svg>
-            <div class="drop-text-main">Drop your SARIF file here</div>
-            
-            <div class="or-separator">
-                <span>or</span>
-            </div>
+        </button>
+        <button id="theme-toggle" class="theme-toggle" title="Toggle Theme">
+            <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+        </button>
+        <a href="https://github.com/SimonMarquis/Lint-Playground?utm_source=sarif-viewer" target="_blank" rel="noopener noreferrer" class="header-link" title="View on GitHub">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+            </svg>
+        </a>
+    </div>
+</header>
 
-            <div class="drop-actions" id="load-example-wrapper">
-                load report from <strong>android/nowinandroid</strong> project
-            </div>
-            <input type="file" id="file-input" accept=".sarif,.json" style="display:none">
-        </div>
-
-        <div id="results-container">
-            <div class="metrics-grid">
-                <div class="metric-card active" data-value="all">
-                    <div class="metric-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                    </div>
-                    <div class="metric-value" id="metric-total">0</div>
-                    <div class="metric-label">Total Issues</div>
-                </div>
-                <div class="metric-card is-error" data-value="error">
-                    <div class="metric-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                            <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
-                            <line x1="9" y1="9" x2="15" y2="15"></line>
-                            <line x1="15" y1="9" x2="9" y2="15"></line>
-                        </svg>
-                    </div>
-                    <div class="metric-value" id="metric-errors">0</div>
-                    <div class="metric-label">Errors</div>
-                </div>
-                <div class="metric-card is-warning" data-value="warning">
-                    <div class="metric-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-                    </div>
-                    <div class="metric-value" id="metric-warnings">0</div>
-                    <div class="metric-label">Warnings</div>
-                </div>
-                <div class="metric-card is-info" data-value="info">
-                    <div class="metric-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                    </div>
-                    <div class="metric-value" id="metric-info">0</div>
-                    <div class="metric-label">Hints</div>
-                </div>
-            </div>
-
-            <div class="filter-section">
-                <div class="search-row">
-                    <div class="search-icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="11" cy="11" r="8"></circle>
-                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                        </svg>
-                    </div>
-                    <input type="text" id="filter-text" class="filter-input">
-                    <span class="search-hint" id="search-hint">Type <kbd>/</kbd> to search</span>
-                </div>
-                <div class="filter-group">
-                    <div class="filter-label">Severity</div>
-                    <div class="pills-container" id="severity-pills">
-                        <button class="pill active" data-value="all">All</button>
-                        <button class="pill" data-value="error" data-severity="error">Error</button>
-                        <button class="pill" data-value="warning" data-severity="warning">Warning</button>
-                        <button class="pill" data-value="info" data-severity="info">Hint</button>
-                    </div>
-                </div>
-                <div class="filter-group">
-                    <div class="filter-label">Category</div>
-                    <div class="pills-container" id="category-pills">
-                        <button class="pill active" data-value="all">All</button>
-                    </div>
-                </div>
-                <div class="filter-group">
-                    <div class="filter-label">Issue ID</div>
-                    <div class="pills-container" id="issue-id-pills">
-                        <button class="pill active" data-value="all">All</button>
-                    </div>
-                </div>
-            </div>
-
-            <div id="issue-list" class="issue-list"></div>
-            <div id="empty-filter-state" class="empty-state hidden">
-                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    <line x1="8" y1="11" x2="14" y2="11"></line>
-                </svg>
-                <span class="empty-state-title">No matching issues found!</span>
-                <span class="empty-state-subtitle">Try adjusting your filters or search query.</span>
-            </div>
-        </div>
-    </main>
-
-    <div id="toast" class="toast hidden"></div>
-
-    <div id="drag-overlay" class="hidden">
+<main>
+    <div id="drop-zone">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
             <line x1="12" y1="11" x2="12" y2="17"></line>
             <line x1="9" y1="14" x2="15" y2="14"></line>
         </svg>
-        <h2 style="font-size: 1.5rem; font-weight: 600;">Drop to Load New File</h2>
+        <div class="drop-text-main">Drop your SARIF file here</div>
+
+        <div class="or-separator">
+            <span>or</span>
+        </div>
+
+        <div class="drop-actions" id="load-example-wrapper">
+            load report from <strong>android/nowinandroid</strong> project
+        </div>
+        <input type="file" id="file-input" accept=".sarif,.json" style="display:none">
     </div>
 
-    <script id="sarif-example" data-src="lint-results-demoDebug.sarif" type="application/json"></script>
-    <!--<script id="sarif-example" type="application/gzip+base64">H4sICJmRi2kAA3NtYWxsLnNhcmlmAMVVTW/bMAz9K4IwoIel9up2wJqlWbvusAIdMDTdaRkCxWJsDbZkSHTSrMh/H2U7qfPdw4A5h+iDfHokn6hn/sbFKeSCd3mKWLhuGFoxCxKFaTkuHdjYaASNQWzy0Ain3CnGLnTCqsmpKyAOc+EQbDioYFAst6rpaRScBe+C385o3uFTsE7RqMurZVqxpXa8+/OZozEZ7z5zaRVZ+ZEWOZDljZbWKMnulcY1iA9B1EBkUGMoSctfhZWxkSAf4ck7uNRY/AIutqrAypMO81stU1YtLDpcwkSUGd4aPVFJacXSIYMpED0O1hrrDQtrCrCo/MmEJxLPgN8aayFGDc7RyXeUN6srDJGpPzXYr8Wi0zD9oSm98gGcKW0M7jDX2pjZlfUr2M6E1Uon+/l+BzsxNhc6hjaxx3lhjtAZFJBlhM1WGTlGRhuE12WOmHgynGIlwLq0vsh3u8qbk4dIYGdVHVpPccgH5ThXOOQdRiGVmWSUS3bdbC9T6smt15nmJq4CqUkU6dypWGT3zao/VFAoExFje620ijBEUYTO+uuhdEiHhJmYmxJDMlZThfOR3wie8oxXsSaNs0OCJLFTSGfvO/X01mRlTrvReYeDli+7NFntXRJMdVef8GEnWkRoWhUFYCtbjL7e5xLR6KFmzSfqO9dV8mrIr98qGboqg6Nxbci3TevgRjMlMSWnmRXFqOkcu8z96VcvhdmLl4JKUtwCZGGfLxZeJ52WNrYv1LY6HlNYVZydPAS1CIKych3VsxNGtQNhHUPDxsDqzbY+ljfrHytkKrKS/moW7qA2LjakcXbZksbFmjLOoyPK2C+M5or4Vkw1IL4jPxzy/rc5uymKXkO1X9dv0zz24Y4cIPpwyGvQDA/7rdWCvJrWN6jmh10zkyiSZ//e/69Md0hl2eK2BULtwj85ykiSmXJMMHr4cqNZrpxrut5HJulFIoGyHIRuPEi1Q/6prZKq5f0/iUQbEjmPWhKJ1iVytHnskkhv9RrtEcC6XuqsbuimF76ANHXyv7+XESPqlwgAAA==</script>-->
-    <!-- Placeholder for embedded report (populated by CI/CD or other tools) -->
-    <script id="sarif-report" type="application/gzip+base64"></script>
+    <div id="results-container">
+        <div class="metrics-grid">
+            <div class="metric-card active" data-value="all">
+                <div class="metric-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                </div>
+                <div class="metric-value" id="metric-total">0</div>
+                <div class="metric-label">Total Issues</div>
+            </div>
+            <div class="metric-card is-error" data-value="error">
+                <div class="metric-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
+                        <line x1="9" y1="9" x2="15" y2="15"></line>
+                        <line x1="15" y1="9" x2="9" y2="15"></line>
+                    </svg>
+                </div>
+                <div class="metric-value" id="metric-errors">0</div>
+                <div class="metric-label">Errors</div>
+            </div>
+            <div class="metric-card is-warning" data-value="warning">
+                <div class="metric-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                </div>
+                <div class="metric-value" id="metric-warnings">0</div>
+                <div class="metric-label">Warnings</div>
+            </div>
+            <div class="metric-card is-info" data-value="info">
+                <div class="metric-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                </div>
+                <div class="metric-value" id="metric-info">0</div>
+                <div class="metric-label">Hints</div>
+            </div>
+        </div>
 
-    <script>
-        const debounce = (fn, delay) => {
-            let timeoutId;
-            return (...args) => {
-                clearTimeout(timeoutId);
-                timeoutId = setTimeout(() => fn(...args), delay);
-            };
+        <div class="filter-section">
+            <div class="search-row">
+                <div class="search-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </div>
+                <input type="text" id="filter-text" class="filter-input">
+                <span class="search-hint" id="search-hint">Type <kbd>/</kbd> to search</span>
+                <button id="regex-toggle" class="regex-toggle" title="Use Regular Expression">.*</button>
+            </div>
+            <div class="filter-group">
+                <div class="filter-label">Severity</div>
+                <div class="pills-container" id="severity-pills">
+                    <button class="pill active" data-value="all">All</button>
+                    <button class="pill" data-value="error" data-severity="error">Error</button>
+                    <button class="pill" data-value="warning" data-severity="warning">Warning</button>
+                    <button class="pill" data-value="info" data-severity="info">Hint</button>
+                </div>
+            </div>
+            <div class="filter-group">
+                <div class="filter-label">Category</div>
+                <div class="pills-container" id="category-pills">
+                    <button class="pill active" data-value="all">All</button>
+                </div>
+            </div>
+            <div class="filter-group">
+                <div class="filter-label">Issue ID</div>
+                <div class="pills-container" id="issue-id-pills">
+                    <button class="pill active" data-value="all">All</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="issue-list" class="issue-list"></div>
+
+        <div id="empty-filter-state" class="empty-state hidden">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                <line x1="8" y1="11" x2="14" y2="11"></line>
+            </svg>
+            <span class="empty-state-title">No matching issues found!</span>
+            <span class="empty-state-subtitle">Try adjusting your filters or search query.</span>
+        </div>
+
+        <div id="empty-report-state" class="empty-state hidden">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            <span class="empty-state-title">No issues found!</span>
+            <span class="empty-state-subtitle">This report contains no lint issues. Great job!</span>
+        </div>
+    </div>
+</main>
+
+<template id="tpl-location">
+    <button class="issue-location">
+        <span class="path-dir"></span><span class="path-name"></span><span class="line-number"></span>
+    </button>
+</template>
+
+<template id="tpl-issue-card">
+    <div class="issue-card">
+        <div class="issue-message markdown-content"></div>
+    </div>
+</template>
+
+<template id="tpl-issue-group">
+    <div class="issue-group">
+        <details class="rule-details">
+            <summary class="issue-group-header">
+                <div class="issue-group-title">
+                    <span class="severity-badge"></span>
+                    <span class="issue-rule-id"></span>
+                    <svg class="chevron-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </div>
+                <div class="issue-group-meta">
+                    <div class="categories-wrapper"></div>
+                    <span class="issue-group-count"></span>
+                </div>
+            </summary>
+            <div class="rule-description-content markdown-content"></div>
+        </details>
+        <div class="issue-group-content"></div>
+    </div>
+</template>
+
+<div id="toast" class="toast hidden"></div>
+
+<div id="drag-overlay" class="hidden">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+        <line x1="12" y1="11" x2="12" y2="17"></line>
+        <line x1="9" y1="14" x2="15" y2="14"></line>
+    </svg>
+    <h2 style="font-size: 1.5rem; font-weight: 600;">Drop to Load New File</h2>
+</div>
+
+<script id="sarif-example" data-src="lint-results-demoDebug.sarif" type="application/json"></script>
+<!--<script id="sarif-example" type="application/gzip+base64">H4sICJmRi2kAA3NtYWxsLnNhcmlmAMVVTW/bMAz9K4IwoIel9up2wJqlWbvusAIdMDTdaRkCxWJsDbZkSHTSrMh/H2U7qfPdw4A5h+iDfHokn6hn/sbFKeSCd3mKWLhuGFoxCxKFaTkuHdjYaASNQWzy0Ain3CnGLnTCqsmpKyAOc+EQbDioYFAst6rpaRScBe+C385o3uFTsE7RqMurZVqxpXa8+/OZozEZ7z5zaRVZ+ZEWOZDljZbWKMnulcY1iA9B1EBkUGMoSctfhZWxkSAf4ck7uNRY/AIutqrAypMO81stU1YtLDpcwkSUGd4aPVFJacXSIYMpED0O1hrrDQtrCrCo/MmEJxLPgN8aayFGDc7RyXeUN6srDJGpPzXYr8Wi0zD9oSm98gGcKW0M7jDX2pjZlfUr2M6E1Uon+/l+BzsxNhc6hjaxx3lhjtAZFJBlhM1WGTlGRhuE12WOmHgynGIlwLq0vsh3u8qbk4dIYGdVHVpPccgH5ThXOOQdRiGVmWSUS3bdbC9T6smt15nmJq4CqUkU6dypWGT3zao/VFAoExFje620ijBEUYTO+uuhdEiHhJmYmxJDMlZThfOR3wie8oxXsSaNs0OCJLFTSGfvO/X01mRlTrvReYeDli+7NFntXRJMdVef8GEnWkRoWhUFYCtbjL7e5xLR6KFmzSfqO9dV8mrIr98qGboqg6Nxbci3TevgRjMlMSWnmRXFqOkcu8z96VcvhdmLl4JKUtwCZGGfLxZeJ52WNrYv1LY6HlNYVZydPAS1CIKych3VsxNGtQNhHUPDxsDqzbY+ljfrHytkKrKS/moW7qA2LjakcXbZksbFmjLOoyPK2C+M5or4Vkw1IL4jPxzy/rc5uymKXkO1X9dv0zz24Y4cIPpwyGvQDA/7rdWCvJrWN6jmh10zkyiSZ//e/69Md0hl2eK2BULtwj85ykiSmXJMMHr4cqNZrpxrut5HJulFIoGyHIRuPEi1Q/6prZKq5f0/iUQbEjmPWhKJ1iVytHnskkhv9RrtEcC6XuqsbuimF76ANHXyv7+XESPqlwgAAA==</script>-->
+<!-- Placeholder for embedded report (populated by CI/CD or other tools) -->
+<script id="sarif-report" type="application/gzip+base64"></script>
+
+<script>
+    const Perf = {
+        start(name) {
+            performance.mark(`${name}-start`);
+        },
+        end(name) {
+            performance.mark(`${name}-end`);
+            performance.measure(name, `${name}-start`, `${name}-end`);
+            const measures = performance.getEntriesByName(name);
+            const measure = measures[measures.length - 1];
+            const duration = parseFloat(measure.duration.toFixed(2));
+            console.log(`⏱️ [${name}] took ${duration}ms`);
+
+            performance.clearMarks(`${name}-start`);
+            performance.clearMarks(`${name}-end`);
+            performance.clearMeasures(name);
+        },
+        groupStart(name, collapsed = false) {
+            if (collapsed) console.groupCollapsed(name);
+            else console.group(name);
+        },
+        groupEnd() {
+            console.groupEnd();
+        }
+    };
+
+    const debounce = (fn, delay) => {
+        let timeoutId;
+        return (...args) => {
+            const callNow = !timeoutId;
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => {
+                timeoutId = null;
+                if (!callNow) fn(...args);
+            }, delay);
+            if (callNow) fn(...args);
         };
+    };
 
-        async function decodeBase64GzipJson(b64) {
-            if (!("DecompressionStream" in window)) {
-                showError("DecompressionStream('gzip') not supported in this browser.");
-                return null;
+    function parseJsonPerf(text) {
+        Perf.start('JSON Parse');
+        const json = JSON.parse(text);
+        Perf.end('JSON Parse');
+        return json;
+    }
+
+    async function decodeBase64GzipJson(b64) {
+        if (!("DecompressionStream" in window)) {
+            showError("DecompressionStream('gzip') not supported in this browser.");
+            return null;
+        }
+        try {
+            Perf.start('Base64 Decode & Unzip');
+            const cleanB64 = b64.trim();
+            const binaryString = atob(cleanB64);
+            const bytes = Uint8Array.from(binaryString, c => c.charCodeAt(0));
+            const stream = new Blob([bytes]).stream()
+                .pipeThrough(new DecompressionStream("gzip"));
+            const text = await new Response(stream).text();
+            Perf.end('Base64 Decode & Unzip');
+
+            return parseJsonPerf(text);
+        } catch (err) {
+            console.error("Decompression failed", err);
+            showError("Failed to decompress example file: " + err.message);
+            return null;
+        }
+    }
+
+    async function copyToClipboard(text) {
+        try {
+            await navigator.clipboard.writeText(text);
+            showToast(`Path copied to clipboard!`, false);
+        } catch (err) {
+            console.error('Failed to copy: ', err);
+            showToast('Failed to copy to clipboard', true);
+        }
+    }
+
+    const toast = document.getElementById('toast');
+    function showToast(msg, isError = false) {
+        toast.textContent = msg;
+        toast.className = 'toast';
+        if (isError) toast.classList.add('toast-error');
+        else toast.classList.add('toast-info');
+        toast.classList.remove('hidden');
+        setTimeout(() => toast.classList.add('hidden'), isError ? 10000 : 3000);
+    }
+
+    function showError(msg) { showToast(msg, true); }
+
+    function sanitize(str) {
+        if (!str) return '';
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
+    function formatMarkdown(text) {
+        if (!text) return '';
+        return sanitize(text).split(/(```[\s\S]*?```|`[^`]+`)/).map(part => {
+            if (part.startsWith('```') && part.endsWith('```')) {
+                const [, lang, content] = part.match(/```(\w*)\n?([\s\S]*?)```/) || [];
+                return content ? `<pre><code${lang ? ` class="language-${lang}"` : ''}>${content.trimEnd()}</code></pre>` : part;
             }
-            try {
-                const cleanB64 = b64.trim();
-                const binaryString = atob(cleanB64);
-                const bytes = Uint8Array.from(binaryString, c => c.charCodeAt(0));
-                const stream = new Blob([bytes]).stream()
-                    .pipeThrough(new DecompressionStream("gzip"));
-                const text = await new Response(stream).text();
-                return JSON.parse(text);
-            } catch (err) {
-                console.error("Decompression failed", err);
-                showError("Failed to decompress example file: " + err.message);
-                return null;
+            if (part.startsWith('`') && part.endsWith('`') && part.length > 1) {
+                return `<code class="formatted-code">${part.slice(1, -1)}</code>`;
             }
+            return part.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+                       .replace(/__([^_]+)__/g, '<u>$1</u>')
+                       .replace(/~~([^~]+)~~/g, '<del>$1</del>')
+                       .replace(/\*([^*]+)\*/g, '<em>$1</em>');
+        }).join('');
+    }
+
+    function getSeverity(level) {
+        const l = (level || 'warning').toLowerCase();
+        return l === 'error' ? 'error' : (l === 'note' || l === 'none' ? 'info' : 'warning');
+    }
+
+    const tplGroup = document.getElementById('tpl-issue-group');
+    const tplCard = document.getElementById('tpl-issue-card');
+    const tplLocation = document.getElementById('tpl-location');
+
+    function createLocationNode(file, line) {
+        const clone = tplLocation.content.cloneNode(true);
+        const btn = clone.querySelector('button');
+        btn.dataset.path = `${file}:${line}`;
+        const last = file.lastIndexOf('/');
+        clone.querySelector('.path-dir').textContent = file.substring(0, last + 1);
+        clone.querySelector('.path-name').textContent = file.substring(last + 1);
+        clone.querySelector('.line-number').textContent = `:${line}`;
+        return clone;
+    }
+
+    const themeToggle = document.getElementById('theme-toggle');
+
+    function initTheme() {
+        const savedTheme = localStorage.getItem('theme');
+        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        applyTheme(savedTheme || (systemDark ? 'dark' : 'light'), false);
+    }
+
+    function applyTheme(theme, persist = true) {
+        document.documentElement.setAttribute('data-theme', theme);
+        if (persist) localStorage.setItem('theme', theme);
+    }
+
+    themeToggle.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+        applyTheme(currentTheme === 'dark' ? 'light' : 'dark', true);
+    });
+
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+        if (!localStorage.getItem('theme')) applyTheme(e.matches ? 'dark' : 'light', false);
+    });
+
+    initTheme();
+
+    const state = {
+        rawIssues: [],
+        filteredIssues: [],
+        categories: new Set(),
+        uniqueIssueIds: new Set(),
+        rules: new Map(),
+        filename: '',
+        driverInfo: { name: '', version: '' },
+        reportDate: null,
+        fileLastModified: null,
+        filters: {
+            text: '',
+            isRegex: false,
+            categories: new Set(['all']),
+            issueIds: new Set(['all']),
+            severities: new Set(['all'])
         }
+    };
 
-        async function copyToClipboard(text) {
-            try {
-                await navigator.clipboard.writeText(text);
-                showToast(`Path copied to clipboard!`, false);
-            } catch (err) {
-                console.error('Failed to copy: ', err);
-                showToast('Failed to copy to clipboard', true);
-            }
-        }
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    const resultsContainer = document.getElementById('results-container');
+    const reportInfoContainer = document.getElementById('report-info');
+    const openButton = document.getElementById('open-button');
+    const issueList = document.getElementById('issue-list');
+    const emptyFilterState = document.getElementById('empty-filter-state');
+    const emptyReportState = document.getElementById('empty-report-state');
+    const filterText = document.getElementById('filter-text');
+    const searchHint = document.getElementById('search-hint');
+    const regexToggle = document.getElementById('regex-toggle');
+    const dragOverlay = document.getElementById('drag-overlay');
+    const exampleLoadWrapper = document.getElementById('load-example-wrapper');
 
-        const toast = document.getElementById('toast');
-        function showToast(msg, isError = false) {
-            toast.textContent = msg;
-            toast.className = 'toast';
-            if (isError) toast.classList.add('toast-error');
-            else toast.classList.add('toast-info');
-            toast.classList.remove('hidden');
-            setTimeout(() => toast.classList.add('hidden'), isError ? 10000 : 3000);
-        }
+    const metricDOM = {
+        grid: document.querySelector('.metrics-grid'),
+        total: document.getElementById('metric-total'),
+        error: document.getElementById('metric-errors'),
+        warning: document.getElementById('metric-warnings'),
+        info: document.getElementById('metric-info')
+    };
 
-        function showError(msg) { showToast(msg, true); }
+    const FILTER_DEFS = {
+        severities: { param: 'severity', container: document.getElementById('severity-pills') },
+        categories: { param: 'category', container: document.getElementById('category-pills') },
+        issueIds: { param: 'issueId', container: document.getElementById('issue-id-pills') }
+    };
 
-        function sanitize(str) {
-            if (!str) return '';
-            const div = document.createElement('div');
-            div.textContent = str;
-            return div.innerHTML;
-        }
+    function updateURL() {
+        const params = new URLSearchParams();
+        if (state.filters.text) params.set('query', state.filters.text);
+        if (state.filters.isRegex) params.set('regex', 'true');
 
-        function formatMarkdown(text) {
-            if (!text) return '';
-            let html = sanitize(text);
-            const parts = html.split(/(```[\s\S]*?```|`[^`]+`)/);
-            for (let i = 0; i < parts.length; i++) {
-                if (parts[i].startsWith('```') && parts[i].endsWith('```')) {
-                    const match = parts[i].match(/```(\w*)\n?([\s\S]*?)```/);
-                    if (match) {
-                        const lang = match[1];
-                        const content = match[2].trimEnd();
-                        const cls = lang ? ` class="language-${lang}"` : '';
-                        parts[i] = `<pre><code${cls}>${content}</code></pre>`;
-                    }
-                } else if (parts[i].startsWith('`') && parts[i].endsWith('`') && parts[i].length > 1) {
-                    const content = parts[i].substring(1, parts[i].length - 1);
-                    parts[i] = `<code class="formatted-code">${content}</code>`;
-                } else {
-                    let s = parts[i];
-                    s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>'); 
-                    s = s.replace(/__([^_]+)__/g, '<u>$1</u>');      
-                    s = s.replace(/~~([^~]+)~~/g, '<del>$1</del>');   
-                    s = s.replace(/\*([^*]+)\*/g, '<em>$1</em>');     
-                    parts[i] = s;
-                }
-            }
-            return parts.join('');
-        }
-
-        const themeToggle = document.getElementById('theme-toggle');
-        const iconSun = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
-        const iconMoon = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
-
-        function initTheme() {
-            const savedTheme = localStorage.getItem('theme');
-            const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            applyTheme(savedTheme || (systemDark ? 'dark' : 'light'), false);
-        }
-
-        function applyTheme(theme, persist = true) {
-            document.documentElement.setAttribute('data-theme', theme);
-            themeToggle.innerHTML = theme === 'dark' ? iconSun : iconMoon;
-            if (persist) localStorage.setItem('theme', theme);
-        }
-
-        themeToggle.addEventListener('click', () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
-            applyTheme(currentTheme === 'dark' ? 'light' : 'dark', true);
-        });
-
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-            if (!localStorage.getItem('theme')) applyTheme(e.matches ? 'dark' : 'light', false);
-        });
-
-        initTheme();
-
-        const state = {
-            rawIssues: [],
-            filteredIssues: [],
-            categories: new Set(),
-            uniqueIssueIds: new Set(),
-            rules: new Map(),
-            filename: '',
-            driverInfo: { name: '', version: '' },
-            reportDate: null,
-            fileLastModified: null,
-            filters: {
-                text: '',
-                categories: new Set(['all']),
-                issueIds: new Set(['all']),
-                severities: new Set(['all'])
-            }
-        };
-
-        const dropZone = document.getElementById('drop-zone');
-        const fileInput = document.getElementById('file-input');
-        const resultsContainer = document.getElementById('results-container');
-        const reportInfoContainer = document.getElementById('report-info');
-        const resetButton = document.getElementById('reset-button');
-        const issueList = document.getElementById('issue-list');
-        const emptyFilterState = document.getElementById('empty-filter-state');
-        const filterText = document.getElementById('filter-text');
-        const searchHint = document.getElementById('search-hint');
-        const severityPillsContainer = document.getElementById('severity-pills');
-        const categoryPillsContainer = document.getElementById('category-pills');
-        const issueIdPillsContainer = document.getElementById('issue-id-pills');
-        const dragOverlay = document.getElementById('drag-overlay');
-        const exampleLoadWrapper = document.getElementById('load-example-wrapper');
-        const metricTotal = document.getElementById('metric-total');
-        const metricErrors = document.getElementById('metric-errors');
-        const metricWarnings = document.getElementById('metric-warnings');
-        const metricInfo = document.getElementById('metric-info');
-
-        function updateURL() {
-            const params = new URLSearchParams();
-            if (state.filters.text) params.set('query', state.filters.text);
-            
-            ['categories', 'issueIds', 'severities'].forEach(key => {
-                const set = state.filters[key];
-                if (!set.has('all') && set.size > 0) {
-                    const paramName = key === 'issueIds' ? 'issueId' : (key === 'severities' ? 'severity' : 'category');
-                    params.set(paramName, Array.from(set).join(','));
-                }
-            });
-
-            const queryString = params.toString();
-            const newUrl = queryString ? `${window.location.pathname}?${queryString}` : window.location.pathname;
-            try {
-                window.history.replaceState({ path: newUrl }, '', newUrl);
-            } catch (e) {
-                // Silently fail in restricted environments (blob:, sandboxed iframes)
-            }
-        }
-
-        function readURL() {
-            const params = new URLSearchParams(window.location.search);
-            
-            const query = params.get('query');
-            if (query) {
-                state.filters.text = query;
-                filterText.value = query;
-                searchHint.style.opacity = '0';
-            } else {
-                state.filters.text = '';
-                filterText.value = '';
-                searchHint.style.opacity = '1';
-            }
-
-            const readSet = (paramName, targetSet) => {
-                const val = params.get(paramName);
-                targetSet.clear();
-                if (val) {
-                    val.split(',').forEach(v => targetSet.add(v.trim()));
-                } else {
-                    targetSet.add('all');
-                }
-            };
-
-            readSet('severity', state.filters.severities);
-            readSet('category', state.filters.categories);
-            readSet('issueId', state.filters.issueIds);
-        }
-
-        window.addEventListener('popstate', () => {
-            readURL();
-            if (state.rawIssues.length > 0) {
-                updateSeverityVisuals();
-                updatePillVisuals(categoryPillsContainer, state.filters.categories);
-                updatePillVisuals(issueIdPillsContainer, state.filters.issueIds);
-                applyFilters();
+        Object.entries(FILTER_DEFS).forEach(([key, { param }]) => {
+            const set = state.filters[key];
+            if (!set.has('all') && set.size > 0) {
+                params.set(param, Array.from(set).join(','));
             }
         });
 
+        const queryString = params.toString();
+        const newUrl = queryString ? `${window.location.pathname}?${queryString}` : window.location.pathname;
+        try {
+            window.history.replaceState({ path: newUrl }, '', newUrl);
+        } catch (e) {
+            // Silently fail in restricted environments
+        }
+    }
+
+    function readURL() {
+        const params = new URLSearchParams(window.location.search);
+
+        const query = params.get('query') || '';
+        state.filters.text = query;
+        filterText.value = query;
+        searchHint.style.opacity = query ? '0' : '1';
+
+        state.filters.isRegex = params.get('regex') === 'true';
+        regexToggle.classList.toggle('active', state.filters.isRegex);
+        filterText.classList.toggle('is-regex', state.filters.isRegex);
+
+        Object.entries(FILTER_DEFS).forEach(([key, { param }]) => {
+            const val = params.get(param);
+            const targetSet = state.filters[key];
+            targetSet.clear();
+            if (val) val.split(',').forEach(v => targetSet.add(v.trim()));
+            else targetSet.add('all');
+        });
+    }
+
+    window.addEventListener('popstate', () => {
         readURL();
+        if (state.rawIssues.length > 0) {
+            updatePillVisuals([FILTER_DEFS.severities.container, metricDOM.grid], state.filters.severities);
+            Object.entries(FILTER_DEFS).forEach(([key, { container }]) => {
+                if (key !== 'severities') updatePillVisuals([container], state.filters[key]);
+            });
+            applyFilters();
+        }
+    });
 
-        window.addEventListener('keydown', (e) => {
-            if (e.key === '/' && document.activeElement !== filterText && resultsContainer.style.display !== 'none') {
-                e.preventDefault();
-                filterText.focus();
+    readURL();
+
+    window.addEventListener('keydown', (e) => {
+        if (e.key === '/' && document.activeElement !== filterText && resultsContainer.style.display !== 'none') {
+            e.preventDefault();
+            filterText.focus();
+        }
+    });
+
+    filterText.addEventListener('focus', () => searchHint.style.opacity = '0');
+    filterText.addEventListener('blur', () => {
+        if (filterText.value === '') searchHint.style.opacity = '1';
+    });
+
+    filterText.addEventListener('input', debounce(() => {
+        state.filters.text = filterText.value;
+        applyFilters();
+    }, 200));
+
+    regexToggle.addEventListener('click', () => {
+        state.filters.isRegex = !state.filters.isRegex;
+        regexToggle.classList.toggle('active', state.filters.isRegex);
+        filterText.classList.toggle('is-regex', state.filters.isRegex);
+        applyFilters();
+    });
+
+    const hasFiles = e => e.dataTransfer && Array.from(e.dataTransfer.types).includes('Files');
+
+    dropZone.addEventListener('click', (e) => {
+        if (e.target.closest('#load-example-wrapper')) return;
+        fileInput.click();
+    });
+
+    fileInput.addEventListener('change', e => handleFiles(e.target.files));
+    openButton.addEventListener('click', () => fileInput.click());
+
+    let dragCounter = 0;
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, e => {
+            e.preventDefault(); e.stopPropagation();
+            dropZone.classList.toggle('highlight', (eventName === 'dragenter' || eventName === 'dragover') && hasFiles(e));
+            if (eventName === 'drop') handleFiles(e.dataTransfer.files);
+        });
+
+        window.addEventListener(eventName, e => {
+            e.preventDefault();
+            if (eventName === 'dragover' || !hasFiles(e)) return;
+
+            if (eventName === 'dragenter') dragCounter++;
+            else if (eventName === 'dragleave') dragCounter--;
+            else if (eventName === 'drop') {
+                dragCounter = 0;
+                handleFiles(e.dataTransfer.files);
             }
-        });
 
-        filterText.addEventListener('focus', () => searchHint.style.opacity = '0');
-        filterText.addEventListener('blur', () => {
-            if (filterText.value === '') searchHint.style.opacity = '1';
+            dragOverlay.classList.toggle('hidden', dragCounter <= 0);
+            if (dragCounter < 0) dragCounter = 0;
         });
+    });
 
-        dropZone.addEventListener('click', (e) => {
-            if (e.target.closest('#load-example-wrapper')) return;
-            fileInput.click();
-        });
+    function loadSarifData(json, filename, lastModified) {
+        resetApp();
+        state.filename = filename || "Unknown";
+        state.fileLastModified = lastModified || Date.now();
+        processSarif(json);
+        readURL();
+        updatePillVisuals([FILTER_DEFS.severities.container, metricDOM.grid], state.filters.severities);
+        showResultsUI();
+    }
 
-        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-            dropZone.addEventListener(eventName, e => { e.preventDefault(); e.stopPropagation(); }, false);
-        });
+    async function loadSarifFromScript(elementId, defaultFilename) {
+        const el = document.getElementById(elementId);
+        if (!el) return false;
 
-        ['dragenter', 'dragover'].forEach(eventName => {
-            dropZone.addEventListener(eventName, e => {
-                if (e.dataTransfer && Array.from(e.dataTransfer.types).includes('Files')) dropZone.classList.add('highlight');
-            }, false);
-        });
+        const src = el.getAttribute('data-src');
+        const type = el.getAttribute('type');
+        const title = el.getAttribute('title');
+        const content = el.textContent.trim();
 
-        ['dragleave', 'drop'].forEach(eventName => {
-            dropZone.addEventListener(eventName, () => dropZone.classList.remove('highlight'), false);
-        });
+        if (!src && !content) return false;
 
-        dropZone.addEventListener('drop', e => handleFiles(e.dataTransfer.files));
-        fileInput.addEventListener('change', e => handleFiles(e.target.files));
-        resetButton.addEventListener('click', () => {
-            fileInput.click();
-        });
+        Perf.start('Fetch / Process Data');
+        let json = null;
+        if (src) {
+            const response = await fetch(src);
+            if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            json = parseJsonPerf(await response.text());
+        } else if (type === 'application/json') {
+            json = parseJsonPerf(content);
+        } else if (type === 'application/gzip+base64') {
+            json = await decodeBase64GzipJson(content);
+        } else {
+            Perf.end('Fetch / Process Data');
+            throw new Error("Unknown data format type.");
+        }
+        Perf.end('Fetch / Process Data');
 
-        exampleLoadWrapper.addEventListener('click', async (e) => {
+        if (json) {
+            loadSarifData(json, title || src || defaultFilename, Date.now());
+            return true;
+        }
+        return false;
+    }
+
+    exampleLoadWrapper.addEventListener('click', async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        Perf.groupStart('Loading Example');
+        Perf.start('Total Load Example');
+        try {
+            const loaded = await loadSarifFromScript('sarif-example', "Unknown");
+            if (!loaded) showError("Example data not found.");
+        } catch (err) {
+            showError(`Failed to load: ${err.message}`);
+        }
+        Perf.end('Total Load Example');
+        Perf.groupEnd();
+    });
+
+    issueList.addEventListener('click', e => {
+        const badge = e.target.closest('.severity-badge');
+        if (badge) {
             e.preventDefault();
             e.stopPropagation();
-
-            const el = document.getElementById('sarif-example');
-            if (!el) {
-                return showError("Example data not found.");
-            }
-
-            const src = el.getAttribute('data-src');
-            const type = el.getAttribute('type');
-            const title = el.getAttribute('title');
-            let json = null;
-
-            try {
-                if (src) {
-                    const response = await fetch(src);
-                    if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                    json = await response.json();
-                } else if (type === 'application/json') {
-                    json = JSON.parse(el.textContent);
-                } else if (type === 'application/gzip+base64') {
-                    json = await decodeBase64GzipJson(el.textContent);
-                } else {
-                    throw new Error("Unknown example format type.");
-                }
-            } catch (err) {
-                return showError(`Failed to load: ${err.message}`);
-            }
-
-            if (json) {
-                try {
-                    resetApp();
-                    state.filename = title || src || "Unknown";
-                    state.fileLastModified = Date.now();
-                    processSarif(json);
-                    readURL(); 
-                    updateSeverityVisuals();
-                    showResultsUI();
-                } catch (err) {
-                    showError("Error processing example: " + err.message);
-                }
-            }
-        });
-
-        let dragCounter = 0;
-        window.addEventListener('dragenter', e => {
+            const group = badge.closest('.issue-group');
+            if (group) group.classList.toggle('content-hidden');
+            return;
+        }
+        const btn = e.target.closest('.issue-location');
+        if (btn) {
             e.preventDefault();
-            if (!e.dataTransfer || !Array.from(e.dataTransfer.types).includes('Files')) return;
-            dragCounter++;
-            dragOverlay.classList.remove('hidden');
-        });
+            const path = btn.getAttribute('data-path');
+            if (path) copyToClipboard(path);
+        }
+    });
 
-        window.addEventListener('dragleave', e => {
-            e.preventDefault();
-            if (!e.dataTransfer || !Array.from(e.dataTransfer.types).includes('Files')) return;
-            dragCounter--;
-            if (dragCounter <= 0) { dragCounter = 0; dragOverlay.classList.add('hidden'); }
-        });
+    metricDOM.grid.addEventListener('click', e => handlePillClick(e, 'severities'));
+    Object.entries(FILTER_DEFS).forEach(([key, { container }]) => {
+        container.addEventListener('click', e => handlePillClick(e, key));
+    });
 
-        window.addEventListener('dragover', e => e.preventDefault());
-        window.addEventListener('drop', e => {
-            e.preventDefault();
-            dragCounter = 0;
-            dragOverlay.classList.add('hidden');
-            if (e.dataTransfer && e.dataTransfer.files.length > 0) handleFiles(e.dataTransfer.files);
-        });
-
-        issueList.addEventListener('click', e => {
-            const badge = e.target.closest('.severity-badge');
-            if (badge) {
-                e.preventDefault();
-                e.stopPropagation();
-                const group = badge.closest('.issue-group');
-                if (group) group.classList.toggle('content-hidden');
-                return;
-            }
-            const btn = e.target.closest('.issue-location');
-            if (btn) { e.preventDefault(); const path = btn.getAttribute('data-path'); if (path) copyToClipboard(path); }
-        });
-
-        filterText.addEventListener('input', debounce(e => {
-            state.filters.text = e.target.value.toLowerCase();
-            applyFilters();
-        }, 200));
-
-        document.querySelector('.metrics-grid').addEventListener('click', e => handlePillClick(e, 'severities'));
-        severityPillsContainer.addEventListener('click', e => handlePillClick(e, 'severities'));
-        categoryPillsContainer.addEventListener('click', e => handlePillClick(e, 'categories'));
-        issueIdPillsContainer.addEventListener('click', e => handlePillClick(e, 'issueIds'));
-
-        function handlePillClick(e, filterType) {
-            const target = e.target.closest('.pill') || e.target.closest('.metric-card');
-            if (!target) return;
-            const value = target.getAttribute('data-value');
-            const filterSet = state.filters[filterType];
-            if (value === 'all') {
-                filterSet.clear();
-                filterSet.add('all');
-            } else {
-                if (filterSet.has('all')) filterSet.delete('all');
-                if (filterSet.has(value)) filterSet.delete(value);
-                else filterSet.add(value);
-                if (filterSet.size === 0) filterSet.add('all');
-            }
-            
-            if (filterType === 'severities') {
-                updateSeverityVisuals();
-            } else if (filterType === 'categories') {
-                updatePillVisuals(categoryPillsContainer, filterSet);
-            } else if (filterType === 'issueIds') {
-                updatePillVisuals(issueIdPillsContainer, filterSet);
-            }
-            applyFilters();
+    function handlePillClick(e, filterType) {
+        const target = e.target.closest('.pill') || e.target.closest('.metric-card');
+        if (!target) return;
+        const value = target.getAttribute('data-value');
+        const filterSet = state.filters[filterType];
+        if (value === 'all') {
+            filterSet.clear();
+            filterSet.add('all');
+        } else {
+            if (filterSet.has('all')) filterSet.delete('all');
+            if (filterSet.has(value)) filterSet.delete(value);
+            else filterSet.add(value);
+            if (filterSet.size === 0) filterSet.add('all');
         }
 
-        function updateSeverityVisuals() {
-            updatePillVisuals(severityPillsContainer, state.filters.severities);
-            updatePillVisuals(document.querySelector('.metrics-grid'), state.filters.severities);
-        }
+        if (filterType === 'severities') updatePillVisuals([FILTER_DEFS.severities.container, metricDOM.grid], state.filters.severities);
+        else updatePillVisuals([FILTER_DEFS[filterType].container], filterSet);
+        applyFilters();
+    }
 
-        function updatePillVisuals(container, filterSet) {
+    function updatePillVisuals(containers, filterSet) {
+        containers.forEach(container => {
             Array.from(container.children).forEach(pill => {
-                if (filterSet.has(pill.getAttribute('data-value'))) pill.classList.add('active');
-                else pill.classList.remove('active');
+                pill.classList.toggle('active', filterSet.has(pill.getAttribute('data-value')));
             });
+        });
+    }
+
+    function handleFiles(files) {
+        if (!files || files.length === 0) return;
+        const file = files[0];
+        const fileName = file.name.toLowerCase();
+        if (!fileName.endsWith('.sarif') && !fileName.endsWith('.json')) {
+            return showError("Invalid file format. Please use .sarif or .json files.");
         }
 
-        function handleFiles(files) {
-            if (!files || files.length === 0) return;
-            const file = files[0];
-            const fileName = file.name.toLowerCase();
-            if (!fileName.endsWith('.sarif') && !fileName.endsWith('.json')) {
-                return showError("Invalid file format. Please use .sarif or .json files.");
+        Perf.groupStart(`Loading File: ${file.name}`);
+        Perf.start('Total File Load');
+        Perf.start('File Read');
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            Perf.end('File Read');
+            try {
+                const json = parseJsonPerf(e.target.result);
+                loadSarifData(json, file.name, file.lastModified);
+            } catch (err) {
+                handleLoadError(err);
+            } finally {
+                Perf.end('Total File Load');
+                Perf.groupEnd();
             }
+        };
+        reader.onerror = () => {
+            Perf.end('File Read');
+            showError("Error reading file.");
+            Perf.end('Total File Load');
+            Perf.groupEnd();
+        };
+        reader.readAsText(file);
+    }
 
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                try {
-                    const json = JSON.parse(e.target.result);
-                    resetApp();
-                    state.filename = file.name;
-                    state.fileLastModified = file.lastModified;
-                    processSarif(json);
-                    readURL(); 
-                    updateSeverityVisuals();
-                    showResultsUI();
-                } catch (err) {
-                    state.filename = '';
-                    reportInfoContainer.innerHTML = '';
-                    showError(err.message || "Could not parse JSON.");
-                }
+    function handleLoadError(err) {
+        state.filename = '';
+        reportInfoContainer.innerHTML = '';
+        showError(err.message || "Could not parse JSON.");
+        console.error(err);
+    }
+
+    function processSarif(sarif) {
+        Perf.groupStart('Processing SARIF');
+        Perf.start('Total SARIF Process');
+
+        if (!sarif?.runs || !Array.isArray(sarif.runs)) {
+            Perf.groupEnd();
+            throw new Error("Invalid SARIF: Missing 'runs' array.");
+        }
+        const run = sarif.runs[0] || {};
+        const driver = run.tool?.driver || {};
+        state.driverInfo = { name: driver.fullName || driver.name || "Unknown Tool", version: driver.semanticVersion || driver.version || "" };
+
+        let dateVal = run.invocations?.[0]?.endTimeUtc || run.invocations?.[0]?.startTimeUtc || sarif.time;
+        state.reportDate = dateVal ? new Date(dateVal) : (state.fileLastModified ? new Date(state.fileLastModified) : new Date());
+
+        const getDesc = (obj) => obj?.markdown || obj?.text || "";
+
+        Perf.start('Extract Rules');
+        state.rules.clear();
+        (driver.rules || []).forEach(rule => {
+            let tags = rule.tags || rule.properties?.tags || [rule.properties?.category] || ["General"];
+            state.rules.set(rule.id, {
+                name: rule.shortDescription?.text || rule.name || rule.id,
+                categories: Array.isArray(tags) ? tags : ["General"],
+                defaultLevel: rule.defaultConfiguration?.level || "warning",
+                shortDescription: getDesc(rule.shortDescription),
+                fullDescription: getDesc(rule.fullDescription) || getDesc(rule.shortDescription)
+            });
+        });
+        Perf.end('Extract Rules');
+
+        Perf.start('Extract Issues');
+        state.rawIssues = (run.results || []).map(result => {
+            const ruleId = result.ruleId;
+            const rd = state.rules.get(ruleId) || { categories: ['Unknown'], name: ruleId };
+            const loc = result.locations?.[0]?.physicalLocation;
+
+            return {
+                id: ruleId,
+                name: rd.name,
+                categories: rd.categories,
+                message: result.message?.markdown || result.message?.text || "No message",
+                file: loc?.artifactLocation?.uri || "Unknown",
+                line: loc?.region?.startLine || 0,
+                level: result.level || rd.defaultLevel || "warning",
+                snippet: loc?.contextRegion?.snippet?.text ? { text: loc.contextRegion.snippet.text, startLine: loc.contextRegion.startLine || 1 } : null,
+                region: loc?.region || {},
+                relatedLocations: (result.relatedLocations || []).map(rel => ({
+                    file: rel.physicalLocation?.artifactLocation?.uri || "Unknown",
+                    line: rel.physicalLocation?.region?.startLine || 0,
+                    message: rel.message?.markdown || rel.message?.text || ""
+                }))
             };
-            reader.onerror = () => {
-                showError("Error reading file.");
-            };
-            reader.readAsText(file);
-        }
+        });
+        Perf.end('Extract Issues');
 
-        function processSarif(sarif) {
-            if (!sarif?.runs || !Array.isArray(sarif.runs)) throw new Error("Invalid SARIF: Missing 'runs' array.");
-            const run = sarif.runs[0] || {};
-            const driver = run.tool?.driver || {};
-            state.driverInfo = { name: driver.fullName || driver.name || "Unknown Tool", version: driver.semanticVersion || driver.version || "" };
+        const uniqueCats = new Set();
+        const uniqueIds = new Set();
+        state.rawIssues.forEach(i => { uniqueIds.add(i.id); i.categories.forEach(c => uniqueCats.add(c)); });
+        state.categories = uniqueCats;
+        state.uniqueIssueIds = uniqueIds;
 
-            let dateVal = run.invocations?.[0]?.endTimeUtc || run.invocations?.[0]?.startTimeUtc || sarif.time;
-            state.reportDate = dateVal ? new Date(dateVal) : (state.fileLastModified ? new Date(state.fileLastModified) : new Date());
+        renderPills(FILTER_DEFS.categories.container, state.categories);
+        renderPills(FILTER_DEFS.issueIds.container, state.uniqueIssueIds);
 
-            const getDesc = (obj) => obj?.markdown || obj?.text || "";
+        updateMetrics();
+        applyFilters();
 
-            state.rules.clear();
-            (driver.rules || []).forEach(rule => {
-                let tags = rule.tags || rule.properties?.tags || [rule.properties?.category] || ["General"];
-                state.rules.set(rule.id, {
-                    name: rule.shortDescription?.text || rule.name || rule.id,
-                    categories: Array.isArray(tags) ? tags : ["General"],
-                    defaultLevel: rule.defaultConfiguration?.level || "warning",
-                    shortDescription: getDesc(rule.shortDescription),
-                    fullDescription: getDesc(rule.fullDescription) || getDesc(rule.shortDescription)
-                });
-            });
+        Perf.end('Total SARIF Process');
+        Perf.groupEnd();
+    }
 
-            state.rawIssues = (run.results || []).map(result => {
-                const ruleId = result.ruleId;
-                const rd = state.rules.get(ruleId) || { categories: ['Unknown'], name: ruleId };
-                const loc = result.locations?.[0]?.physicalLocation;
-                
-                const related = (result.relatedLocations || []).map(rel => {
-                    const pLoc = rel.physicalLocation;
-                    return {
-                        file: pLoc?.artifactLocation?.uri || "Unknown",
-                        line: pLoc?.region?.startLine || 0,
-                        message: rel.message?.markdown || rel.message?.text || ""
-                    };
-                });
+    function showResultsUI() {
+        dropZone.classList.add('hidden');
+        resultsContainer.style.display = 'block';
+        const toolStr = `${state.driverInfo.name} ${state.driverInfo.version ? 'v' + state.driverInfo.version : ''}`;
+        const dateStr = state.reportDate?.toLocaleString() || '';
+        reportInfoContainer.innerHTML = `
+            <div class="info-line-primary">${sanitize(state.filename)}</div>
+            <div class="info-line-secondary">${sanitize(toolStr)}</div>
+            <div class="info-line-tertiary" title="${sanitize(dateStr)}">${sanitize(dateStr)}</div>
+        `;
+    }
 
-                return {
-                    id: ruleId,
-                    name: rd.name,
-                    categories: rd.categories,
-                    message: result.message?.markdown || result.message?.text || "No message",
-                    file: loc?.artifactLocation?.uri || "Unknown",
-                    line: loc?.region?.startLine || 0,
-                    level: result.level || rd.defaultLevel || "warning",
-                    snippet: loc?.contextRegion?.snippet?.text ? { text: loc.contextRegion.snippet.text, startLine: loc.contextRegion.startLine || 1 } : null,
-                    region: loc?.region || {},
-                    relatedLocations: related
-                };
-            });
+    function resetApp() {
+        Object.assign(state, {
+            rawIssues: [], filteredIssues: [], categories: new Set(), uniqueIssueIds: new Set(),
+            rules: new Map(), filename: '', driverInfo: { name: '', version: '' },
+            reportDate: null, fileLastModified: null
+        });
+        state.filters = {
+            text: '', isRegex: state.filters.isRegex, categories: new Set(['all']),
+            issueIds: new Set(['all']), severities: new Set(['all'])
+        };
+        dropZone.classList.remove('hidden');
+        resultsContainer.style.display = 'none';
+        reportInfoContainer.innerHTML = '';
+        fileInput.value = ''; filterText.value = ''; searchHint.style.opacity = '1';
 
-            const uniqueCats = new Set();
-            const uniqueIds = new Set();
-            state.rawIssues.forEach(i => { uniqueIds.add(i.id); i.categories.forEach(c => uniqueCats.add(c)); });
-            state.categories = uniqueCats;
-            state.uniqueIssueIds = uniqueIds;
-            renderCategoryPills();
-            renderIssueIdPills();
-            updateMetrics();
-            applyFilters();
-        }
+        Object.entries(FILTER_DEFS).forEach(([key, { container }]) => {
+            if (key !== 'severities') renderPills(container, []);
+        });
+        updatePillVisuals([FILTER_DEFS.severities.container, metricDOM.grid], state.filters.severities);
+    }
 
-        function showResultsUI() {
-            dropZone.classList.add('hidden');
-            resultsContainer.style.display = 'block';
-            resetButton.classList.remove('hidden');
-            const toolStr = `${state.driverInfo.name} ${state.driverInfo.version ? 'v' + state.driverInfo.version : ''}`;
-            const dateStr = state.reportDate?.toLocaleString() || '';
-            reportInfoContainer.innerHTML = `
-                <div class="info-line-primary">${sanitize(state.filename)}</div>
-                <div class="info-line-secondary">${sanitize(toolStr)}</div>
-                <div class="info-line-tertiary" title="${sanitize(dateStr)}">${sanitize(dateStr)}</div>
-            `;
-        }
+    function renderPills(container, items) {
+        container.innerHTML = ['all', ...Array.from(items).sort()].map(item => {
+            if (item === 'all') return '<button class="pill active" data-value="all">All</button>';
+            return `<button class="pill" data-value="${item}">` +
+                   `<span class="pill-label">${sanitize(item)}</span><span class="pill-count"></span>` +
+                   `</button>`;
+        }).join('');
+    }
 
-        function resetApp() {
-            Object.assign(state, { rawIssues: [], filteredIssues: [], categories: new Set(), uniqueIssueIds: new Set(), rules: new Map(), filename: '', driverInfo: { name: '', version: '' }, reportDate: null, fileLastModified: null });
-            state.filters = { text: '', categories: new Set(['all']), issueIds: new Set(['all']), severities: new Set(['all']) };
-            dropZone.classList.remove('hidden');
-            resultsContainer.style.display = 'none';
-            resetButton.classList.add('hidden');
-            reportInfoContainer.innerHTML = '';
-            fileInput.value = ''; filterText.value = '';
-            categoryPillsContainer.innerHTML = '<button class="pill active" data-value="all"><span class="pill-label">All</span></button>';
-            issueIdPillsContainer.innerHTML = '<button class="pill active" data-value="all"><span class="pill-label">All</span></button>';
-            updateSeverityVisuals();
-        }
+    function applyFilters() {
+        Perf.groupStart('Filtering & Rendering', true);
+        Perf.start('Total Update');
+        Perf.start('Filtering');
 
-        function renderCategoryPills() {
-            categoryPillsContainer.innerHTML = '<button class="pill active" data-value="all"><span class="pill-label">All</span></button>';
-            Array.from(state.categories).sort().forEach(cat => {
-                const p = document.createElement('button'); 
-                p.className = 'pill'; 
-                p.setAttribute('data-value', cat); 
-                p.innerHTML = `<span class="pill-label">${sanitize(cat)}</span><span class="pill-count"></span>`;
-                categoryPillsContainer.appendChild(p);
-            });
-        }
+        const query = state.filters.text;
+        const queryLower = query.toLowerCase();
+        let regex = null;
+        filterText.classList.remove('is-invalid');
 
-        function renderIssueIdPills() {
-            issueIdPillsContainer.innerHTML = '<button class="pill active" data-value="all"><span class="pill-label">All</span></button>';
-            Array.from(state.uniqueIssueIds).sort().forEach(id => {
-                const rd = state.rules.get(id);
-                const p = document.createElement('button');
-                p.className = 'pill';
-                p.setAttribute('data-value', id);
-                p.innerHTML = `<span class="pill-label">${sanitize(id)}</span><span class="pill-count"></span>`;
-                issueIdPillsContainer.appendChild(p);
-            });
-        }
-
-        function applyFilters() {
-            const query = state.filters.text;
-            const match = state.rawIssues.filter(i => i.id.toLowerCase().includes(query) || i.message.toLowerCase().includes(query) || i.file.toLowerCase().includes(query));
-            updatePillCounts(match);
-            state.filteredIssues = match.filter(i => {
-                const lvl = (i.level || 'warning').toLowerCase();
-                const sMatch = state.filters.severities.has('all') || (state.filters.severities.has('error') && lvl === 'error') || (state.filters.severities.has('warning') && lvl === 'warning') || (state.filters.severities.has('info') && (lvl === 'note' || lvl === 'none'));
-                return sMatch && (state.filters.categories.has('all') || i.categories.some(c => state.filters.categories.has(c))) && (state.filters.issueIds.has('all') || state.filters.issueIds.has(i.id));
-            });
-            updateURL();
-            renderList();
-        }
-
-        function updatePillCounts(issues) {
-            const counts = { cats: {}, ids: {}, sevs: { error: 0, warning: 0, info: 0 } };
-            issues.forEach(i => {
-                counts.ids[i.id] = (counts.ids[i.id] || 0) + 1;
-                i.categories.forEach(c => counts.cats[c] = (counts.cats[c] || 0) + 1);
-                const l = (i.level || 'warning').toLowerCase();
-                if (l === 'error') counts.sevs.error++; else if (l === 'warning') counts.sevs.warning++; else counts.sevs.info++;
-            });
-            const update = (c, val, count, label) => {
-                const p = c.querySelector(`[data-value="${val}"]`);
-                if (p) { 
-                    const name = label || val;
-                    p.innerHTML = `<span class="pill-label">${sanitize(name)}</span><span class="pill-count">(${count})</span>`;
-                    
-                    const type = c === severityPillsContainer ? 'severities' : (c === categoryPillsContainer ? 'categories' : 'issueIds');
-                    const isActive = state.filters[type].has(val);
-                    const queryStr = state.filters.text.toLowerCase();
-                    const matchesQuery = queryStr && name.toLowerCase().includes(queryStr);
-                    
-                    if (count === 0 && val !== 'all' && !isActive && !matchesQuery) p.classList.add('hidden'); else p.classList.remove('hidden'); 
-                    if (isActive) p.classList.add('active'); else p.classList.remove('active');
-                }
-            };
-            update(severityPillsContainer, 'error', counts.sevs.error, 'Error');
-            update(severityPillsContainer, 'warning', counts.sevs.warning, 'Warning');
-            update(severityPillsContainer, 'info', counts.sevs.info, 'Hint');
-            Array.from(state.categories).forEach(c => update(categoryPillsContainer, c, counts.cats[c] || 0));
-            Array.from(state.uniqueIssueIds).forEach(id => update(issueIdPillsContainer, id, counts.ids[id] || 0));
-        }
-
-        function updateMetrics() {
-            const issues = state.rawIssues;
-            metricTotal.textContent = issues.length;
-            metricErrors.textContent = issues.filter(i => i.level === 'error').length;
-            metricWarnings.textContent = issues.filter(i => i.level === 'warning').length;
-            metricInfo.textContent = issues.filter(i => i.level === 'note' || i.level === 'none').length;
-        }
-
-        function renderList() {
-            issueList.innerHTML = '';
-            if (state.filteredIssues.length === 0) return emptyFilterState.classList.remove('hidden');
-            emptyFilterState.classList.add('hidden');
-
-            const groups = {};
-            state.filteredIssues.forEach(i => { 
-                const key = i.id + '::' + i.level;
-                if (!groups[key]) groups[key] = { id: i.id, level: i.level, categories: i.categories, instances: [] }; 
-                groups[key].instances.push(i); 
-            });
-
-            const fragment = document.createDocumentFragment();
-            Object.values(groups).sort((a, b) => {
-                const diff = a.id.localeCompare(b.id);
-                if (diff !== 0) return diff;
-                const getWeight = (lvl) => {
-                    const l = (lvl || '').toLowerCase();
-                    if (l === 'error') return 3;
-                    if (l === 'warning') return 2;
-                    return 1;
-                };
-                return getWeight(b.level) - getWeight(a.level);
-            }).forEach(group => {
-                const rd = state.rules.get(group.id);
-                const descText = rd?.fullDescription || rd?.shortDescription;
-                const hasDescription = !!descText;
-
-                const lvl = (group.level || 'warning').toLowerCase();
-                const sCls = lvl === 'error' ? 'severity-error' : (lvl === 'note' || lvl === 'none' ? 'severity-info' : 'severity-warning');
-                
-                const g = document.createElement('div'); 
-                g.className = 'issue-group';
-
-                const headerHtml = `
-                        <div class="issue-group-title" style="color: var(--${sCls})">
-                            <span class="severity-badge ${sCls}"></span>
-                            <span class="issue-rule-id">${sanitize(group.id)}</span>
-                            ${hasDescription ? `<svg class="chevron-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" ` +
-                                `stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">` +
-                                `<polyline points="9 18 15 12 9 6"></polyline></svg>` : ''}
-                        </div>
-                        <div class="issue-group-meta">
-                            <div class="categories-wrapper">${group.categories.map(c => `<span class="category-badge">${sanitize(c)}</span>`).join('')}</div>
-                            <span class="issue-group-count">${group.instances.length}</span>
-                        </div>`;
-
-                if (hasDescription) {
-                    const details = document.createElement('details');
-                    details.className = 'rule-details';
-                    
-                    const summary = document.createElement('summary');
-                    summary.className = 'issue-group-header';
-                    summary.innerHTML = headerHtml;
-                    
-                    const descContent = document.createElement('div');
-                    descContent.className = 'rule-description-content markdown-content';
-                    descContent.innerHTML = formatMarkdown(descText);
-                    
-                    details.appendChild(summary);
-                    details.appendChild(descContent);
-                    g.appendChild(details);
-                } else {
-                    const header = document.createElement('div');
-                    header.className = 'issue-group-header';
-                    header.innerHTML = headerHtml;
-                    g.appendChild(header);
-                }
-
-                const content = document.createElement('div'); content.className = 'issue-group-content';
-                group.instances.forEach(i => {
-                    let snippet = '';
-                    if (i.snippet) {
-                        const lines = i.snippet.text.split('\n');
-                        const lHtml = lines.map((text, idx) => {
-                            const cur = i.snippet.startLine + idx;
-                            let content = sanitize(text);
-                            if (cur >= i.region.startLine && cur <= (i.region.endLine || i.region.startLine)) {
-                                let start = cur === i.region.startLine ? Math.max(0, (i.region.startColumn || 1) - 1) : 0;
-                                let end = cur === (i.region.endLine || i.region.startLine) && i.region.endColumn ? Math.min(text.length, i.region.endColumn - 1) : text.length;
-                                content = `${sanitize(text.substring(0, start))}<span class="code-highlight">${sanitize(text.substring(start, end))}</span>${sanitize(text.substring(end))}`;
-                            }
-                            return `<span class="code-line-number">${cur}</span><span class="code-content">${content}</span>`;
-                        }).join('');
-                        snippet = `<div class="issue-code-snippet">${lHtml}</div>`;
-                    }
-                    
-                    const last = i.file.lastIndexOf('/');
-                    
-                    let relatedHtml = '';
-                    if (i.relatedLocations?.length > 0) {
-                        relatedHtml = i.relatedLocations.map(rel => {
-                            const rLast = rel.file.lastIndexOf('/');
-                            return `
-                                <div style="margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.25rem; padding-left: 0.75rem; border-left: 2px solid var(--border);">
-                                    ${rel.message ? `<div style="font-size: 0.75rem; color: var(--text-tertiary); font-style: italic;">${formatMarkdown(rel.message)}</div>` : ''}
-                                    <button class="issue-location" data-path="${sanitize(rel.file)}:${rel.line}">
-                                        <span class="path-dir">${sanitize(rel.file.substring(0, rLast + 1))}</span>
-                                        <span class="path-name">${sanitize(rel.file.substring(rLast + 1))}</span>
-                                        <span class="line-number">:${rel.line}</span>
-                                    </button>
-                                </div>
-                            `;
-                        }).join('');
-                    }
-
-                    const card = document.createElement('div'); card.className = 'issue-card';
-                    card.innerHTML = `
-                        <div class="issue-message markdown-content"><span>${formatMarkdown(i.message)}</span></div>
-                        <button class="issue-location" data-path="${sanitize(i.file)}:${i.line}">
-                            <span class="path-dir">${sanitize(i.file.substring(0, last + 1))}</span>
-                            <span class="path-name">${sanitize(i.file.substring(last + 1))}</span>
-                            <span class="line-number">:${i.line}</span>
-                        </button>
-                        ${relatedHtml}
-                        ${snippet}`;
-                    content.appendChild(card);
-                });
-                g.appendChild(content); fragment.appendChild(g);
-            });
-            issueList.appendChild(fragment);
-        }
-
-        async function tryLoadInitialData() {
-            const el = document.getElementById('sarif-report');
-            const embeddedContent = el ? el.textContent.trim() : null;
-
-            if (embeddedContent) {
-                const type = el.getAttribute('type');
-                let json = null;
-                try {
-                    if (type === 'application/json') {
-                        json = JSON.parse(embeddedContent);
-                    } else if (type === 'application/gzip+base64') {
-                        json = await decodeBase64GzipJson(embeddedContent);
-                    }
-                    if (json) {
-                        resetApp();
-                        state.filename = "Embedded Report";
-                        state.fileLastModified = Date.now();
-                        processSarif(json);
-                        readURL(); 
-                        updateSeverityVisuals();
-                        showResultsUI();
-                    }
-                } catch (err) {
-                    showError("Error processing embedded report: " + err.message);
-                }
+        if (state.filters.isRegex && query) {
+            try {
+                regex = new RegExp(query, 'i');
+            } catch (e) {
+                filterText.classList.add('is-invalid');
             }
         }
 
-        tryLoadInitialData();
-    </script>
+        const match = state.rawIssues.filter(i => {
+            if (!query) return true;
+            const id = i.id || '', msg = i.message || '', file = i.file || '';
+            if (state.filters.isRegex) return regex ? (regex.test(id) || regex.test(msg) || regex.test(file)) : false;
+            return id.toLowerCase().includes(queryLower) || msg.toLowerCase().includes(queryLower) || file.toLowerCase().includes(queryLower);
+        });
+        updatePillCounts(match);
+
+        state.filteredIssues = match.filter(i => {
+            const sev = getSeverity(i.level);
+            const sMatch = state.filters.severities.has('all') || state.filters.severities.has(sev);
+            return sMatch &&
+                (state.filters.categories.has('all') || i.categories.some(c => state.filters.categories.has(c))) &&
+                (state.filters.issueIds.has('all') || state.filters.issueIds.has(i.id));
+        });
+        updateURL();
+        Perf.end('Filtering');
+
+        Perf.start('Rendering UI');
+        renderList();
+        Perf.end('Rendering UI');
+
+        Perf.end('Total Update');
+        Perf.groupEnd();
+    }
+
+    function updatePillCounts(issues) {
+        const counts = { categories: {}, issueIds: {}, severities: { error: 0, warning: 0, info: 0 } };
+        issues.forEach(i => {
+            counts.issueIds[i.id] = (counts.issueIds[i.id] || 0) + 1;
+            i.categories.forEach(c => counts.categories[c] = (counts.categories[c] || 0) + 1);
+            counts.severities[getSeverity(i.level)]++;
+        });
+
+        const update = (key, val, count, label) => {
+            const p = FILTER_DEFS[key].container.querySelector(`[data-value="${val}"]`);
+            if (!p) return;
+            const name = label || val;
+            p.innerHTML = `<span class="pill-label">${sanitize(name)}</span><span class="pill-count">(${count})</span>`;
+
+            const isActive = state.filters[key].has(val);
+            const matchesQuery = state.filters.text && name.toLowerCase().includes(state.filters.text.toLowerCase());
+
+            p.classList.toggle('hidden', count === 0 && val !== 'all' && !isActive && !matchesQuery);
+            p.classList.toggle('active', isActive);
+        };
+
+        const SEVERITY_LABELS = { error: 'Error', warning: 'Warning', info: 'Hint' };
+        Object.keys(SEVERITY_LABELS).forEach(s => update('severities', s, counts.severities[s], SEVERITY_LABELS[s]));
+        Array.from(state.categories).forEach(c => update('categories', c, counts.categories[c] || 0));
+        Array.from(state.uniqueIssueIds).forEach(id => update('issueIds', id, counts.issueIds[id] || 0));
+    }
+
+    function updateMetrics() {
+        const counts = { error: 0, warning: 0, info: 0 };
+        state.rawIssues.forEach(i => counts[getSeverity(i.level)]++);
+
+        metricDOM.total.textContent = state.rawIssues.length;
+        metricDOM.error.textContent = counts.error;
+        metricDOM.warning.textContent = counts.warning;
+        metricDOM.info.textContent = counts.info;
+    }
+
+    function renderList() {
+        issueList.innerHTML = '';
+        emptyFilterState.classList.add('hidden');
+        emptyReportState.classList.add('hidden');
+
+        if (state.rawIssues.length === 0) {
+            emptyReportState.classList.remove('hidden');
+            return;
+        }
+
+        if (state.filteredIssues.length === 0) {
+            emptyFilterState.classList.remove('hidden');
+            return;
+        }
+
+        const groups = {};
+        state.filteredIssues.forEach(i => {
+            const key = i.id + '::' + i.level;
+            if (!groups[key]) groups[key] = { id: i.id, level: i.level, categories: i.categories, instances: [] };
+            groups[key].instances.push(i);
+        });
+
+        const fragment = document.createDocumentFragment();
+        const weight = { error: 3, warning: 2, info: 1 };
+
+        Object.values(groups).sort((a, b) => {
+            const diff = a.id.localeCompare(b.id);
+            return diff !== 0 ? diff : weight[getSeverity(b.level)] - weight[getSeverity(a.level)];
+        }).forEach(group => {
+            const rd = state.rules.get(group.id);
+            const descText = rd?.fullDescription || rd?.shortDescription || "No description provided.";
+            const sCls = `severity-${getSeverity(group.level)}`;
+
+            const groupClone = tplGroup.content.cloneNode(true);
+            const titleEl = groupClone.querySelector('.issue-group-title');
+
+            titleEl.style.color = `var(--${sCls})`;
+            groupClone.querySelector('.severity-badge').classList.add(sCls);
+            groupClone.querySelector('.issue-rule-id').textContent = group.id;
+
+            const catWrapper = groupClone.querySelector('.categories-wrapper');
+            group.categories.forEach(c => {
+                const badge = document.createElement('span');
+                badge.className = 'category-badge';
+                badge.innerHTML = sanitize(c);
+                catWrapper.appendChild(badge);
+            });
+
+            groupClone.querySelector('.issue-group-count').textContent = group.instances.length;
+            groupClone.querySelector('.rule-description-content').innerHTML = formatMarkdown(descText);
+
+            const contentEl = groupClone.querySelector('.issue-group-content');
+
+            group.instances.forEach(i => {
+                const cardClone = tplCard.content.cloneNode(true);
+                const cardEl = cardClone.querySelector('.issue-card');
+
+                cardClone.querySelector('.issue-message').innerHTML = `<span>${formatMarkdown(i.message)}</span>`;
+                cardEl.appendChild(createLocationNode(i.file, i.line));
+
+                if (i.relatedLocations?.length > 0) {
+                    i.relatedLocations.forEach(rel => {
+                        const relDiv = document.createElement('div');
+                        relDiv.className = 'related-location-card';
+
+                        if (rel.message) {
+                            const msgDiv = document.createElement('div');
+                            msgDiv.className = 'related-location-msg';
+                            msgDiv.innerHTML = formatMarkdown(rel.message);
+                            relDiv.appendChild(msgDiv);
+                        }
+                        relDiv.appendChild(createLocationNode(rel.file, rel.line));
+                        cardEl.appendChild(relDiv);
+                    });
+                }
+
+                if (i.snippet) {
+                    const lHtml = i.snippet.text.split('\n').map((text, idx) => {
+                        const cur = i.snippet.startLine + idx;
+                        let cText = sanitize(text);
+                        if (cur >= i.region.startLine && cur <= (i.region.endLine || i.region.startLine)) {
+                            const start = cur === i.region.startLine ? Math.max(0, (i.region.startColumn || 1) - 1) : 0;
+                            const end = cur === (i.region.endLine || i.region.startLine) && i.region.endColumn
+                                ? Math.min(text.length, i.region.endColumn - 1) : text.length;
+                            cText = `${sanitize(text.substring(0, start))}<span class="code-highlight">` +
+                                    `${sanitize(text.substring(start, end))}</span>${sanitize(text.substring(end))}`;
+                        }
+                        return `<span class="code-line-number">${cur}</span><span class="code-content">${cText}</span>`;
+                    }).join('');
+
+                    const snipDiv = document.createElement('div');
+                    snipDiv.className = 'issue-code-snippet';
+                    snipDiv.innerHTML = lHtml;
+                    cardEl.appendChild(snipDiv);
+                }
+
+                contentEl.appendChild(cardClone);
+            });
+
+            fragment.appendChild(groupClone);
+        });
+        issueList.appendChild(fragment);
+    }
+
+    async function tryLoadInitialData() {
+        Perf.groupStart('App Initialization');
+        Perf.start('App Init');
+        try {
+            await loadSarifFromScript('sarif-report', "Embedded Report");
+        } catch (err) {
+            showError("Error processing embedded report: " + err.message);
+            console.error(err);
+        }
+        Perf.end('App Init');
+        Perf.groupEnd();
+    }
+
+    tryLoadInitialData();
+</script>
 </body>
 </html>
