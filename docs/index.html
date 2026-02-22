@@ -89,7 +89,7 @@
         h1 {
             font-size: 1.25rem; font-weight: 600; color: var(--text-main);
             display: flex; align-items: center; gap: 0.5rem;
-            min-width: 0; flex: 0 1 auto; user-select: none;
+            min-width: 0; flex: 0 1 auto; user-select: none; cursor: pointer;
         }
 
         h1 svg { flex-shrink: 0; }
@@ -154,7 +154,7 @@
 
         .or-separator {
             display: flex; align-items: center; width: 100%; max-width: 280px;
-            margin: 1rem 0; color: var(--text-tertiary); font-size: 0.8rem; user-select: none;
+            margin: 1rem auto; color: var(--text-tertiary); font-size: 0.8rem; user-select: none;
         }
         .or-separator::before, .or-separator::after { content: ""; flex: 1; height: 1px; background: var(--border); }
         .or-separator span { padding: 0 1rem; }
@@ -166,6 +166,13 @@
         }
         .drop-actions:hover { color: var(--primary); text-decoration-style: solid; }
         .drop-actions strong { font-weight: 700; }
+
+        .loader-container { display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 50vh; }
+        .loader { width: 48px; height: 48px; background: var(--primary); display: inline-block; border-radius: 50%; box-sizing: border-box; animation: animloader 1s ease-in infinite; }
+        @keyframes animloader {
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: scale(1); opacity: 0; }
+        }
 
         #file-input { display: none; }
         #results-container { display: none; max-width: 1200px; margin: 0 auto; }
@@ -183,20 +190,19 @@
         .metric-card.is-info { --card-accent: var(--severity-info); }
         .metric-card:hover, .metric-card.is-active { box-shadow: 0 4px 12px color-mix(in srgb, var(--card-accent) 30%, transparent); }
         .metric-card.is-active { border-color: var(--card-accent); }
-        .metric-card:hover .metric-icon, .metric-card.is-active .metric-icon { opacity: 1; }
 
         .metric-icon {
             position: absolute; top: 1rem; right: 1rem; width: 24px; height: 24px; color: var(--card-accent);
-            opacity: 0.5; pointer-events: none; display: flex; align-items: center; justify-content: center; transition: opacity 0.2s ease;
+            pointer-events: none; display: flex; align-items: center; justify-content: center;
         }
-        .metric-icon svg { width: 100%; height: 100%; stroke-width: 2; }
+        .metric-icon svg { width: 100%; height: 100%; fill: currentColor; }
 
         .metric-value { font-size: 2rem; font-weight: 700; color: var(--card-accent); position: relative; z-index: 1; line-height: 1; margin-bottom: 0.25rem; }
         .metric-label { color: var(--card-accent); font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; position: relative; z-index: 1; line-height: 1.2; }
 
-        .filter-section, .issue-group { background-color: var(--bg-surface); border-radius: 8px; border: 1px solid var(--border); transition: box-shadow 0.2s ease, border-color 0.2s ease; }
+        .filter-section, .issue-group, .empty-state { background-color: var(--bg-surface); border-radius: 8px; border: 1px solid var(--border); transition: box-shadow 0.2s ease, border-color 0.2s ease; }
         .filter-section { padding: 1rem; margin-bottom: 1.5rem; }
-        .filter-section:hover, .issue-group:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.3); border-color: var(--text-tertiary); }
+        .filter-section:hover, .issue-group:hover, .empty-state:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.3); border-color: var(--text-tertiary); }
 
         .search-row { margin-bottom: 1.5rem; position: relative; display: flex; align-items: center; }
 
@@ -286,10 +292,7 @@
         .category-wrapper { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: flex-end; max-width: 100%; flex-shrink: 0; }
         .category-badge { background-color: var(--bg-surface); border: 1px solid var(--border); color: var(--text-secondary); padding: 0.2rem 0.6rem; border-radius: 100px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
 
-        .severity-badge { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex-shrink: 0; margin-top: 0.5rem; cursor: pointer; opacity: 0.9; transition: opacity 0.2s ease; background-color: var(--badge-color, transparent); box-shadow: 0 0 6px var(--badge-color, transparent); }
-        .severity-badge:hover { opacity: 1; }
-        .issue-group-title .severity-badge { margin-top: 0; width: 12px; height: 12px; }
-        .issue-group.is-collapsed .severity-badge { background-color: transparent; box-shadow: none; }
+        .severity-icon { width: 1rem; height: 1rem; flex-shrink: 0; cursor: pointer; fill: var(--badge-color); }
         .severity-error { --badge-color: var(--severity-error); }
         .severity-warning { --badge-color: var(--severity-warning); }
         .severity-info { --badge-color: var(--severity-info); }
@@ -328,7 +331,7 @@
         .toast.is-info { background-color: var(--bg-elevation); color: var(--text-main); border-color: var(--primary); }
         @keyframes slideIn { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-        .empty-state { text-align: center; padding: 4rem 2rem; color: var(--text-secondary); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem; }
+        .empty-state { text-align: center; padding: 2rem; color: var(--text-secondary); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem; }
         .empty-state-title { font-weight: 600; font-size: 1.1rem; color: var(--text-secondary); margin-top: 0.5rem; }
         .empty-state-subtitle { font-size: 0.9rem; color: var(--text-tertiary); }
         .empty-state svg { color: var(--text-secondary); }
@@ -340,21 +343,31 @@
             backdrop-filter: blur(4px); border: 4px dashed var(--primary); color: var(--primary);
         }
         #drag-overlay svg { width: 64px; height: 64px; stroke: var(--primary); margin-bottom: 1rem; }
+        #drag-overlay h2 { font-size: 1.5rem; font-weight: 600; }
+
+        .svg-sprites { display: none; }
+        .header-logo { color: var(--primary); }
+        .empty-state-icon { stroke-width: 1.5; }
+        .chevron-icon-bold { stroke-width: 2.5; }
     </style>
 </head>
 <body>
 
-<svg style="display: none;" xmlns="http://www.w3.org/2000/svg">
+<svg class="svg-sprites" xmlns="http://www.w3.org/2000/svg">
     <defs>
         <symbol id="icon-logo" viewBox="0 0 24 24"><path d="M20 8h-2.81c-.45-.78-1.07-1.45-1.82-1.96L17 4.41 15.59 3l-2.17 2.17C12.96 5.06 12.49 5 12 5c-.49 0-.96.06-1.41.17L8.41 3 7 4.41l1.62 1.63C7.88 6.55 7.26 7.22 6.81 8H4v2h2.09c-.05.33-.09.66-.09 1v1H4v2h2v1c0 .34.04.67.09 1H4v2h2.81c1.04 1.79 2.97 3 5.19 3s4.15-1.21 5.19-3H20v-2h-2.09c.05-.33.09-.66.09-1v-1h2v-2h-2v-1c0-.34-.04-.67-.09-1H20V8zm-6 8h-4v-2h4v2zm0-4h-4v-2h4v2z"/></symbol>
         <symbol id="icon-open" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path><line x1="12" y1="11" x2="12" y2="17"></line><line x1="9" y1="14" x2="15" y2="14"></line></symbol>
         <symbol id="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></symbol>
         <symbol id="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></symbol>
         <symbol id="icon-github" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></symbol>
-        <symbol id="icon-list" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></symbol>
-        <symbol id="icon-error" viewBox="0 0 24 24"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon><line x1="9" y1="9" x2="15" y2="15"></line><line x1="15" y1="9" x2="9" y2="15"></line></symbol>
-        <symbol id="icon-warning" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></symbol>
-        <symbol id="icon-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></symbol>
+        <symbol id="icon-list-outline" viewBox="0 -960 960 960"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h168q13-36 43.5-58t68.5-22q38 0 68.5 22t43.5 58h168q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm80-80h280v-80H280v80Zm0-160h400v-80H280v80Zm0-160h400v-80H280v80Zm221.5-198.5Q510-807 510-820t-8.5-21.5Q493-850 480-850t-21.5 8.5Q450-833 450-820t8.5 21.5Q467-790 480-790t21.5-8.5ZM200-200v-560 560Z"/></symbol>
+        <symbol id="icon-list-fill" viewBox="0 -960 960 960"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h168q13-36 43.5-58t68.5-22q38 0 68.5 22t43.5 58h168q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm80-160h280v-80H280v80Zm0-160h400v-80H280v80Zm0-160h400v-80H280v80Zm221.5-198.5Q510-807 510-820t-8.5-21.5Q493-850 480-850t-21.5 8.5Q450-833 450-820t8.5 21.5Q467-790 480-790t21.5-8.5Z"/></symbol>
+        <symbol id="icon-error-fill" viewBox="0 -960 960 960"><path d="M363-120q-16 0-30.5-6T307-143L143-307q-11-11-17-25.5t-6-30.5v-234q0-16 6-30.5t17-25.5l164-164q11-11 25.5-17t30.5-6h234q16 0 30.5 6t25.5 17l164 164q11 11 17 25.5t6 30.5v234q0 16-6 30.5T817-307L653-143q-11 11-25.5 17t-30.5 6H363Zm117-304 86 86q11 11 28 11t28-11q11-11 11-28t-11-28l-86-86 86-86q11-11 11-28t-11-28q-11-11-28-11t-28 11l-86 86-86-86q-11-11-28-11t-28 11q-11 11-11 28t11 28l86 86-86 86q-11 11-11 28t11 28q11 11 28 11t28-11l86-86Z"/></symbol>
+        <symbol id="icon-error-outline" viewBox="0 -960 960 960"><path d="M363-120q-16 0-30.5-6T307-143L143-307q-11-11-17-25.5t-6-30.5v-234q0-16 6-30.5t17-25.5l164-164q11-11 25.5-17t30.5-6h234q16 0 30.5 6t25.5 17l164 164q11 11 17 25.5t6 30.5v234q0 16-6 30.5T817-307L653-143q-11 11-25.5 17t-30.5 6H363Zm1-80h232l164-164v-232L596-760H364L200-596v232l164 164Zm116-224 86 86q11 11 28 11t28-11q11-11 11-28t-11-28l-86-86 86-86q11-11 11-28t-11-28q-11-11-28-11t-28 11l-86 86-86-86q-11-11-28-11t-28 11q-11 11-11 28t11 28l86 86-86 86q-11 11-11 28t11 28q11 11 28 11t28-11l86-86Zm0-56Z"/></symbol>
+        <symbol id="icon-warning-fill" viewBox="0 -960 960 960"><path d="M109-120q-11 0-20-5.5T75-140q-5-9-5.5-19.5T75-180l370-640q6-10 15.5-15t19.5-5q10 0 19.5 5t15.5 15l370 640q6 10 5.5 20.5T885-140q-5 9-14 14.5t-20 5.5H109Zm399.5-131.5Q520-263 520-280t-11.5-28.5Q497-320 480-320t-28.5 11.5Q440-297 440-280t11.5 28.5Q463-240 480-240t28.5-11.5Zm0-120Q520-383 520-400v-120q0-17-11.5-28.5T480-560q-17 0-28.5 11.5T440-520v120q0 17 11.5 28.5T480-360q17 0 28.5-11.5Z"/></symbol>
+        <symbol id="icon-warning-outline" viewBox="0 -960 960 960"><path d="M109-120q-11 0-20-5.5T75-140q-5-9-5.5-19.5T75-180l370-640q6-10 15.5-15t19.5-5q10 0 19.5 5t15.5 15l370 640q6 10 5.5 20.5T885-140q-5 9-14 14.5t-20 5.5H109Zm69-80h604L480-720 178-200Zm330.5-51.5Q520-263 520-280t-11.5-28.5Q497-320 480-320t-28.5 11.5Q440-297 440-280t11.5 28.5Q463-240 480-240t28.5-11.5Zm0-120Q520-383 520-400v-120q0-17-11.5-28.5T480-560q-17 0-28.5 11.5T440-520v120q0 17 11.5 28.5T480-360q17 0 28.5-11.5ZM480-460Z"/></symbol>
+        <symbol id="icon-info-fill" viewBox="0 -960 960 960"><path d="M508.5-291.5Q520-303 520-320v-160q0-17-11.5-28.5T480-520q-17 0-28.5 11.5T440-480v160q0 17 11.5 28.5T480-280q17 0 28.5-11.5Zm0-320Q520-623 520-640t-11.5-28.5Q497-680 480-680t-28.5 11.5Q440-657 440-640t11.5 28.5Q463-600 480-600t28.5-11.5ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z"/></symbol>
+        <symbol id="icon-info-outline" viewBox="0 -960 960 960"><path d="M508.5-291.5Q520-303 520-320v-160q0-17-11.5-28.5T480-520q-17 0-28.5 11.5T440-480v160q0 17 11.5 28.5T480-280q17 0 28.5-11.5Zm0-320Q520-623 520-640t-11.5-28.5Q497-680 480-680t-28.5 11.5Q440-657 440-640t11.5 28.5Q463-600 480-600t28.5-11.5ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/></symbol>
         <symbol id="icon-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></symbol>
         <symbol id="icon-empty-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="8" y1="11" x2="14" y2="11"></line></symbol>
         <symbol id="icon-empty-report" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></symbol>
@@ -364,7 +377,7 @@
 
 <header>
     <h1>
-        <svg class="svg-icon-fill" width="28" height="28" style="color:var(--primary)"><use href="#icon-logo"/></svg>
+        <svg class="svg-icon-fill header-logo" width="28" height="28"><use href="#icon-logo"/></svg>
         <span class="title-text">
             <span class="title-prefix">Android Lint</span><span class="title-suffix">SARIF Viewer</span>
         </span>
@@ -386,16 +399,20 @@
 </header>
 
 <main>
-    <div id="drop-zone">
+    <div id="loader-container" class="loader-container">
+        <span class="loader"></span>
+    </div>
+
+    <div id="drop-zone" class="is-hidden">
         <svg class="svg-icon"><use href="#icon-open"/></svg>
         <div class="drop-text-main">Drop your SARIF file here</div>
 
-        <div class="or-separator">
-            <span>or</span>
-        </div>
+        <div id="example-container" class="is-hidden">
+            <div class="or-separator">
+                <span>or</span>
+            </div>
 
-        <div class="drop-actions" id="load-example-wrapper">
-            load report from <strong>android/nowinandroid</strong> project
+            <div class="drop-actions" id="load-example-wrapper"></div>
         </div>
         <input type="file" id="file-input" accept=".sarif,.json">
     </div>
@@ -403,22 +420,22 @@
     <div id="results-container">
         <div class="metric-grid">
             <div class="metric-card is-active" data-value="all">
-                <div class="metric-icon"><svg class="svg-icon"><use href="#icon-list"/></svg></div>
+                <div class="metric-icon"><svg class="svg-icon"><use href="#icon-list-fill"/></svg></div>
                 <div class="metric-value" id="metric-total">0</div>
                 <div class="metric-label">Total Issues</div>
             </div>
             <div class="metric-card is-error" data-value="error">
-                <div class="metric-icon"><svg class="svg-icon"><use href="#icon-error"/></svg></div>
+                <div class="metric-icon"><svg class="svg-icon"><use href="#icon-error-outline"/></svg></div>
                 <div class="metric-value" id="metric-errors">0</div>
                 <div class="metric-label">Errors</div>
             </div>
             <div class="metric-card is-warning" data-value="warning">
-                <div class="metric-icon"><svg class="svg-icon"><use href="#icon-warning"/></svg></div>
+                <div class="metric-icon"><svg class="svg-icon"><use href="#icon-warning-outline"/></svg></div>
                 <div class="metric-value" id="metric-warnings">0</div>
                 <div class="metric-label">Warnings</div>
             </div>
             <div class="metric-card is-info" data-value="info">
-                <div class="metric-icon"><svg class="svg-icon"><use href="#icon-info"/></svg></div>
+                <div class="metric-icon"><svg class="svg-icon"><use href="#icon-info-outline"/></svg></div>
                 <div class="metric-value" id="metric-info">0</div>
                 <div class="metric-label">Hints</div>
             </div>
@@ -457,13 +474,13 @@
         <div id="issue-list" class="issue-list"></div>
 
         <div id="empty-filter-state" class="empty-state is-hidden">
-            <svg class="svg-icon" width="64" height="64" style="stroke-width: 1.5"><use href="#icon-empty-search"/></svg>
+            <svg class="svg-icon empty-state-icon" width="64" height="64"><use href="#icon-empty-search"/></svg>
             <span class="empty-state-title">No matching issues found!</span>
             <span class="empty-state-subtitle">Try adjusting your filters or search query.</span>
         </div>
 
         <div id="empty-report-state" class="empty-state is-hidden">
-            <svg class="svg-icon" width="64" height="64" style="stroke-width: 1.5"><use href="#icon-empty-report"/></svg>
+            <svg class="svg-icon empty-state-icon" width="64" height="64"><use href="#icon-empty-report"/></svg>
             <span class="empty-state-title">No issues found!</span>
             <span class="empty-state-subtitle">This report contains no lint issues. Great job!</span>
         </div>
@@ -475,9 +492,9 @@
         <details class="rule-details">
             <summary class="issue-group-header">
                 <div class="issue-group-title">
-                    <span class="severity-badge"></span>
+                    <svg class="severity-icon"><use href=""></use></svg>
                     <span class="issue-rule-id"></span>
-                    <svg class="chevron-icon svg-icon" width="18" height="18" style="stroke-width: 2.5"><use href="#icon-chevron"/></svg>
+                    <svg class="chevron-icon svg-icon chevron-icon-bold" width="18" height="18"><use href="#icon-chevron"/></svg>
                 </div>
                 <div class="issue-group-meta">
                     <div class="category-wrapper"></div>
@@ -494,13 +511,15 @@
 
 <div id="drag-overlay" class="is-hidden">
     <svg class="svg-icon"><use href="#icon-open"/></svg>
-    <h2 style="font-size: 1.5rem; font-weight: 600;">Drop to Load New File</h2>
+    <h2>Drop to Load New File</h2>
 </div>
 
-<script id="sarif-example" data-src="lint-results-demoDebug.sarif" type="application/json"></script>
+<!--region SARIF-->
+<script id="sarif-example" data-src="lint-results-demoDebug.sarif" data-project="android/nowinandroid" type="application/json"></script>
 <!--<script id="sarif-example" type="application/gzip+base64">H4sICJmRi2kAA3NtYWxsLnNhcmlmAMVVTW/bMAz9K4IwoIel9up2wJqlWbvusAIdMDTdaRkCxWJsDbZkSHTSrMh/H2U7qfPdw4A5h+iDfHokn6hn/sbFKeSCd3mKWLhuGFoxCxKFaTkuHdjYaASNQWzy0Ain3CnGLnTCqsmpKyAOc+EQbDioYFAst6rpaRScBe+C385o3uFTsE7RqMurZVqxpXa8+/OZozEZ7z5zaRVZ+ZEWOZDljZbWKMnulcY1iA9B1EBkUGMoSctfhZWxkSAf4ck7uNRY/AIutqrAypMO81stU1YtLDpcwkSUGd4aPVFJacXSIYMpED0O1hrrDQtrCrCo/MmEJxLPgN8aayFGDc7RyXeUN6srDJGpPzXYr8Wi0zD9oSm98gGcKW0M7jDX2pjZlfUr2M6E1Uon+/l+BzsxNhc6hjaxx3lhjtAZFJBlhM1WGTlGRhuE12WOmHgynGIlwLq0vsh3u8qbk4dIYGdVHVpPccgH5ThXOOQdRiGVmWSUS3bdbC9T6smt15nmJq4CqUkU6dypWGT3zao/VFAoExFje620ijBEUYTO+uuhdEiHhJmYmxJDMlZThfOR3wie8oxXsSaNs0OCJLFTSGfvO/X01mRlTrvReYeDli+7NFntXRJMdVef8GEnWkRoWhUFYCtbjL7e5xLR6KFmzSfqO9dV8mrIr98qGboqg6Nxbci3TevgRjMlMSWnmRXFqOkcu8z96VcvhdmLl4JKUtwCZGGfLxZeJ52WNrYv1LY6HlNYVZydPAS1CIKych3VsxNGtQNhHUPDxsDqzbY+ljfrHytkKrKS/moW7qA2LjakcXbZksbFmjLOoyPK2C+M5or4Vkw1IL4jPxzy/rc5uymKXkO1X9dv0zz24Y4cIPpwyGvQDA/7rdWCvJrWN6jmh10zkyiSZ//e/69Md0hl2eK2BULtwj85ykiSmXJMMHr4cqNZrpxrut5HJulFIoGyHIRuPEi1Q/6prZKq5f0/iUQbEjmPWhKJ1iVytHnskkhv9RrtEcC6XuqsbuimF76ANHXyv7+XESPqlwgAAA==</script>-->
 <!-- Placeholder for embedded report (populated by CI/CD or other tools) -->
 <script id="sarif-report" type="application/gzip+base64"></script>
+<!--endregion SARIF-->
 
 <script>
     const Perf = {
@@ -508,13 +527,11 @@
         end: (name) => {
             performance.mark(`${name}-end`);
             performance.measure(name, `${name}-start`, `${name}-end`);
-            console.log(`⏱️ [${name}] took ${performance.getEntriesByName(name).pop().duration.toFixed(2)}ms`);
+            console.log(`⏱️ [${name}] ${Number(performance.getEntriesByName(name).pop().duration.toFixed(2))} ms`);
             performance.clearMarks(`${name}-start`);
             performance.clearMarks(`${name}-end`);
             performance.clearMeasures(name);
-        },
-        groupStart: (name, collapsed = false) => collapsed ? console.groupCollapsed(name) : console.group(name),
-        groupEnd: () => console.groupEnd()
+        }
     };
 
     const DOM = {
@@ -531,6 +548,8 @@
         searchHint: document.getElementById('search-hint'),
         regexToggle: document.getElementById('regex-toggle'),
         dragOverlay: document.getElementById('drag-overlay'),
+        loaderContainer: document.getElementById('loader-container'),
+        exampleContainer: document.getElementById('example-container'),
         loadExampleWrapper: document.getElementById('load-example-wrapper'),
         toast: document.getElementById('toast'),
         metrics: {
@@ -578,7 +597,7 @@
         return json;
     }
 
-    async function decodeGzipJson(base64) {
+    async function decodeGzipBase64(base64) {
         if (!("DecompressionStream" in window)) return showError("DecompressionStream('gzip') not supported in this browser."), null;
         try {
             Perf.start('Base64 Decode & Unzip');
@@ -586,7 +605,7 @@
             const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream("gzip"));
             const text = await new Response(stream).text();
             Perf.end('Base64 Decode & Unzip');
-            return parseJson(text);
+            return text;
         } catch (err) {
             console.error("Decompression failed", err);
             return showError(`Failed to decompress embedded file: ${err.message}`), null;
@@ -668,6 +687,10 @@
 
     initTheme();
 
+    document.querySelector('header h1').addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
     const state = {
         rawIssues: [], filteredIssues: [], categories: new Set(), issueIds: new Set(),
         rules: new Map(), filename: '', driverInfo: { name: '', version: '' }, reportDate: null, fileLastModified: null,
@@ -710,9 +733,10 @@
     window.addEventListener('popstate', () => {
         readURL();
         if (state.rawIssues.length === 0) return;
-        updatePillVisuals([FILTER_CONFIG.severities.container, DOM.metrics.grid], state.filters.severities);
+        updateMetricCards(state.filters.severities);
+        updatePillStates(FILTER_CONFIG.severities.container, state.filters.severities);
         Object.entries(FILTER_CONFIG).forEach(([key, config]) => {
-            if (key !== 'severities') updatePillVisuals([config.container], state.filters[key]);
+            if (key !== 'severities') updatePillStates(config.container, state.filters[key]);
         });
         applyFilters();
     });
@@ -775,7 +799,8 @@
         state.fileLastModified = lastModified || Date.now();
         processSarif(json);
         readURL();
-        updatePillVisuals([FILTER_CONFIG.severities.container, DOM.metrics.grid], state.filters.severities);
+        updateMetricCards(state.filters.severities);
+        updatePillStates(FILTER_CONFIG.severities.container, state.filters.severities);
         showResultsUI();
     }
 
@@ -790,19 +815,22 @@
 
         Perf.start('Fetch / Process Data');
         let json = null;
-        if (src) {
-            const response = await fetch(src);
-            if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-            json = parseJson(await response.text());
-        } else if (type === 'application/json') {
-            json = parseJson(content);
-        } else if (type === 'application/gzip+base64') {
-            json = await decodeGzipJson(content);
-        } else {
+        try {
+            if (src) {
+                const response = await fetch(src);
+                if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                json = await response.text();
+            } else if (type === 'application/json') {
+                json = content;
+            } else if (type === 'application/gzip+base64') {
+                json = await decodeGzipBase64(content);
+            } else {
+                throw new Error("Unknown data format type.");
+            }
+            json = parseJson(json)
+        } finally {
             Perf.end('Fetch / Process Data');
-            throw new Error("Unknown data format type.");
         }
-        Perf.end('Fetch / Process Data');
 
         if (!json) return false;
         loadSarifData(json, element.getAttribute('title') || src || defaultFilename, Date.now());
@@ -811,20 +839,21 @@
 
     DOM.loadExampleWrapper.addEventListener('click', async event => {
         event.preventDefault(); event.stopPropagation();
-        Perf.groupStart('Loading Example');
-        Perf.start('Total Load Example');
         try { if (!(await loadSarifFromScript('sarif-example', "Unknown"))) showError("Example data not found."); }
         catch (err) { showError(`Failed to load: ${err.message}`); }
-        Perf.end('Total Load Example');
-        Perf.groupEnd();
     });
 
     DOM.issueList.addEventListener('click', event => {
-        const badge = event.target.closest('.severity-badge');
-        if (badge) {
+        const icon = event.target.closest('.severity-icon');
+        if (icon) {
             event.preventDefault(); event.stopPropagation();
-            const group = badge.closest('.issue-group');
-            if (group) group.classList.toggle('is-collapsed');
+            const group = icon.closest('.issue-group');
+            if (!group) return;
+
+            const isCollapsed = group.classList.toggle('is-collapsed');
+            const use = icon.querySelector('use');
+            const href = use.getAttribute('href');
+            use.setAttribute('href', isCollapsed ? href.replace('-fill', '-outline') : href.replace('-outline', '-fill'));
             return;
         }
         const locationButton = event.target.closest('.issue-location');
@@ -847,22 +876,36 @@
             filterSet.clear();
             filterSet.add(FILTER_ALL);
         } else {
-            if (filterSet.has(FILTER_ALL)) filterSet.delete(FILTER_ALL);
+            filterSet.delete(FILTER_ALL);
             if (filterSet.has(value)) filterSet.delete(value);
             else filterSet.add(value);
             if (filterSet.size === 0) filterSet.add(FILTER_ALL);
         }
 
-        if (filterType === 'severities') updatePillVisuals([FILTER_CONFIG.severities.container, DOM.metrics.grid], state.filters.severities);
-        else updatePillVisuals([FILTER_CONFIG[filterType].container], filterSet);
+        if (filterType === 'severities') {
+            updateMetricCards(state.filters.severities);
+            updatePillStates(FILTER_CONFIG.severities.container, state.filters.severities);
+        } else {
+            updatePillStates(FILTER_CONFIG[filterType].container, filterSet);
+        }
 
         applyFilters();
     }
 
-    function updatePillVisuals(containers, filterSet) {
-        containers.forEach(container => Array.from(container.children).forEach(pill => {
+    function updatePillStates(container, filterSet) {
+        if (!container) return;
+        Array.from(container.children).forEach(pill => {
             pill.classList.toggle('is-active', filterSet.has(pill.getAttribute('data-value')));
-        }));
+        });
+    }
+
+    function updateMetricCards(filterSet) {
+        Array.from(DOM.metrics.grid.children).forEach(card => {
+            const value = card.getAttribute('data-value');
+            const isActive = filterSet.has(value);
+            card.classList.toggle('is-active', isActive);
+            card.querySelector('use').setAttribute('href', `#icon-${value === 'all' ? 'list' : value}-${isActive ? 'fill' : 'outline'}`);
+        });
     }
 
     function handleFiles(files) {
@@ -872,8 +915,6 @@
 
         if (!fileName.endsWith('.sarif') && !fileName.endsWith('.json')) return showError("Invalid file format. Please use .sarif or .json files.");
 
-        Perf.groupStart(`Loading File: ${file.name}`);
-        Perf.start('Total File Load');
         Perf.start('File Read');
 
         const reader = new FileReader();
@@ -881,17 +922,13 @@
             Perf.end('File Read');
             try { loadSarifData(parseJson(event.target.result), file.name, file.lastModified); }
             catch (err) { state.filename = ''; DOM.reportInfo.innerHTML = ''; showError(err.message || "Could not parse JSON."); }
-            finally { Perf.end('Total File Load'); Perf.groupEnd(); }
         };
-        reader.onerror = () => { Perf.end('File Read'); showError("Error reading file."); Perf.end('Total File Load'); Perf.groupEnd(); };
+        reader.onerror = () => { Perf.end('File Read'); showError("Error reading file."); };
         reader.readAsText(file);
     }
 
     function processSarif(sarif) {
-        Perf.groupStart('Processing SARIF');
-        Perf.start('Total SARIF Process');
-
-        if (!sarif?.runs || !Array.isArray(sarif.runs)) { Perf.groupEnd(); throw new Error("Invalid SARIF: Missing 'runs' array."); }
+        if (!sarif?.runs || !Array.isArray(sarif.runs)) { throw new Error("Invalid SARIF: Missing 'runs' array."); }
 
         const run = sarif.runs[0] || {};
         const driver = run.tool?.driver || {};
@@ -951,13 +988,11 @@
 
         updateMetrics();
         applyFilters();
-
-        Perf.end('Total SARIF Process');
-        Perf.groupEnd();
     }
 
     function showResultsUI() {
         DOM.dropZone.classList.add('is-hidden');
+        DOM.loaderContainer.classList.add('is-hidden');
         DOM.resultsContainer.style.display = 'block';
         const toolStr = `${state.driverInfo.name} ${state.driverInfo.version ? 'v' + state.driverInfo.version : ''}`;
         const dateStr = state.reportDate?.toLocaleString() || '';
@@ -975,6 +1010,7 @@
         });
 
         DOM.dropZone.classList.remove('is-hidden');
+        DOM.loaderContainer.classList.add('is-hidden');
         DOM.resultsContainer.style.display = 'none';
         DOM.reportInfo.innerHTML = '';
         DOM.fileInput.value = '';
@@ -982,7 +1018,8 @@
         DOM.searchHint.style.opacity = state.filters.text ? '0' : '1';
 
         Object.entries(FILTER_CONFIG).forEach(([key, config]) => { if (key !== 'severities') renderPills(config.container, []); });
-        updatePillVisuals([FILTER_CONFIG.severities.container, DOM.metrics.grid], state.filters.severities);
+        updateMetricCards(state.filters.severities);
+        updatePillStates(FILTER_CONFIG.severities.container, state.filters.severities);
     }
 
     function renderPills(container, items) {
@@ -993,8 +1030,6 @@
     }
 
     function applyFilters() {
-        Perf.groupStart('Filtering & Rendering', true);
-        Perf.start('Total Update');
         Perf.start('Filtering');
 
         let needsPillRender = false;
@@ -1039,9 +1074,6 @@
         Perf.start('Rendering UI');
         renderList();
         Perf.end('Rendering UI');
-
-        Perf.end('Total Update');
-        Perf.groupEnd();
     }
 
     function updatePillCounts(issues) {
@@ -1108,11 +1140,17 @@
             const severityClass = `severity-${getSeverity(group.level)}`;
 
             const groupClone = DOM.templates.group.content.cloneNode(true);
-            const titleElement = groupClone.querySelector('.issue-group-title');
+            const groupElement = groupClone.querySelector('.issue-group');
+            groupElement.classList.add(severityClass);
 
-            titleElement.style.color = `var(--${severityClass})`;
-            groupClone.querySelector('.severity-badge').classList.add(severityClass);
+            const severity = getSeverity(group.level);
+            const icon = groupClone.querySelector('.severity-icon');
+            icon.classList.add(`severity-${severity}`);
+            icon.querySelector('use').setAttribute('href', `#icon-${severity}-fill`);
+
             groupClone.querySelector('.issue-rule-id').textContent = group.id;
+            const titleElement = groupClone.querySelector('.issue-group-title');
+            titleElement.style.color = `var(--badge-color)`;
 
             const categoryWrapper = groupClone.querySelector('.category-wrapper');
             group.categories.forEach(category => {
@@ -1165,16 +1203,39 @@
         DOM.issueList.appendChild(fragment);
     }
 
-    async function tryLoadInitialData() {
-        Perf.groupStart('App Initialization');
-        Perf.start('App Init');
-        try { await loadSarifFromScript('sarif-report', "Embedded Report"); }
-        catch (err) { showError(`Error processing embedded report: ${err.message}`); console.error(err); }
-        Perf.end('App Init');
-        Perf.groupEnd();
+    function initExample() {
+        const exampleElement = document.getElementById('sarif-example');
+        if (!exampleElement) return;
+
+        const project = exampleElement.getAttribute('data-project');
+        const src = exampleElement.getAttribute('data-src');
+
+        const message = project ? `load report from <strong>${sanitize(project)}</strong> project`
+                      : src ? `load <strong>${sanitize(src)}</strong> report`
+                      : null;
+
+        if (!message) return;
+
+        DOM.loadExampleWrapper.innerHTML = message;
+        DOM.exampleContainer.classList.remove('is-hidden');
     }
 
-    tryLoadInitialData();
+    async function init() {
+        Perf.start('App Init');
+        let loaded = false;
+
+        initExample();
+
+        try { loaded = await loadSarifFromScript('sarif-report', "Embedded Report"); }
+        catch (err) { showError(`Error processing embedded report: ${err.message}`); console.error(err); }
+        finally {
+            DOM.loaderContainer.classList.add('is-hidden');
+            if (!loaded) DOM.dropZone.classList.remove('is-hidden');
+        }
+        Perf.end('App Init');
+    }
+
+    init();
 </script>
 </body>
 </html>
