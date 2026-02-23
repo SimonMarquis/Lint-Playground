@@ -16,6 +16,28 @@
 - **⚙️ CI/CD Ready:** Embed report data to generate portable HTML artifacts.
 - **💅 Modern UI:** Markdown support and highlighted inline code snippets.
 
+
+> [!TIP]
+> <details>
+> <summary>How to create an embedded HTML report from a SARIF file?</summary>
+> 
+> ```shell
+> (
+>   sarif="input.sarif"         # SARIF input file
+>   template="docs/index.html"  # HTML template file
+>   output="report.html"        # HTML output file
+> 
+>   {
+>     sed -n '1,/<!--region SARIF-->/p' "$template"
+>     printf '<script id="sarif-report" type="application/gzip+base64">'
+>     jq -c . "$sarif" | gzip -cn | base64 | tr -d '\n'
+>     printf '</script>\n'
+>     sed -n '/<!--endregion SARIF-->/,$p' "$template"
+>   } > "$output"
+> )
+> ```
+> </details>
+
 ### ▶️ Run configurations
 
 - `🕵️ Lint`: [txt](app/build/reports/lint-results-debug.txt), [xml](app/build/reports/lint-results-debug.xml), [html](app/build/reports/lint-results-debug.html), [sarif](app/build/reports/lint-results-debug.sarif)
