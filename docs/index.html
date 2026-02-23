@@ -175,7 +175,7 @@
         }
 
         #file-input { display: none; }
-        #results-container { display: none; max-width: 1200px; margin: 0 auto; }
+        #results-container { max-width: 1200px; margin: 0 auto; }
 
         .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
 
@@ -252,7 +252,7 @@
         .pill:focus { outline: 2px solid var(--text-tertiary); outline-offset: 2px; border-color: var(--text-tertiary); }
 
         .pill-label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; flex: 0 1 auto; }
-        .pill-count { white-space: nowrap; padding-left: 0.35rem; flex: 0 0 auto; font-variant-numeric: tabular-nums; }
+        .pill-count { white-space: nowrap; padding-left: 0.35rem; flex: 0 0 auto; }
 
         .pill.is-active { background-color: var(--primary-bg); color: var(--primary); border-color: var(--primary); text-shadow: 0 0 0.65px currentColor; font-weight: normal; }
         .pill[data-severity="error"].is-active { --pill-color: var(--severity-error); }
@@ -417,7 +417,7 @@
         <input type="file" id="file-input" accept=".sarif,.json">
     </div>
 
-    <div id="results-container">
+    <div id="results-container" class="is-hidden">
         <div class="metric-grid">
             <div class="metric-card is-active" data-value="all">
                 <div class="metric-icon"><svg class="svg-icon"><use href="#icon-list-fill"/></svg></div>
@@ -516,12 +516,17 @@
 
 <!--region SARIF-->
 <script id="sarif-example" data-src="lint-results-demoDebug.sarif" data-project="android/nowinandroid" type="application/json"></script>
-<!--<script id="sarif-example" type="application/gzip+base64">H4sICJmRi2kAA3NtYWxsLnNhcmlmAMVVTW/bMAz9K4IwoIel9up2wJqlWbvusAIdMDTdaRkCxWJsDbZkSHTSrMh/H2U7qfPdw4A5h+iDfHokn6hn/sbFKeSCd3mKWLhuGFoxCxKFaTkuHdjYaASNQWzy0Ain3CnGLnTCqsmpKyAOc+EQbDioYFAst6rpaRScBe+C385o3uFTsE7RqMurZVqxpXa8+/OZozEZ7z5zaRVZ+ZEWOZDljZbWKMnulcY1iA9B1EBkUGMoSctfhZWxkSAf4ck7uNRY/AIutqrAypMO81stU1YtLDpcwkSUGd4aPVFJacXSIYMpED0O1hrrDQtrCrCo/MmEJxLPgN8aayFGDc7RyXeUN6srDJGpPzXYr8Wi0zD9oSm98gGcKW0M7jDX2pjZlfUr2M6E1Uon+/l+BzsxNhc6hjaxx3lhjtAZFJBlhM1WGTlGRhuE12WOmHgynGIlwLq0vsh3u8qbk4dIYGdVHVpPccgH5ThXOOQdRiGVmWSUS3bdbC9T6smt15nmJq4CqUkU6dypWGT3zao/VFAoExFje620ijBEUYTO+uuhdEiHhJmYmxJDMlZThfOR3wie8oxXsSaNs0OCJLFTSGfvO/X01mRlTrvReYeDli+7NFntXRJMdVef8GEnWkRoWhUFYCtbjL7e5xLR6KFmzSfqO9dV8mrIr98qGboqg6Nxbci3TevgRjMlMSWnmRXFqOkcu8z96VcvhdmLl4JKUtwCZGGfLxZeJ52WNrYv1LY6HlNYVZydPAS1CIKych3VsxNGtQNhHUPDxsDqzbY+ljfrHytkKrKS/moW7qA2LjakcXbZksbFmjLOoyPK2C+M5or4Vkw1IL4jPxzy/rc5uymKXkO1X9dv0zz24Y4cIPpwyGvQDA/7rdWCvJrWN6jmh10zkyiSZ//e/69Md0hl2eK2BULtwj85ykiSmXJMMHr4cqNZrpxrut5HJulFIoGyHIRuPEi1Q/6prZKq5f0/iUQbEjmPWhKJ1iVytHnskkhv9RrtEcC6XuqsbuimF76ANHXyv7+XESPqlwgAAA==</script>-->
-<!-- Placeholder for embedded report (populated by CI/CD or other tools) -->
-<script id="sarif-report" type="application/gzip+base64"></script>
+<!-- Placeholders for embedded report (populated by CI/CD or other tools) -->
+<!--SARIF raw-->
+<!--<script id="sarif-report" type="application/json">{...}</script>-->
+<!--SARIF file-->
+<!--<script id="sarif-report" type="application/json" data-src="lint-results-demoDebug.sarif"></script>-->
+<!--SARIF b64 GZIP-->
+<!--<script id="sarif-report" type="application/gzip+base64">H4sICJmRi2kAA3NtYWxsLnNhcmlmAMVVTW/bMAz9K4IwoIel9up2wJqlWbvusAIdMDTdaRkCxWJsDbZkSHTSrMh/H2U7qfPdw4A5h+iDfHokn6hn/sbFKeSCd3mKWLhuGFoxCxKFaTkuHdjYaASNQWzy0Ain3CnGLnTCqsmpKyAOc+EQbDioYFAst6rpaRScBe+C385o3uFTsE7RqMurZVqxpXa8+/OZozEZ7z5zaRVZ+ZEWOZDljZbWKMnulcY1iA9B1EBkUGMoSctfhZWxkSAf4ck7uNRY/AIutqrAypMO81stU1YtLDpcwkSUGd4aPVFJacXSIYMpED0O1hrrDQtrCrCo/MmEJxLPgN8aayFGDc7RyXeUN6srDJGpPzXYr8Wi0zD9oSm98gGcKW0M7jDX2pjZlfUr2M6E1Uon+/l+BzsxNhc6hjaxx3lhjtAZFJBlhM1WGTlGRhuE12WOmHgynGIlwLq0vsh3u8qbk4dIYGdVHVpPccgH5ThXOOQdRiGVmWSUS3bdbC9T6smt15nmJq4CqUkU6dypWGT3zao/VFAoExFje620ijBEUYTO+uuhdEiHhJmYmxJDMlZThfOR3wie8oxXsSaNs0OCJLFTSGfvO/X01mRlTrvReYeDli+7NFntXRJMdVef8GEnWkRoWhUFYCtbjL7e5xLR6KFmzSfqO9dV8mrIr98qGboqg6Nxbci3TevgRjMlMSWnmRXFqOkcu8z96VcvhdmLl4JKUtwCZGGfLxZeJ52WNrYv1LY6HlNYVZydPAS1CIKych3VsxNGtQNhHUPDxsDqzbY+ljfrHytkKrKS/moW7qA2LjakcXbZksbFmjLOoyPK2C+M5or4Vkw1IL4jPxzy/rc5uymKXkO1X9dv0zz24Y4cIPpwyGvQDA/7rdWCvJrWN6jmh10zkyiSZ//e/69Md0hl2eK2BULtwj85ykiSmXJMMHr4cqNZrpxrut5HJulFIoGyHIRuPEi1Q/6prZKq5f0/iUQbEjmPWhKJ1iVytHnskkhv9RrtEcC6XuqsbuimF76ANHXyv7+XESPqlwgAAA==</script>-->
 <!--endregion SARIF-->
 
 <script>
+    // #region Utilities
     const Perf = {
         start: (name) => performance.mark(`${name}-start`),
         end: (name) => {
@@ -534,6 +539,28 @@
         }
     };
 
+    const debounce = (fn, delay) => {
+        let timeoutId;
+        return (...args) => {
+            const callNow = !timeoutId;
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => {
+                timeoutId = null;
+                if (!callNow) fn(...args);
+            }, delay);
+            if (callNow) fn(...args);
+        };
+    };
+
+    const normalize = (str) =>
+      str.normalize("NFD")
+         .replace(/[\u0300-\u036f]/g, "")
+         .toLowerCase();
+
+    const FILTER_ALL = 'all';
+    // #endregion
+
+    // #region State
     const DOM = {
         themeToggle: document.getElementById('theme-toggle'),
         dropZone: document.getElementById('drop-zone'),
@@ -569,27 +596,33 @@
         }
     };
 
-    const FILTER_ALL = 'all';
-
     const FILTER_CONFIG = {
         severities: { param: 'severity', container: DOM.filters.severities },
         categories: { param: 'category', container: DOM.filters.categories },
         issueIds: { param: 'issueId', container: DOM.filters.issueIds }
     };
 
-    const debounce = (fn, delay) => {
-        let timeoutId;
-        return (...args) => {
-            const callNow = !timeoutId;
-            clearTimeout(timeoutId);
-            timeoutId = setTimeout(() => {
-                timeoutId = null;
-                if (!callNow) fn(...args);
-            }, delay);
-            if (callNow) fn(...args);
-        };
+    const state = {
+        rawIssues: [],
+        filteredIssues: [],
+        categories: new Set(),
+        issueIds: new Set(),
+        rules: new Map(),
+        filename: '',
+        driverInfo: { name: '', version: '' },
+        reportDate: null,
+        fileLastModified: null,
+        filters: {
+            text: '',
+            isRegex: false,
+            categories: new Set([FILTER_ALL]),
+            issueIds: new Set([FILTER_ALL]),
+            severities: new Set([FILTER_ALL])
+        }
     };
+    // #endregion
 
+    // #region Helpers
     function parseJson(text) {
         Perf.start('JSON Parse');
         const json = JSON.parse(text);
@@ -598,7 +631,10 @@
     }
 
     async function decodeGzipBase64(base64) {
-        if (!("DecompressionStream" in window)) return showError("DecompressionStream('gzip') not supported in this browser."), null;
+        if (!("DecompressionStream" in window)) {
+            showError("DecompressionStream('gzip') not supported in this browser.");
+            return null;
+        }
         try {
             Perf.start('Base64 Decode & Unzip');
             const bytes = Uint8Array.from(atob(base64.trim()), c => c.charCodeAt(0));
@@ -608,7 +644,8 @@
             return text;
         } catch (err) {
             console.error("Decompression failed", err);
-            return showError(`Failed to decompress embedded file: ${err.message}`), null;
+            showError(`Failed to decompress embedded file: ${err.message}`);
+            return null;
         }
     }
 
@@ -629,7 +666,9 @@
         setTimeout(() => DOM.toast.classList.add('is-hidden'), isError ? 10000 : 3000);
     }
 
-    function showError(message) { showToast(message, true); }
+    function showError(message) {
+        showToast(message, true);
+    }
 
     function sanitize(str) {
         if (!str) return '';
@@ -645,9 +684,14 @@
                 const [, lang, content] = part.match(/```(\w*)\n?([\s\S]*?)```/) || [];
                 return content ? `<pre><code${lang ? ` class="language-${lang}"` : ''}>${content.trimEnd()}</code></pre>` : part;
             }
-            if (part.startsWith('`') && part.endsWith('`') && part.length > 1) return `<code class="formatted-code">${part.slice(1, -1)}</code>`;
-            return part.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>').replace(/__([^_]+)__/g, '<u>$1</u>')
-                       .replace(/~~([^~]+)~~/g, '<del>$1</del>').replace(/\*([^*]+)\*/g, '<em>$1</em>').replace(/\n/g, '<br>');
+            if (part.startsWith('`') && part.endsWith('`') && part.length > 1) {
+                return `<code class="formatted-code">${part.slice(1, -1)}</code>`;
+            }
+            return part.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+                       .replace(/__([^_]+)__/g, '<u>$1</u>')
+                       .replace(/~~([^~]+)~~/g, '<del>$1</del>')
+                       .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+                       .replace(/\n/g, '<br>');
         }).join('');
     }
 
@@ -657,154 +701,78 @@
         if (severity === 'note' || severity === 'none') return 'info';
         return 'warning';
     }
+    // #endregion
 
-    function createLocationHtml(file, line) {
-        const lastIndex = file.lastIndexOf('/');
-        const dir = sanitize(file.substring(0, lastIndex + 1));
-        const name = sanitize(file.substring(lastIndex + 1));
-        return `<button class="issue-location" data-path="${sanitize(file)}:${line}">` +
-               `<span class="path-dir">${dir}</span><span class="path-name">${name}</span><span class="line-number">:${line}</span></button>`;
-    }
-
-    function applyTheme(theme, persist = true) {
-        document.documentElement.setAttribute('data-theme', theme);
-        if (persist) localStorage.setItem('theme', theme);
-    }
-
-    function initTheme() {
-        const saved = localStorage.getItem('theme');
-        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        applyTheme(saved || (systemPrefersDark ? 'dark' : 'light'), false);
-    }
-
-    DOM.themeToggle.addEventListener('click', () => {
-        applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark', true);
-    });
-
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
-        if (!localStorage.getItem('theme')) applyTheme(event.matches ? 'dark' : 'light', false);
-    });
-
-    initTheme();
-
-    document.querySelector('header h1').addEventListener('click', () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-
-    const state = {
-        rawIssues: [], filteredIssues: [], categories: new Set(), issueIds: new Set(),
-        rules: new Map(), filename: '', driverInfo: { name: '', version: '' }, reportDate: null, fileLastModified: null,
-        filters: { text: '', isRegex: false, categories: new Set([FILTER_ALL]), issueIds: new Set([FILTER_ALL]), severities: new Set([FILTER_ALL]) }
-    };
-
-    function updateURL() {
-        const params = new URLSearchParams();
-        if (state.filters.text) params.set('query', state.filters.text);
-        if (state.filters.isRegex) params.set('regex', 'true');
-
-        Object.entries(FILTER_CONFIG).forEach(([key, config]) => {
-            const set = state.filters[key];
-            if (!set.has(FILTER_ALL) && set.size > 0) params.set(config.param, Array.from(set).join(','));
-        });
-
-        const queryString = params.toString();
-        const newUrl = queryString ? `${window.location.pathname}?${queryString}` : window.location.pathname;
-        try { window.history.replaceState({ path: newUrl }, '', newUrl); } catch (e) {}
-    }
-
-    function readURL() {
-        const params = new URLSearchParams(window.location.search);
-        state.filters.text = params.get('query') || '';
-        DOM.filterText.value = state.filters.text;
-        DOM.searchHint.style.opacity = state.filters.text ? '0' : '1';
-
-        state.filters.isRegex = params.get('regex') === 'true';
-        DOM.regexToggle.classList.toggle('is-active', state.filters.isRegex);
-        DOM.filterText.classList.toggle('is-regex', state.filters.isRegex);
-
-        Object.entries(FILTER_CONFIG).forEach(([key, config]) => {
-            const value = params.get(config.param);
-            state.filters[key].clear();
-            if (value) value.split(',').forEach(v => state.filters[key].add(v.trim()));
-            else state.filters[key].add(FILTER_ALL);
-        });
-    }
-
-    window.addEventListener('popstate', () => {
-        readURL();
-        if (state.rawIssues.length === 0) return;
-        updateMetricCards(state.filters.severities);
-        updatePillStates(FILTER_CONFIG.severities.container, state.filters.severities);
-        Object.entries(FILTER_CONFIG).forEach(([key, config]) => {
-            if (key !== 'severities') updatePillStates(config.container, state.filters[key]);
-        });
-        applyFilters();
-    });
-
-    readURL();
-
-    window.addEventListener('keydown', event => {
-        if (event.key === '/' && document.activeElement !== DOM.filterText && DOM.resultsContainer.style.display !== 'none') {
-            event.preventDefault(); DOM.filterText.focus();
+    // #region SARIF
+    function processSarif(sarif) {
+        if (!sarif?.runs || !Array.isArray(sarif.runs)) {
+            throw new Error("Invalid SARIF: Missing 'runs' array.");
         }
-    });
 
-    DOM.filterText.addEventListener('focus', () => DOM.searchHint.style.opacity = '0');
-    DOM.filterText.addEventListener('blur', () => { if (!DOM.filterText.value) DOM.searchHint.style.opacity = '1'; });
+        const run = sarif.runs[0] || {};
+        const driver = run.tool?.driver || {};
+        state.driverInfo = {
+            name: driver.fullName || driver.name || "Unknown Tool",
+            version: driver.semanticVersion || driver.version || ""
+        };
 
-    DOM.filterText.addEventListener('input', debounce(() => {
-        state.filters.text = DOM.filterText.value;
-        applyFilters();
-    }, 200));
+        const dateValue = run.invocations?.[0]?.endTimeUtc || run.invocations?.[0]?.startTimeUtc || sarif.time;
+        state.reportDate = dateValue ? new Date(dateValue) : (state.fileLastModified ? new Date(state.fileLastModified) : new Date());
 
-    DOM.regexToggle.addEventListener('click', () => {
-        state.filters.isRegex = !state.filters.isRegex;
-        DOM.regexToggle.classList.toggle('is-active', state.filters.isRegex);
-        DOM.filterText.classList.toggle('is-regex', state.filters.isRegex);
-        applyFilters();
-    });
+        const getMardownOrText = obj => obj?.markdown || obj?.text || "";
 
-    const hasFiles = event => Array.from(event.dataTransfer?.types || []).includes('Files');
-
-    DOM.dropZone.addEventListener('click', event => {
-        if (!event.target.closest('#load-example-wrapper')) DOM.fileInput.click();
-    });
-
-    DOM.fileInput.addEventListener('change', event => handleFiles(event.target.files));
-    DOM.openButton.addEventListener('click', () => DOM.fileInput.click());
-
-    let dragCounter = 0;
-    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-        DOM.dropZone.addEventListener(eventName, event => {
-            event.preventDefault(); event.stopPropagation();
-            DOM.dropZone.classList.toggle('highlight', (eventName === 'dragenter' || eventName === 'dragover') && hasFiles(event));
-            if (eventName === 'drop') handleFiles(event.dataTransfer.files);
+        Perf.start('Extract Rules');
+        state.rules.clear();
+        (driver.rules || []).forEach(rule => {
+            state.rules.set(rule.id, {
+                label: rule.shortDescription?.text,
+                categories: rule.tags || rule.properties?.tags || ["General"],
+                level: rule.defaultConfiguration?.level || "warning",
+                description: getMardownOrText(rule.fullDescription)
+            });
         });
+        Perf.end('Extract Rules');
 
-        window.addEventListener(eventName, event => {
-            event.preventDefault();
-            if (eventName === 'dragover' || !hasFiles(event)) return;
-            if (eventName === 'dragenter') dragCounter++;
-            else if (eventName === 'dragleave') dragCounter--;
-            else if (eventName === 'drop') dragCounter = 0, handleFiles(event.dataTransfer.files);
+        Perf.start('Extract Issues');
+        state.rawIssues = (run.results || []).map(result => {
+            const rule = state.rules.get(result.ruleId);
+            const location = result.locations?.[0]?.physicalLocation;
+            const snippet = location?.contextRegion?.snippet;
 
-            DOM.dragOverlay.classList.toggle('is-hidden', dragCounter <= 0);
-            if (dragCounter < 0) dragCounter = 0;
+            return {
+                id: result.ruleId,
+                categories: rule?.categories,
+                message: getMardownOrText(result.message) || "No message",
+                file: location?.artifactLocation?.uri || "Unknown",
+                line: location?.region?.startLine || 0,
+                level: result.level || rule?.level || "warning",
+                snippet: snippet?.text ? {
+                    text: snippet.text,
+                    startLine: location.contextRegion.startLine || 1
+                } : null,
+                region: location?.region || {},
+                relatedLocations: (result.relatedLocations || []).map(related => ({
+                    file: related.physicalLocation?.artifactLocation?.uri || "Unknown",
+                    line: related.physicalLocation?.region?.startLine || 0,
+                    message: getMardownOrText(related.message) || ""
+                }))
+            };
         });
-    });
+        Perf.end('Extract Issues');
 
-    function loadSarifData(json, filename, lastModified) {
-        resetApp();
-        state.filename = filename || "Unknown";
-        state.fileLastModified = lastModified || Date.now();
-        processSarif(json);
-        readURL();
-        updateMetricCards(state.filters.severities);
-        updatePillStates(FILTER_CONFIG.severities.container, state.filters.severities);
-        showResultsUI();
+        state.categories = new Set(state.rawIssues.flatMap(issue => issue.categories));
+        state.filters.categories.forEach(c => { if (c !== FILTER_ALL) state.categories.add(c); });
+        renderPills(FILTER_CONFIG.categories.container, state.categories, state.filters.categories);
+
+        state.issueIds = new Set(state.rawIssues.map(issue => issue.id));
+        state.filters.issueIds.forEach(id => { if (id !== FILTER_ALL) state.issueIds.add(id); });
+        renderPills(FILTER_CONFIG.issueIds.container, state.issueIds, state.filters.issueIds);
+
+        updateMetrics();
+        applyFilters();
     }
 
-    async function loadSarifFromScript(elementId, defaultFilename) {
+    async function loadSarifFromScript(elementId, defaultFilename, keepUrlParams = false) {
         const element = document.getElementById(elementId);
         if (!element) return false;
 
@@ -827,85 +795,24 @@
             } else {
                 throw new Error("Unknown data format type.");
             }
-            json = parseJson(json)
+            json = parseJson(json);
         } finally {
             Perf.end('Fetch / Process Data');
         }
 
         if (!json) return false;
-        loadSarifData(json, element.getAttribute('title') || src || defaultFilename, Date.now());
+        loadSarifData(json, element.getAttribute('title') || src || defaultFilename, Date.now(), keepUrlParams);
         return true;
     }
 
-    DOM.loadExampleWrapper.addEventListener('click', async event => {
-        event.preventDefault(); event.stopPropagation();
-        try { if (!(await loadSarifFromScript('sarif-example', "Unknown"))) showError("Example data not found."); }
-        catch (err) { showError(`Failed to load: ${err.message}`); }
-    });
-
-    DOM.issueList.addEventListener('click', event => {
-        const icon = event.target.closest('.severity-icon');
-        if (icon) {
-            event.preventDefault(); event.stopPropagation();
-            const group = icon.closest('.issue-group');
-            if (!group) return;
-
-            const isCollapsed = group.classList.toggle('is-collapsed');
-            const use = icon.querySelector('use');
-            const href = use.getAttribute('href');
-            use.setAttribute('href', isCollapsed ? href.replace('-fill', '-outline') : href.replace('-outline', '-fill'));
-            return;
-        }
-        const locationButton = event.target.closest('.issue-location');
-        if (locationButton && locationButton.getAttribute('data-path')) {
-            event.preventDefault(); copyToClipboard(locationButton.getAttribute('data-path'));
-        }
-    });
-
-    DOM.metrics.grid.addEventListener('click', event => handlePillClick(event, 'severities'));
-    Object.entries(FILTER_CONFIG).forEach(([key, config]) => config.container.addEventListener('click', event => handlePillClick(event, key)));
-
-    function handlePillClick(event, filterType) {
-        const target = event.target.closest('.pill') || event.target.closest('.metric-card');
-        if (!target) return;
-
-        const value = target.getAttribute('data-value');
-        const filterSet = state.filters[filterType];
-
-        if (value === FILTER_ALL) {
-            filterSet.clear();
-            filterSet.add(FILTER_ALL);
-        } else {
-            filterSet.delete(FILTER_ALL);
-            if (filterSet.has(value)) filterSet.delete(value);
-            else filterSet.add(value);
-            if (filterSet.size === 0) filterSet.add(FILTER_ALL);
-        }
-
-        if (filterType === 'severities') {
-            updateMetricCards(state.filters.severities);
-            updatePillStates(FILTER_CONFIG.severities.container, state.filters.severities);
-        } else {
-            updatePillStates(FILTER_CONFIG[filterType].container, filterSet);
-        }
-
-        applyFilters();
-    }
-
-    function updatePillStates(container, filterSet) {
-        if (!container) return;
-        Array.from(container.children).forEach(pill => {
-            pill.classList.toggle('is-active', filterSet.has(pill.getAttribute('data-value')));
-        });
-    }
-
-    function updateMetricCards(filterSet) {
-        Array.from(DOM.metrics.grid.children).forEach(card => {
-            const value = card.getAttribute('data-value');
-            const isActive = filterSet.has(value);
-            card.classList.toggle('is-active', isActive);
-            card.querySelector('use').setAttribute('href', `#icon-${value === 'all' ? 'list' : value}-${isActive ? 'fill' : 'outline'}`);
-        });
+    function loadSarifData(json, filename, lastModified, keepUrlParams = false) {
+        resetApp(!keepUrlParams);
+        state.filename = filename || "Unknown";
+        state.fileLastModified = lastModified || Date.now();
+        processSarif(json);
+        updateMetricCards(state.filters.severities);
+        updatePillStates(FILTER_CONFIG.severities.container, state.filters.severities);
+        showResultsUI();
     }
 
     function handleFiles(files) {
@@ -913,159 +820,83 @@
         const file = files[0];
         const fileName = file.name.toLowerCase();
 
-        if (!fileName.endsWith('.sarif') && !fileName.endsWith('.json')) return showError("Invalid file format. Please use .sarif or .json files.");
+        if (!fileName.endsWith('.sarif') && !fileName.endsWith('.json')) {
+            return showError("Invalid file format. Please use .sarif or .json files.");
+        }
 
         Perf.start('File Read');
-
         const reader = new FileReader();
         reader.onload = event => {
             Perf.end('File Read');
-            try { loadSarifData(parseJson(event.target.result), file.name, file.lastModified); }
-            catch (err) { state.filename = ''; DOM.reportInfo.innerHTML = ''; showError(err.message || "Could not parse JSON."); }
+            try {
+                loadSarifData(parseJson(event.target.result), file.name, file.lastModified);
+            } catch (err) {
+                state.filename = '';
+                DOM.reportInfo.innerHTML = '';
+                showError(err.message || "Could not parse JSON.");
+            }
         };
-        reader.onerror = () => { Perf.end('File Read'); showError("Error reading file."); };
+        reader.onerror = () => {
+            Perf.end('File Read');
+            showError("Error reading file.");
+        };
         reader.readAsText(file);
     }
+    // #endregion
 
-    function processSarif(sarif) {
-        if (!sarif?.runs || !Array.isArray(sarif.runs)) { throw new Error("Invalid SARIF: Missing 'runs' array."); }
-
-        const run = sarif.runs[0] || {};
-        const driver = run.tool?.driver || {};
-        state.driverInfo = { name: driver.fullName || driver.name || "Unknown Tool", version: driver.semanticVersion || driver.version || "" };
-
-        const dateValue = run.invocations?.[0]?.endTimeUtc || run.invocations?.[0]?.startTimeUtc || sarif.time;
-        state.reportDate = dateValue ? new Date(dateValue) : (state.fileLastModified ? new Date(state.fileLastModified) : new Date());
-
-        const getDescription = obj => obj?.markdown || obj?.text || "";
-
-        Perf.start('Extract Rules');
-        state.rules.clear();
-        (driver.rules || []).forEach(rule => {
-            const tags = rule.tags || rule.properties?.tags || [rule.properties?.category] || ["General"];
-            state.rules.set(rule.id, {
-                name: rule.shortDescription?.text || rule.name || rule.id,
-                categories: Array.isArray(tags) ? tags : ["General"],
-                defaultLevel: rule.defaultConfiguration?.level || "warning",
-                shortDescription: getDescription(rule.shortDescription),
-                fullDescription: getDescription(rule.fullDescription) || getDescription(rule.shortDescription)
-            });
-        });
-        Perf.end('Extract Rules');
-
-        Perf.start('Extract Issues');
-        state.rawIssues = (run.results || []).map(result => {
-            const ruleDef = state.rules.get(result.ruleId) || { categories: ['Unknown'], name: result.ruleId };
-            const location = result.locations?.[0]?.physicalLocation;
-
-            return {
-                id: result.ruleId,
-                name: ruleDef.name,
-                categories: ruleDef.categories,
-                message: result.message?.markdown || result.message?.text || "No message",
-                file: location?.artifactLocation?.uri || "Unknown",
-                line: location?.region?.startLine || 0,
-                level: result.level || ruleDef.defaultLevel || "warning",
-                snippet: location?.contextRegion?.snippet?.text ? { text: location.contextRegion.snippet.text, startLine: location.contextRegion.startLine || 1 } : null,
-                region: location?.region || {},
-                relatedLocations: (result.relatedLocations || []).map(related => ({
-                    file: related.physicalLocation?.artifactLocation?.uri || "Unknown",
-                    line: related.physicalLocation?.region?.startLine || 0,
-                    message: related.message?.markdown || related.message?.text || ""
-                }))
-            };
-        });
-        Perf.end('Extract Issues');
-
-        state.categories = new Set(state.rawIssues.flatMap(issue => issue.categories));
-        state.filters.categories.forEach(c => { if (c !== FILTER_ALL) state.categories.add(c); });
-
-        state.issueIds = new Set(state.rawIssues.map(issue => issue.id));
-        state.filters.issueIds.forEach(id => { if (id !== FILTER_ALL) state.issueIds.add(id); });
-
-        renderPills(FILTER_CONFIG.categories.container, state.categories);
-        renderPills(FILTER_CONFIG.issueIds.container, state.issueIds);
-
-        updateMetrics();
-        applyFilters();
-    }
-
-    function showResultsUI() {
-        DOM.dropZone.classList.add('is-hidden');
-        DOM.loaderContainer.classList.add('is-hidden');
-        DOM.resultsContainer.style.display = 'block';
-        const toolStr = `${state.driverInfo.name} ${state.driverInfo.version ? 'v' + state.driverInfo.version : ''}`;
-        const dateStr = state.reportDate?.toLocaleString() || '';
-        DOM.reportInfo.innerHTML = `
-            <div class="info-line-primary">${sanitize(state.filename)}</div>
-            <div class="info-line-secondary">${sanitize(toolStr)}</div>
-            <div class="info-line-tertiary" title="${sanitize(dateStr)}">${sanitize(dateStr)}</div>
-        `;
-    }
-
-    function resetApp() {
-        Object.assign(state, {
-            rawIssues: [], filteredIssues: [], categories: new Set(), issueIds: new Set(),
-            rules: new Map(), filename: '', driverInfo: { name: '', version: '' }, reportDate: null, fileLastModified: null
-        });
-
-        DOM.dropZone.classList.remove('is-hidden');
-        DOM.loaderContainer.classList.add('is-hidden');
-        DOM.resultsContainer.style.display = 'none';
-        DOM.reportInfo.innerHTML = '';
-        DOM.fileInput.value = '';
-        DOM.filterText.value = state.filters.text;
-        DOM.searchHint.style.opacity = state.filters.text ? '0' : '1';
-
-        Object.entries(FILTER_CONFIG).forEach(([key, config]) => { if (key !== 'severities') renderPills(config.container, []); });
-        updateMetricCards(state.filters.severities);
-        updatePillStates(FILTER_CONFIG.severities.container, state.filters.severities);
-    }
-
-    function renderPills(container, items) {
-        container.innerHTML = [FILTER_ALL, ...Array.from(items).sort()].map(item => {
-            if (item === FILTER_ALL) return `<button class="pill is-active" data-value="${FILTER_ALL}">All</button>`;
-            return `<button class="pill" data-value="${item}"><span class="pill-label">${sanitize(item)}</span><span class="pill-count"></span></button>`;
-        }).join('');
+    // #region Logic
+    function applyTheme(theme, persist = true) {
+        document.documentElement.setAttribute('data-theme', theme);
+        if (persist) localStorage.setItem('theme', theme);
     }
 
     function applyFilters() {
         Perf.start('Filtering');
 
-        let needsPillRender = false;
+        let needsCategoriesPillsRender = false;
         state.filters.categories.forEach(c => {
-            if (c !== FILTER_ALL && !state.categories.has(c)) { state.categories.add(c); needsPillRender = true; }
+            if (c == FILTER_ALL || state.categories.has(c)) return
+            state.categories.add(c);
+            needsCategoriesPillsRender = true;
         });
-        state.filters.issueIds.forEach(id => {
-            if (id !== FILTER_ALL && !state.issueIds.has(id)) { state.issueIds.add(id); needsPillRender = true; }
-        });
+        if (needsCategoriesPillsRender) renderPills(FILTER_CONFIG.categories.container, state.categories, state.filters.categories);
 
-        if (needsPillRender) {
-            renderPills(FILTER_CONFIG.categories.container, state.categories);
-            renderPills(FILTER_CONFIG.issueIds.container, state.issueIds);
-        }
+        let needsIssueIdsPillsRender = false;
+        state.filters.issueIds.forEach(id => {
+            if (id == FILTER_ALL || state.issueIds.has(id)) return
+            state.issueIds.add(id);
+            needsIssueIdsPillsRender = true;
+        });
+        if (needsIssueIdsPillsRender) renderPills(FILTER_CONFIG.issueIds.container, state.issueIds, state.filters.issueIds);
 
         const query = state.filters.text;
-        const queryLower = query.toLowerCase();
+        const queryNormalized = normalize(query);
+
         let regex = null;
         DOM.filterText.classList.remove('is-invalid');
-
         if (state.filters.isRegex && query) {
-            try { regex = new RegExp(query, 'i'); }
-            catch (e) { DOM.filterText.classList.add('is-invalid'); }
+            try {
+                regex = new RegExp(query, 'i');
+            } catch (e) {
+                DOM.filterText.classList.add('is-invalid');
+            }
         }
 
         const matchedIssues = state.rawIssues.filter(issue => {
-            return !query || (state.filters.isRegex && regex ? (regex.test(issue.id) || regex.test(issue.message) || regex.test(issue.file)) :
-                (issue.id.toLowerCase().includes(queryLower) || issue.message.toLowerCase().includes(queryLower) || issue.file.toLowerCase().includes(queryLower)));
+            if (!query) return true;
+            if (state.filters.isRegex && regex) return regex.test(issue.id) || regex.test(issue.message) || regex.test(issue.file);
+            return normalize(issue.id).includes(queryNormalized) ||
+                   normalize(issue.message).includes(queryNormalized) ||
+                   normalize(issue.file).includes(queryNormalized);
         });
 
         updatePillCounts(matchedIssues);
 
         state.filteredIssues = matchedIssues.filter(issue => {
-            return (state.filters.severities.has(FILTER_ALL) || state.filters.severities.has(getSeverity(issue.level))) &&
-                   (state.filters.categories.has(FILTER_ALL) || issue.categories.some(c => state.filters.categories.has(c))) &&
-                   (state.filters.issueIds.has(FILTER_ALL) || state.filters.issueIds.has(issue.id));
+            if (!state.filters.severities.has(FILTER_ALL) && !state.filters.severities.has(getSeverity(issue.level))) return false;
+            if (!state.filters.categories.has(FILTER_ALL) && !issue.categories.some(c => state.filters.categories.has(c))) return false;
+            if (!state.filters.issueIds.has(FILTER_ALL) && !state.filters.issueIds.has(issue.id)) return false;
+            return true;
         });
 
         updateURL();
@@ -1074,6 +905,199 @@
         Perf.start('Rendering UI');
         renderList();
         Perf.end('Rendering UI');
+    }
+
+    function resetApp(resetFilters = true) {
+        if (resetFilters) {
+            state.filters.text = '';
+            state.filters.isRegex = false;
+            state.filters.categories = new Set([FILTER_ALL]);
+            state.filters.issueIds = new Set([FILTER_ALL]);
+            state.filters.severities = new Set([FILTER_ALL]);
+            updateURL();
+        }
+
+        Object.assign(state, {
+            rawIssues: [],
+            filteredIssues: [],
+            categories: new Set(),
+            issueIds: new Set(),
+            rules: new Map(),
+            filename: '',
+            driverInfo: { name: '', version: '' },
+            reportDate: null,
+            fileLastModified: null
+        });
+
+        DOM.dropZone.classList.remove('is-hidden');
+        DOM.loaderContainer.classList.add('is-hidden');
+        DOM.resultsContainer.classList.add('is-hidden');
+        DOM.reportInfo.innerHTML = '';
+        DOM.fileInput.value = '';
+
+        DOM.filterText.value = state.filters.text;
+        DOM.searchHint.style.opacity = state.filters.text ? '0' : '1';
+        DOM.regexToggle.classList.toggle('is-active', state.filters.isRegex);
+        DOM.filterText.classList.toggle('is-regex', state.filters.isRegex);
+
+        renderPills(FILTER_CONFIG.categories.container, [], state.filters.categories)
+        renderPills(FILTER_CONFIG.issueIds.container, [], state.filters.issueIds)
+        updatePillStates(FILTER_CONFIG.severities.container, state.filters.severities);
+
+        updateMetricCards(state.filters.severities);
+    }
+
+    function readURL() {
+        const params = new URLSearchParams(window.location.search);
+        state.filters.text = params.get('query') || '';
+        DOM.filterText.value = state.filters.text;
+        DOM.searchHint.style.opacity = state.filters.text ? '0' : '1';
+
+        state.filters.isRegex = params.get('regex') === 'true';
+        DOM.regexToggle.classList.toggle('is-active', state.filters.isRegex);
+        DOM.filterText.classList.toggle('is-regex', state.filters.isRegex);
+
+        Object.entries(FILTER_CONFIG).forEach(([key, config]) => {
+            const value = params.get(config.param);
+            state.filters[key].clear();
+            if (value) {
+                value.split(',').forEach(v => state.filters[key].add(v.trim()));
+            } else {
+                state.filters[key].add(FILTER_ALL);
+            }
+        });
+    }
+
+    function updateURL() {
+        const params = new URLSearchParams();
+        if (state.filters.text) params.set('query', state.filters.text);
+        if (state.filters.isRegex) params.set('regex', 'true');
+
+        Object.entries(FILTER_CONFIG).forEach(([key, config]) => {
+            const set = state.filters[key];
+            if (!set.has(FILTER_ALL) && set.size > 0) {
+                params.set(config.param, Array.from(set).join(','));
+            }
+        });
+
+        const queryString = params.toString();
+        const newUrl = queryString ? `${window.location.pathname}?${queryString}` : window.location.pathname;
+        try {
+            window.history.replaceState({ path: newUrl }, '', newUrl);
+        } catch (e) {}
+    }
+    // #endregion
+
+    // #region Rendering
+    function renderList() {
+        DOM.issueList.innerHTML = '';
+        DOM.emptyFilterState.classList.add('is-hidden');
+        DOM.emptyReportState.classList.add('is-hidden');
+
+        if (state.rawIssues.length === 0) return DOM.emptyReportState.classList.remove('is-hidden');
+        if (state.filteredIssues.length === 0) return DOM.emptyFilterState.classList.remove('is-hidden');
+
+        const groups = state.filteredIssues.reduce((acc, issue) => {
+            const key = `${issue.id}::${issue.level}`;
+            if (!acc[key]) acc[key] = { id: issue.id, level: issue.level, categories: issue.categories, issues: [] };
+            acc[key].issues.push(issue);
+            return acc;
+        }, {});
+
+        const fragment = document.createDocumentFragment();
+        const weight = { error: 3, warning: 2, info: 1 };
+
+        Object.values(groups).sort((a, b) => {
+            const diff = a.id.localeCompare(b.id);
+            return diff !== 0 ? diff : weight[getSeverity(b.level)] - weight[getSeverity(a.level)];
+        }).forEach(group => {
+            const rule = state.rules.get(group.id);
+            const description = rule?.description || "No description provided.";
+            const severityClass = `severity-${getSeverity(group.level)}`;
+
+            const groupClone = DOM.templates.group.content.cloneNode(true);
+            const groupElement = groupClone.querySelector('.issue-group');
+            groupElement.classList.add(severityClass);
+
+            const severity = getSeverity(group.level);
+            const icon = groupClone.querySelector('.severity-icon');
+            icon.classList.add(`severity-${severity}`);
+            icon.querySelector('use').setAttribute('href', `#icon-${severity}-fill`);
+
+            const groupIdElement = groupClone.querySelector('.issue-rule-id');
+            groupIdElement.textContent = group.id;
+            groupIdElement.setAttribute('title', sanitize(rule.label));
+            const titleElement = groupClone.querySelector('.issue-group-title');
+            titleElement.style.color = `var(--badge-color)`;
+
+            const categoryWrapper = groupClone.querySelector('.category-wrapper');
+            categoryWrapper.innerHTML = group.categories.map(category => `<span class="category-badge">${sanitize(category)}</span>`).join('');
+
+            groupClone.querySelector('.issue-group-count').textContent = group.issues.length;
+            groupClone.querySelector('.rule-description-content').innerHTML = formatMarkdown(description);
+
+            let cardsHtml = '';
+            group.issues.forEach(issue => {
+                cardsHtml += `<div class="issue-card"><div class="issue-message markdown-content"><span>${formatMarkdown(issue.message)}</span></div>`;
+                cardsHtml += createLocationHtml(issue.file, issue.line);
+
+                issue.relatedLocations?.forEach(related => {
+                    cardsHtml += `<div class="related-location-card">`;
+                    if (related.message) cardsHtml += `<div class="related-location-msg">${formatMarkdown(related.message)}</div>`;
+                    cardsHtml += createLocationHtml(related.file, related.line);
+                    cardsHtml += `</div>`;
+                });
+
+                if (issue.snippet) {
+                    const lineHtml = issue.snippet.text.split('\n').map((text, idx) => {
+                        const currentLine = issue.snippet.startLine + idx;
+                        let codeText = sanitize(text);
+                        const region = issue.region;
+                        const startLine = region.startLine;
+                        const endLine = region.endLine || startLine;
+
+                        if (currentLine >= startLine && currentLine <= endLine) {
+                            const startCol = currentLine === startLine ? Math.max(0, (region.startColumn || 1) - 1) : 0;
+                            const endCol = currentLine === endLine && region.endColumn ? Math.min(text.length, region.endColumn - 1) : text.length;
+                            codeText = `${sanitize(text.substring(0, startCol))}<span class="code-highlight">` +
+                                       `${sanitize(text.substring(startCol, endCol))}</span>${sanitize(text.substring(endCol))}`;
+                        }
+                        return `<span class="code-line-number">${currentLine}</span><span class="code-content">${codeText}</span>`;
+                    }).join('');
+                    cardsHtml += `<div class="issue-code-snippet">${lineHtml}</div>`;
+                }
+                cardsHtml += `</div>`;
+            });
+
+            groupClone.querySelector('.issue-group-content').innerHTML = cardsHtml;
+            fragment.appendChild(groupClone);
+        });
+        DOM.issueList.appendChild(fragment);
+    }
+
+    function createLocationHtml(file, line) {
+        const lastIndex = file.lastIndexOf('/');
+        const dir = sanitize(file.substring(0, lastIndex + 1));
+        const name = sanitize(file.substring(lastIndex + 1));
+        return `<button class="issue-location" data-path="${sanitize(file)}:${line}">` +
+               `<span class="path-dir">${dir}</span><span class="path-name">${name}</span><span class="line-number">:${line}</span></button>`;
+    }
+
+    function renderPills(container, items, filterSet) {
+        const activeSet = filterSet || new Set([FILTER_ALL]);
+        container.innerHTML = [FILTER_ALL, ...Array.from(items).sort()].map(item => {
+            const activeClass = activeSet.has(item) ? ' is-active' : '';
+            if (item === FILTER_ALL) return `<button class="pill${activeClass}" data-value="${FILTER_ALL}">All</button>`;
+            const sanitized = sanitize(item);
+            return `<button class="pill${activeClass}" data-value="${sanitized}"><span class="pill-label">${sanitized}</span><span class="pill-count"></span></button>`;
+        }).join('');
+    }
+
+    function updatePillStates(container, filterSet) {
+        if (!container) return;
+        Array.from(container.children).forEach(pill => {
+            pill.classList.toggle('is-active', filterSet.has(pill.getAttribute('data-value')));
+        });
     }
 
     function updatePillCounts(issues) {
@@ -1113,94 +1137,186 @@
         DOM.metrics.info.textContent = counts.info;
     }
 
-    function renderList() {
-        DOM.issueList.innerHTML = '';
-        DOM.emptyFilterState.classList.add('is-hidden');
-        DOM.emptyReportState.classList.add('is-hidden');
-
-        if (state.rawIssues.length === 0) return DOM.emptyReportState.classList.remove('is-hidden');
-        if (state.filteredIssues.length === 0) return DOM.emptyFilterState.classList.remove('is-hidden');
-
-        const groups = state.filteredIssues.reduce((acc, issue) => {
-            const key = `${issue.id}::${issue.level}`;
-            if (!acc[key]) acc[key] = { id: issue.id, level: issue.level, categories: issue.categories, instances: [] };
-            acc[key].instances.push(issue);
-            return acc;
-        }, {});
-
-        const fragment = document.createDocumentFragment();
-        const weight = { error: 3, warning: 2, info: 1 };
-
-        Object.values(groups).sort((a, b) => {
-            const diff = a.id.localeCompare(b.id);
-            return diff !== 0 ? diff : weight[getSeverity(b.level)] - weight[getSeverity(a.level)];
-        }).forEach(group => {
-            const ruleDef = state.rules.get(group.id);
-            const descText = ruleDef?.fullDescription || ruleDef?.shortDescription || "No description provided.";
-            const severityClass = `severity-${getSeverity(group.level)}`;
-
-            const groupClone = DOM.templates.group.content.cloneNode(true);
-            const groupElement = groupClone.querySelector('.issue-group');
-            groupElement.classList.add(severityClass);
-
-            const severity = getSeverity(group.level);
-            const icon = groupClone.querySelector('.severity-icon');
-            icon.classList.add(`severity-${severity}`);
-            icon.querySelector('use').setAttribute('href', `#icon-${severity}-fill`);
-
-            groupClone.querySelector('.issue-rule-id').textContent = group.id;
-            const titleElement = groupClone.querySelector('.issue-group-title');
-            titleElement.style.color = `var(--badge-color)`;
-
-            const categoryWrapper = groupClone.querySelector('.category-wrapper');
-            group.categories.forEach(category => {
-                const badge = document.createElement('span');
-                badge.className = 'category-badge';
-                badge.innerHTML = sanitize(category);
-                categoryWrapper.appendChild(badge);
-            });
-
-            groupClone.querySelector('.issue-group-count').textContent = group.instances.length;
-            groupClone.querySelector('.rule-description-content').innerHTML = formatMarkdown(descText);
-
-            let cardsHtml = '';
-            group.instances.forEach(issue => {
-                cardsHtml += `<div class="issue-card"><div class="issue-message markdown-content"><span>${formatMarkdown(issue.message)}</span></div>`;
-                cardsHtml += createLocationHtml(issue.file, issue.line);
-
-                issue.relatedLocations?.forEach(related => {
-                    cardsHtml += `<div class="related-location-card">`;
-                    if (related.message) cardsHtml += `<div class="related-location-msg">${formatMarkdown(related.message)}</div>`;
-                    cardsHtml += createLocationHtml(related.file, related.line);
-                    cardsHtml += `</div>`;
-                });
-
-                if (issue.snippet) {
-                    const lineHtml = issue.snippet.text.split('\n').map((text, idx) => {
-                        const currentLine = issue.snippet.startLine + idx;
-                        let codeText = sanitize(text);
-
-                        const region = issue.region;
-                        const startLine = region.startLine;
-                        const endLine = region.endLine || startLine;
-
-                        if (currentLine >= startLine && currentLine <= endLine) {
-                            const startCol = currentLine === startLine ? Math.max(0, (region.startColumn || 1) - 1) : 0;
-                            const endCol = currentLine === endLine && region.endColumn ? Math.min(text.length, region.endColumn - 1) : text.length;
-                            codeText = `${sanitize(text.substring(0, startCol))}<span class="code-highlight">` +
-                                       `${sanitize(text.substring(startCol, endCol))}</span>${sanitize(text.substring(endCol))}`;
-                        }
-                        return `<span class="code-line-number">${currentLine}</span><span class="code-content">${codeText}</span>`;
-                    }).join('');
-                    cardsHtml += `<div class="issue-code-snippet">${lineHtml}</div>`;
-                }
-                cardsHtml += `</div>`;
-            });
-
-            groupClone.querySelector('.issue-group-content').innerHTML = cardsHtml;
-            fragment.appendChild(groupClone);
+    function updateMetricCards(filterSet) {
+        Array.from(DOM.metrics.grid.children).forEach(card => {
+            const value = card.getAttribute('data-value');
+            const isActive = filterSet.has(value);
+            card.classList.toggle('is-active', isActive);
+            card.querySelector('use').setAttribute('href', `#icon-${value === 'all' ? 'list' : value}-${isActive ? 'fill' : 'outline'}`);
         });
-        DOM.issueList.appendChild(fragment);
+    }
+
+    function showResultsUI() {
+        DOM.dropZone.classList.add('is-hidden');
+        DOM.loaderContainer.classList.add('is-hidden');
+        DOM.resultsContainer.classList.remove('is-hidden');
+        const toolStr = `${state.driverInfo.name} ${state.driverInfo.version ? 'v' + state.driverInfo.version : ''}`;
+        const dateStr = state.reportDate?.toLocaleString() || '';
+        DOM.reportInfo.innerHTML = `
+            <div class="info-line-primary">${sanitize(state.filename)}</div>
+            <div class="info-line-secondary">${sanitize(toolStr)}</div>
+            <div class="info-line-tertiary" title="${sanitize(dateStr)}">${sanitize(dateStr)}</div>
+        `;
+    }
+
+    function handlePillClick(event, filterType) {
+        const target = event.target.closest('.pill') || event.target.closest('.metric-card');
+        if (!target) return;
+
+        const value = target.getAttribute('data-value');
+        const filterSet = state.filters[filterType];
+
+        if (value === FILTER_ALL) {
+            filterSet.clear();
+            filterSet.add(FILTER_ALL);
+        } else {
+            filterSet.delete(FILTER_ALL);
+            if (filterSet.has(value)) filterSet.delete(value);
+            else filterSet.add(value);
+            if (filterSet.size === 0) filterSet.add(FILTER_ALL);
+        }
+
+        if (filterType === 'severities') {
+            updateMetricCards(state.filters.severities);
+            updatePillStates(FILTER_CONFIG.severities.container, state.filters.severities);
+        } else {
+            updatePillStates(FILTER_CONFIG[filterType].container, filterSet);
+        }
+
+        applyFilters();
+    }
+
+    function setAllGroupsCollapsed(collapsed) {
+        DOM.issueList.querySelectorAll('.issue-group').forEach(group => {
+            group.classList.toggle('is-collapsed', collapsed);
+            const use = group.querySelector('.severity-icon use');
+            if (!use) return;
+            const href = use.getAttribute('href');
+            use.setAttribute('href', collapsed ? href.replace('-fill', '-outline') : href.replace('-outline', '-fill'));
+        });
+    }
+    // #endregion
+
+    // #region Event listeners
+    DOM.themeToggle.addEventListener('click', () => {
+        applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark', true);
+    });
+
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+        if (!localStorage.getItem('theme')) applyTheme(event.matches ? 'dark' : 'light', false);
+    });
+
+    document.querySelector('header h1').addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+
+    window.addEventListener('popstate', () => {
+        readURL();
+        if (state.rawIssues.length === 0) return;
+        updateMetricCards(state.filters.severities);
+        Object.entries(FILTER_CONFIG).forEach(([key, config]) => {
+            updatePillStates(config.container, state.filters[key]);
+        });
+        applyFilters();
+    });
+
+    window.addEventListener('keydown', event => {
+        // Search
+        if (event.key === '/' && document.activeElement !== DOM.filterText && DOM.resultsContainer.style.display !== 'none') {
+            event.preventDefault();
+            DOM.filterText.focus();
+        }
+        // Collapse all
+        if (event.ctrlKey && event.shiftKey && event.code === 'NumpadSubtract') {
+            event.preventDefault();
+            setAllGroupsCollapsed(true);
+        }
+        // Expand all
+        if (event.ctrlKey && event.shiftKey && event.code === 'NumpadAdd') {
+            event.preventDefault();
+            setAllGroupsCollapsed(false);
+        }
+    });
+
+    DOM.filterText.addEventListener('focus', () => DOM.searchHint.style.opacity = '0');
+    DOM.filterText.addEventListener('blur', () => { if (!DOM.filterText.value) DOM.searchHint.style.opacity = '1'; });
+    DOM.filterText.addEventListener('input', debounce(() => { state.filters.text = DOM.filterText.value; applyFilters(); }, 200));
+
+    DOM.regexToggle.addEventListener('click', () => {
+        state.filters.isRegex = !state.filters.isRegex;
+        DOM.regexToggle.classList.toggle('is-active', state.filters.isRegex);
+        DOM.filterText.classList.toggle('is-regex', state.filters.isRegex);
+        applyFilters();
+    });
+
+    DOM.dropZone.addEventListener('click', event => { if (!event.target.closest('#load-example-wrapper')) DOM.fileInput.click(); });
+    DOM.fileInput.addEventListener('change', event => handleFiles(event.target.files));
+    DOM.openButton.addEventListener('click', () => DOM.fileInput.click());
+
+    // Drag and Drop
+    const hasFiles = event => Array.from(event.dataTransfer?.types || []).includes('Files');
+    let dragCounter = 0;
+
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        DOM.dropZone.addEventListener(eventName, event => {
+            event.preventDefault();
+            event.stopPropagation();
+            DOM.dropZone.classList.toggle('highlight', (eventName === 'dragenter' || eventName === 'dragover') && hasFiles(event));
+            if (eventName === 'drop') handleFiles(event.dataTransfer.files);
+        });
+
+        window.addEventListener(eventName, event => {
+            event.preventDefault();
+            if (eventName === 'dragover' || !hasFiles(event)) return;
+            if (eventName === 'dragenter') dragCounter++;
+            else if (eventName === 'dragleave') dragCounter--;
+            else if (eventName === 'drop') dragCounter = 0, handleFiles(event.dataTransfer.files);
+
+            DOM.dragOverlay.classList.toggle('is-hidden', dragCounter <= 0);
+            if (dragCounter < 0) dragCounter = 0;
+        });
+    });
+
+    DOM.loadExampleWrapper.addEventListener('click', async event => {
+        event.preventDefault();
+        event.stopPropagation();
+        try {
+            if (!(await loadSarifFromScript('sarif-example', "Unknown"))) showError("Example data not found.");
+        } catch (err) {
+            showError(`Failed to load: ${err.message}`);
+        }
+    });
+
+    DOM.issueList.addEventListener('click', event => {
+        const icon = event.target.closest('.severity-icon');
+        if (icon) {
+            event.preventDefault();
+            event.stopPropagation();
+            const group = icon.closest('.issue-group');
+            if (!group) return;
+
+            const isCollapsed = group.classList.toggle('is-collapsed');
+            const use = icon.querySelector('use');
+            const href = use.getAttribute('href');
+            use.setAttribute('href', isCollapsed ? href.replace('-fill', '-outline') : href.replace('-outline', '-fill'));
+            return;
+        }
+        const locationButton = event.target.closest('.issue-location');
+        if (locationButton && locationButton.getAttribute('data-path')) {
+            event.preventDefault();
+            copyToClipboard(locationButton.getAttribute('data-path'));
+        }
+    });
+
+    DOM.metrics.grid.addEventListener('click', event => handlePillClick(event, 'severities'));
+    Object.entries(FILTER_CONFIG).forEach(([key, config]) => {
+        config.container.addEventListener('click', event => handlePillClick(event, key));
+    });
+    // #endregion
+
+    // #region Initialization
+    function initTheme() {
+        const saved = localStorage.getItem('theme');
+        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        applyTheme(saved || (systemPrefersDark ? 'dark' : 'light'), false);
     }
 
     function initExample() {
@@ -1224,16 +1340,22 @@
         Perf.start('App Init');
         let loaded = false;
 
+        initTheme();
         initExample();
+        readURL();
 
-        try { loaded = await loadSarifFromScript('sarif-report', "Embedded Report"); }
-        catch (err) { showError(`Error processing embedded report: ${err.message}`); console.error(err); }
-        finally {
+        try {
+            loaded = await loadSarifFromScript('sarif-report', "Embedded Report", true);
+        } catch (err) {
+            showError(`Error processing embedded report: ${err.message}`);
+            console.error(err);
+        } finally {
             DOM.loaderContainer.classList.add('is-hidden');
             if (!loaded) DOM.dropZone.classList.remove('is-hidden');
         }
         Perf.end('App Init');
     }
+    // #endregion
 
     init();
 </script>
