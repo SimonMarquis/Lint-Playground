@@ -24,6 +24,7 @@
 > Mostly because the official one is broken (it relies on external js/css resources that are 403'ing) since January 2025 and no sign of activity since then on the official issue tracker:
 > - [*Android Lint HTML reports broken by code.getmdl.io 403 Forbidden error*](https://issuetracker.google.com/issues/486495092)
 > - [*Generated HTML output of lint references JS and CSS that are no longer available (code.getmdl.io)*](https://issuetracker.google.com/issues/474474279)
+>
 > And it also lacks a proper search & filter mechanism.
 > </details>
 
@@ -32,14 +33,14 @@
 > <summary>How to create an embedded HTML report from a SARIF file?</summary><br>
 >
 > - with a GHA composite action: [`📝 Generate Lint Embedded Reports`](.github/actions/generate-lint-embedded-reports/action.yaml)
-    >   ```yaml
+>   ```yaml
 >   - id: lint
 >     run: ./gradlew lint --continue
 >   - if: ${{ !cancelled() && contains(fromJSON('["success", "failure"]'), steps.lint.outcome) }}
 >     uses: ./.github/actions/generate-lint-embedded-reports
 >   ```
 > - with a bash script:
-    >   ```bash
+>   ```bash
 >   (
 >     sarif="input.sarif"         # SARIF input file
 >     template="docs/index.html"  # HTML template file
