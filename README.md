@@ -17,7 +17,7 @@
 - **💅 Modern UI:** Markdown support and highlighted inline code snippets.
 
 
-> [!NOTE]
+> [!IMPORTANT]
 > <details>
 > <summary>Why a SARIF Viewer?</summary><br>
 >
@@ -32,7 +32,7 @@
 > - this new HTML report is ~1.5MB and contains all the reported issues!
 > </details>
 
-> [!IMPORTANT]
+> [!TIP]
 > <details>
 > <summary>How to create an embedded HTML report from a SARIF file?</summary><br>
 >
