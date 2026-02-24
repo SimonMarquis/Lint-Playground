@@ -17,25 +17,48 @@
 - **💅 Modern UI:** Markdown support and highlighted inline code snippets.
 
 
+> [!NOTE]
+> <details>
+> <summary>Why a SARIF Viewer?</summary><br>
+>
+> Mostly because the official HTML report is broken (it relies on external js/css resources that are 403'ing) since January 2025 and no sign of activity since then on the official issue tracker:
+> - [*Android Lint HTML reports broken by code.getmdl.io 403 Forbidden error*](https://issuetracker.google.com/issues/486495092)
+> - [*Generated HTML output of lint references JS and CSS that are no longer available (code.getmdl.io)*](https://issuetracker.google.com/issues/474474279)
+>
+> It also lacks proper search & filter mechanisms that can be very useful to focus on a specific scope.  
+> And finally, if we take as an example a 10k issues report:
+> - the SARIF file is ~23MB
+> - the default HTML report is ~2.3MB but only shows the [50 first instances](https://cs.android.com/android-studio/platform/tools/base/+/mirror-goog-studio-main:lint/cli/src/main/java/com/android/tools/lint/HtmlReporter.kt;l=987?q=MAX_COUNT&sq=&ss=android-studio%2Fplatform%2Ftools%2Fbase) of each issue and omits the rest
+> - this new HTML report is ~1.5MB and contains all the reported issues!
+> </details>
+
 > [!TIP]
 > <details>
-> <summary>How to create an embedded HTML report from a SARIF file?</summary>
-> 
-> ```shell
-> (
->   sarif="input.sarif"         # SARIF input file
->   template="docs/index.html"  # HTML template file
->   output="report.html"        # HTML output file
-> 
->   {
->     sed -n '1,/<!--region SARIF-->/p' "$template"
->     printf '<script id="sarif-report" type="application/gzip+base64">'
->     jq -c . "$sarif" | gzip -cn | base64 | tr -d '\n'
->     printf '</script>\n'
->     sed -n '/<!--endregion SARIF-->/,$p' "$template"
->   } > "$output"
-> )
-> ```
+> <summary>How to create an embedded HTML report from a SARIF file?</summary><br>
+>
+> - with a GHA composite action: [`📝 Generate Lint Embedded Reports`](.github/actions/generate-lint-embedded-reports/action.yaml)
+>   ```yaml
+>   - id: lint
+>     run: ./gradlew lint --continue
+>   - if: ${{ !cancelled() && contains(fromJSON('["success", "failure"]'), steps.lint.outcome) }}
+>     uses: ./.github/actions/generate-lint-embedded-reports
+>   ```
+> - with a bash script:
+>   ```bash
+>   (
+>     sarif="input.sarif"         # SARIF input file
+>     template="docs/index.html"  # HTML template file
+>     output="report.html"        # HTML output file
+>   
+>     {
+>       sed -n '1,/<!--region SARIF-->/p' "$template"
+>       printf '<script id="sarif-report" type="application/gzip+base64">'
+>       jq -c . "$sarif" | gzip -cn | base64 | tr -d '\n'
+>       printf '</script>\n'
+>       sed -n '/<!--endregion SARIF-->/,$p' "$template"
+>     } > "$output"
+>   )
+>   ```
 > </details>
 
 ### ▶️ Run configurations
