@@ -745,6 +745,7 @@
                 message: getMardownOrText(result.message) || "No message",
                 file: location?.artifactLocation?.uri || "Unknown",
                 line: location?.region?.startLine || 0,
+                column: location?.region?.startColumn || 0,
                 level: result.level || rule?.level || "warning",
                 snippet: snippet?.text ? {
                     text: snippet.text,
@@ -757,7 +758,7 @@
                     message: getMardownOrText(related.message) || ""
                 }))
             };
-        }).sort((a, b) => a.file.localeCompare(b.file) || a.line - b.line);
+        }).sort((a, b) => a.file.localeCompare(b.file) || a.line - b.line || a.column - b.column);
         Perf.end('Extract Issues');
 
         state.categories = new Set(state.rawIssues.flatMap(issue => issue.categories));
