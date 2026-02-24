@@ -17,6 +17,16 @@
 - **💅 Modern UI:** Markdown support and highlighted inline code snippets.
 
 
+> [!NOTE]
+> <details>
+> <summary>Why a SARIF Viewer?</summary><br>
+>
+> Mostly because the official one is broken (it relies on external js/css resources that are 403'ing) since January 2025 and no sign of activity since then on the official issue tracker:
+> - [*Android Lint HTML reports broken by code.getmdl.io 403 Forbidden error*](https://issuetracker.google.com/issues/486495092)
+> - [*Generated HTML output of lint references JS and CSS that are no longer available (code.getmdl.io)*](https://issuetracker.google.com/issues/474474279)
+> And it also lacks a proper search & filter mechanism.
+> </details>
+
 > [!TIP]
 > <details>
 > <summary>How to create an embedded HTML report from a SARIF file?</summary><br>
