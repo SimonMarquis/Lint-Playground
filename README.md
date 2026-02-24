@@ -19,23 +19,31 @@
 
 > [!TIP]
 > <details>
-> <summary>How to create an embedded HTML report from a SARIF file?</summary>
-> 
-> ```shell
-> (
->   sarif="input.sarif"         # SARIF input file
->   template="docs/index.html"  # HTML template file
->   output="report.html"        # HTML output file
-> 
->   {
->     sed -n '1,/<!--region SARIF-->/p' "$template"
->     printf '<script id="sarif-report" type="application/gzip+base64">'
->     jq -c . "$sarif" | gzip -cn | base64 | tr -d '\n'
->     printf '</script>\n'
->     sed -n '/<!--endregion SARIF-->/,$p' "$template"
->   } > "$output"
-> )
-> ```
+> <summary>How to create an embedded HTML report from a SARIF file?</summary><br>
+>
+> - with a GHA composite action: [`📝 Generate Lint Embedded Reports`](.github/actions/generate-lint-embedded-reports/action.yaml)
+    >   ```yaml
+>   - id: lint
+>     run: ./gradlew lint --continue
+>   - if: ${{ !cancelled() && contains(fromJSON('["success", "failure"]'), steps.lint.outcome) }}
+>     uses: ./.github/actions/generate-lint-embedded-reports
+>   ```
+> - with a bash script:
+    >   ```bash
+>   (
+>     sarif="input.sarif"         # SARIF input file
+>     template="docs/index.html"  # HTML template file
+>     output="report.html"        # HTML output file
+>   
+>     {
+>       sed -n '1,/<!--region SARIF-->/p' "$template"
+>       printf '<script id="sarif-report" type="application/gzip+base64">'
+>       jq -c . "$sarif" | gzip -cn | base64 | tr -d '\n'
+>       printf '</script>\n'
+>       sed -n '/<!--endregion SARIF-->/,$p' "$template"
+>     } > "$output"
+>   )
+>   ```
 > </details>
 
 ### ▶️ Run configurations

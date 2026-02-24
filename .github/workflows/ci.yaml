@@ -121,6 +121,9 @@ jobs:
       - name: 🕵️ Lint
         id: lint
         run: ./gradlew lint --continue
+      - name: 📝 Generate Lint Embedded Reports
+        if: ${{ !cancelled() && contains(fromJSON('["success", "failure"]'), steps.lint.outcome) }}
+        uses: ./.github/actions/generate-lint-embedded-reports
       - name: 📦 Archive Lint reports
         if: ${{ !cancelled() && contains(fromJSON('["success", "failure"]'), steps.lint.outcome) }}
         uses: ./.github/actions/archive-lint-reports

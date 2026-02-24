@@ -1,0 +1,24 @@
+name: 📝 Generate Lint Embedded Reports
+description: Generate Lint Embedded Reports
+
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: |
+        find . \
+          -path "./.git" -prune -o \
+          -path "./.gradle" -prune -o \
+          -type f -path "*/build/reports/lint-results*.sarif" -print0 |
+        while IFS= read -r -d '' sarif; do
+          echo "Processing $sarif"
+          template="docs/index.html"
+          output="${sarif%.sarif}-embedded.html"
+          {
+            sed -n '1,/<!--region SARIF-->/p' "$template"
+            printf '<script id="sarif-report" type="application/gzip+base64">'
+            jq -c . "$sarif" | gzip -cn | base64 | tr -d '\n'
+            printf '</script>\n'
+            sed -n '/<!--endregion SARIF-->/,$p' "$template"
+          } > "$output"
+        done
