@@ -32,7 +32,7 @@
 > - this new HTML report is ~1.5MB and contains all the reported issues!
 > </details>
 
-> [!TIP]
+> [!IMPORTANT]
 > <details>
 > <summary>How to create an embedded HTML report from a SARIF file?</summary><br>
 >
