@@ -17,7 +17,7 @@
 - **💅 Modern UI:** Markdown support and highlighted inline code snippets.
 
 
-> [!NOTE]
+> [!IMPORTANT]
 > <details>
 > <summary>Why a SARIF Viewer?</summary><br>
 >
