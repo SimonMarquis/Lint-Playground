@@ -757,7 +757,7 @@
                     message: getMardownOrText(related.message) || ""
                 }))
             };
-        });
+        }).sort((a, b) => a.file.localeCompare(b.file) || a.line - b.line);
         Perf.end('Extract Issues');
 
         state.categories = new Set(state.rawIssues.flatMap(issue => issue.categories));
