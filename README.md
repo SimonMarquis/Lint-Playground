@@ -21,11 +21,15 @@
 > <details>
 > <summary>Why a SARIF Viewer?</summary><br>
 >
-> Mostly because the official one is broken (it relies on external js/css resources that are 403'ing) since January 2025 and no sign of activity since then on the official issue tracker:
+> Mostly because the official HTML report is broken (it relies on external js/css resources that are 403'ing) since January 2025 and no sign of activity since then on the official issue tracker:
 > - [*Android Lint HTML reports broken by code.getmdl.io 403 Forbidden error*](https://issuetracker.google.com/issues/486495092)
 > - [*Generated HTML output of lint references JS and CSS that are no longer available (code.getmdl.io)*](https://issuetracker.google.com/issues/474474279)
 >
-> And it also lacks a proper search & filter mechanism.
+> It also lacks a proper search & filter mechanism that can be very useful to focus on a specific scope.  
+> And finally, if we take as an example a 10k issues report:
+> - the SARIF file is ~23MB
+> - the default HTML report is ~2.3MB but only shows the [50 first instances](https://cs.android.com/android-studio/platform/tools/base/+/mirror-goog-studio-main:lint/cli/src/main/java/com/android/tools/lint/HtmlReporter.kt;l=987?q=MAX_COUNT&sq=&ss=android-studio%2Fplatform%2Ftools%2Fbase) of each issue and omits the rest
+> - this new report is ~1.5MB and contains all the reported issues
 > </details>
 
 > [!TIP]
