@@ -719,7 +719,7 @@
         const dateValue = run.invocations?.[0]?.endTimeUtc || run.invocations?.[0]?.startTimeUtc || sarif.time;
         state.reportDate = dateValue ? new Date(dateValue) : (state.fileLastModified ? new Date(state.fileLastModified) : new Date());
 
-        const getMardownOrText = obj => obj?.markdown || obj?.text || "";
+        const getMarkdownOrText = obj => obj?.markdown || obj?.text || "";
 
         Perf.start('Extract Rules');
         state.rules.clear();
@@ -728,7 +728,7 @@
                 label: rule.shortDescription?.text,
                 categories: rule.tags || rule.properties?.tags || ["General"],
                 level: rule.defaultConfiguration?.level || "warning",
-                description: getMardownOrText(rule.fullDescription)
+                description: getMarkdownOrText(rule.fullDescription)
             });
         });
         Perf.end('Extract Rules');
@@ -742,7 +742,7 @@
             return {
                 id: result.ruleId,
                 categories: rule?.categories,
-                message: getMardownOrText(result.message) || "No message",
+                message: getMarkdownOrText(result.message) || "No message",
                 file: location?.artifactLocation?.uri || "Unknown",
                 line: location?.region?.startLine || 0,
                 column: location?.region?.startColumn || 0,
@@ -755,7 +755,7 @@
                 relatedLocations: (result.relatedLocations || []).map(related => ({
                     file: related.physicalLocation?.artifactLocation?.uri || "Unknown",
                     line: related.physicalLocation?.region?.startLine || 0,
-                    message: getMardownOrText(related.message) || ""
+                    message: getMarkdownOrText(related.message) || ""
                 }))
             };
         }).sort((a, b) => a.file.localeCompare(b.file) || a.line - b.line || a.column - b.column);
