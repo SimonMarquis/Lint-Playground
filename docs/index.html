@@ -737,28 +737,29 @@
         state.rawIssues = (run.results || []).map(result => {
             const rule = state.rules.get(result.ruleId);
             const location = result.locations?.[0]?.physicalLocation;
-            const snippet = location?.contextRegion?.snippet;
+            const context = location?.contextRegion;
 
             return {
                 id: result.ruleId,
                 categories: rule?.categories,
                 message: getMarkdownOrText(result.message) || "No message",
                 file: location?.artifactLocation?.uri || "Unknown",
-                line: location?.region?.startLine || 0,
-                column: location?.region?.startColumn || 0,
+                line: location?.region?.startLine,
+                column: location?.region?.startColumn,
                 level: result.level || rule?.level || "warning",
-                snippet: snippet?.text ? {
-                    text: snippet.text,
-                    startLine: location.contextRegion.startLine || 1
+                snippet: context?.snippet?.text ? {
+                    text: context?.snippet.text,
+                    startLine: context?.startLine
                 } : null,
                 region: location?.region || {},
                 relatedLocations: (result.relatedLocations || []).map(related => ({
                     file: related.physicalLocation?.artifactLocation?.uri || "Unknown",
-                    line: related.physicalLocation?.region?.startLine || 0,
+                    line: related.physicalLocation?.region?.startLine,
+                    column: related.physicalLocation?.region?.startColumn,
                     message: getMarkdownOrText(related.message) || ""
                 }))
             };
-        }).sort((a, b) => a.file.localeCompare(b.file) || a.line - b.line || a.column - b.column);
+        }).sort((a, b) => a.file.localeCompare(b.file) || (a.line || 0) - (b.line || 0) || (a.column || 0) - (b.column || 0));
         Perf.end('Extract Issues');
 
         state.categories = new Set(state.rawIssues.flatMap(issue => issue.categories));
@@ -1040,24 +1041,24 @@
             let cardsHtml = '';
             group.issues.forEach(issue => {
                 cardsHtml += `<div class="issue-card"><div class="issue-message markdown-content"><span>${formatMarkdown(issue.message)}</span></div>`;
-                cardsHtml += createLocationHtml(issue.file, issue.line);
+                cardsHtml += createLocationHtml(issue.file, issue.line, issue.column);
 
                 issue.relatedLocations?.forEach(related => {
                     cardsHtml += `<div class="related-location-card">`;
                     if (related.message) cardsHtml += `<div class="related-location-msg">${formatMarkdown(related.message)}</div>`;
-                    cardsHtml += createLocationHtml(related.file, related.line);
+                    cardsHtml += createLocationHtml(related.file, related.line, related.column);
                     cardsHtml += `</div>`;
                 });
 
                 if (issue.snippet) {
                     const lineHtml = issue.snippet.text.split('\n').map((text, idx) => {
-                        const currentLine = issue.snippet.startLine + idx;
                         let codeText = sanitize(text);
+                        const currentLine = issue.snippet.startLine ? issue.snippet.startLine + idx : '';
                         const region = issue.region;
                         const startLine = region.startLine;
                         const endLine = region.endLine || startLine;
 
-                        if (currentLine >= startLine && currentLine <= endLine) {
+                        if (currentLine && startLine && currentLine >= startLine && currentLine <= endLine) {
                             const startCol = currentLine === startLine ? Math.max(0, (region.startColumn || 1) - 1) : 0;
                             const endCol = currentLine === endLine && region.endColumn ? Math.min(text.length, region.endColumn - 1) : text.length;
                             codeText = `${sanitize(text.substring(0, startCol))}<span class="code-highlight">` +
@@ -1076,12 +1077,19 @@
         DOM.issueList.appendChild(fragment);
     }
 
-    function createLocationHtml(file, line) {
+    function createLocationHtml(file, line, column) {
         const lastIndex = file.lastIndexOf('/');
         const dir = sanitize(file.substring(0, lastIndex + 1));
         const name = sanitize(file.substring(lastIndex + 1));
-        return `<button class="issue-location" data-path="${sanitize(file)}:${line}">` +
-               `<span class="path-dir">${dir}</span><span class="path-name">${name}</span><span class="line-number">:${line}</span></button>`;
+        const showLine = line > 1 || (line === 1 && column > 0);
+        const showColumn = showLine && column > 0;
+        const linePart = showLine ? `:${line}` : '';
+        const colPart = showColumn ? `:${column}` : '';
+        const pathData = `${sanitize(file)}${linePart}${colPart}`;
+        const lineHtml = showLine ? `<span class="line-number">${linePart}</span>` : '';
+        const colHtml = showColumn ? `<span class="line-number">${colPart}</span>` : '';
+        return `<button class="issue-location" data-path="${pathData}">` +
+               `<span class="path-dir">${dir}</span><span class="path-name">${name}</span>${lineHtml}${colHtml}</button>`;
     }
 
     function renderPills(container, items, filterSet) {
