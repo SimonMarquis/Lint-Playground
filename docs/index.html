@@ -557,6 +557,8 @@
          .toLowerCase();
 
     const FILTER_ALL = 'all';
+    const SEVERITY_LEVELS = { error: 'error', warning: 'warning', note: 'info', none: 'info' };
+    const SEVERITY_LABELS = { error: 'Error', warning: 'Warning', info: 'Hint' };
     // #endregion
 
     // #region State
@@ -687,13 +689,6 @@
                        .replace(/\n/g, '<br>');
         }).join('');
     }
-
-    function getSeverity(level) {
-        const severity = (level || 'warning').toLowerCase();
-        if (severity === 'error') return 'error';
-        if (severity === 'note' || severity === 'none') return 'info';
-        return 'warning';
-    }
     // #endregion
 
     // #region SARIF
@@ -720,7 +715,7 @@
             state.rules.set(rule.id, {
                 label: rule.shortDescription?.text,
                 categories: rule.tags || rule.properties?.tags || ["General"],
-                level: rule.defaultConfiguration?.level || "warning",
+                level: SEVERITY_LEVELS[rule.defaultConfiguration?.level] || SEVERITY_LEVELS.warning,
                 description: getMarkdownOrText(rule.fullDescription)
             });
         });
@@ -888,7 +883,7 @@
         updatePillCounts(matchedIssues);
 
         state.filteredIssues = matchedIssues.filter(issue => {
-            if (!state.filters.severities.has(FILTER_ALL) && !state.filters.severities.has(getSeverity(issue.level))) return false;
+            if (!state.filters.severities.has(FILTER_ALL) && !state.filters.severities.has(issue.level)) return false;
             if (!state.filters.categories.has(FILTER_ALL) && !issue.categories.some(c => state.filters.categories.has(c))) return false;
             if (!state.filters.issueIds.has(FILTER_ALL) && !state.filters.issueIds.has(issue.id)) return false;
             return true;
@@ -1004,20 +999,19 @@
 
         Object.values(groups).sort((a, b) => {
             const diff = a.id.localeCompare(b.id);
-            return diff !== 0 ? diff : weight[getSeverity(b.level)] - weight[getSeverity(a.level)];
+            return diff !== 0 ? diff : weight[b.level] - weight[a.level];
         }).forEach(group => {
             const rule = state.rules.get(group.id);
             const description = rule?.description || "No description provided.";
-            const severityClass = `severity-${getSeverity(group.level)}`;
+            const severityClass = `severity-${group.level}`;
 
             const groupClone = DOM.templates.group.content.cloneNode(true);
             const groupElement = groupClone.querySelector('.issue-group');
             groupElement.classList.add(severityClass);
 
-            const severity = getSeverity(group.level);
             const icon = groupClone.querySelector('.severity-icon');
-            icon.classList.add(`severity-${severity}`);
-            icon.querySelector('use').setAttribute('href', `#icon-${severity}-fill`);
+            icon.classList.add(`severity-${group.level}`);
+            icon.querySelector('use').setAttribute('href', `#icon-${group.level}-fill`);
 
             const groupIdElement = groupClone.querySelector('.issue-rule-id');
             groupIdElement.textContent = group.id;
@@ -1110,7 +1104,7 @@
         issues.forEach(issue => {
             counts.issueIds[issue.id] = (counts.issueIds[issue.id] || 0) + 1;
             issue.categories.forEach(category => counts.categories[category] = (counts.categories[category] || 0) + 1);
-            counts.severities[getSeverity(issue.level)]++;
+            counts.severities[issue.level]++;
         });
 
         const update = (type, val, count, label) => {
@@ -1126,15 +1120,14 @@
             element.classList.toggle('is-active', isActive);
         };
 
-        const SEVERITY_LABELS = { error: 'Error', warning: 'Warning', info: 'Hint' };
-        Object.keys(SEVERITY_LABELS).forEach(severity => update('severities', severity, counts.severities[severity], SEVERITY_LABELS[severity]));
+        Object.entries(SEVERITY_LABELS).forEach(([id, label]) => update('severities', id, counts.severities[id], label));
         Array.from(state.categories).forEach(category => update('categories', category, counts.categories[category] || 0));
         Array.from(state.issueIds).forEach(id => update('issueIds', id, counts.issueIds[id] || 0));
     }
 
     function updateMetrics() {
         const counts = { error: 0, warning: 0, info: 0 };
-        state.rawIssues.forEach(issue => counts[getSeverity(issue.level)]++);
+        state.rawIssues.forEach(issue => counts[issue.level]++);
 
         DOM.metrics.total.textContent = state.rawIssues.length;
         DOM.metrics.error.textContent = counts.error;
