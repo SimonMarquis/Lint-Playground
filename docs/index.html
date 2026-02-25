@@ -201,10 +201,10 @@
         .metric-label { color: var(--card-accent); font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; position: relative; z-index: 1; line-height: 1.2; }
 
         .filter-section, .issue-group, .empty-state { background-color: var(--bg-surface); border-radius: 8px; border: 1px solid var(--border); transition: box-shadow 0.2s ease, border-color 0.2s ease; }
-        .filter-section { padding: 1rem; margin-bottom: 1.5rem; }
+        .filter-section { padding: 1rem; margin-bottom: 1.5rem; display: grid; grid-template-columns: max-content max-content 1fr; gap: 0.5rem 1rem; align-items: start; }
         .filter-section:hover, .issue-group:hover, .empty-state:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.3); border-color: var(--text-tertiary); }
 
-        .search-row { margin-bottom: 1.5rem; position: relative; display: flex; align-items: center; }
+        .search-row { grid-column: 1 / -1; margin-bottom: 0.5rem; position: relative; display: flex; align-items: center; }
 
         .filter-input {
             width: 100%; background-color: var(--bg-body); border: 1px solid var(--border); color: var(--text-main);
@@ -231,15 +231,16 @@
             line-height: 1.2; box-shadow: 0 1px 0 var(--border);
         }
 
-        .filter-group { display: flex; align-items: flex-start; gap: 0.5rem; margin-bottom: 0.5rem; }
-        .filter-group:last-child { margin-bottom: 0; }
+        .filter-group { display: contents; }
 
         .filter-label {
             font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em;
-            font-weight: 600; min-width: 80px; white-space: nowrap; flex-shrink: 0; height: 24px; display: flex; align-items: center;
+            font-weight: 600; white-space: nowrap; height: 24px; display: flex; align-items: center;
         }
 
-        .pill-container { display: flex; flex-wrap: wrap; gap: 0.35rem; flex: 1; }
+        .pill-container { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+
+        .all-pill { justify-content: center; }
 
         .pill {
             appearance: none; font-family: inherit; background-color: var(--bg-elevation); color: var(--text-secondary);
@@ -448,26 +449,24 @@
                 <span class="search-hint" id="search-hint">Type <kbd>/</kbd> to search</span>
                 <button id="regex-toggle" class="regex-toggle" title="Use Regular Expression">.*</button>
             </div>
-            <div class="filter-group">
+            <div class="filter-group" id="severity-group">
                 <div class="filter-label">Severity</div>
+                <button class="pill is-active all-pill" data-value="all">All</button>
                 <div class="pill-container" id="severity-pills">
-                    <button class="pill is-active" data-value="all">All</button>
                     <button class="pill" data-value="error" data-severity="error">Error</button>
                     <button class="pill" data-value="warning" data-severity="warning">Warning</button>
                     <button class="pill" data-value="info" data-severity="info">Hint</button>
                 </div>
             </div>
-            <div class="filter-group">
+            <div class="filter-group" id="category-group">
                 <div class="filter-label">Category</div>
-                <div class="pill-container" id="category-pills">
-                    <button class="pill is-active" data-value="all">All</button>
-                </div>
+                <button class="pill is-active all-pill" data-value="all">All</button>
+                <div class="pill-container" id="category-pills"></div>
             </div>
-            <div class="filter-group">
+            <div class="filter-group" id="issue-group">
                 <div class="filter-label">Issue ID</div>
-                <div class="pill-container" id="issue-id-pills">
-                    <button class="pill is-active" data-value="all">All</button>
-                </div>
+                <button class="pill is-active all-pill" data-value="all">All</button>
+                <div class="pill-container" id="issue-pills"></div>
             </div>
         </div>
 
@@ -587,19 +586,13 @@
             info: document.getElementById('metric-info')
         },
         filters: {
-            severities: document.getElementById('severity-pills'),
-            categories: document.getElementById('category-pills'),
-            issueIds: document.getElementById('issue-id-pills')
+            severities: { param: 'severity', group: document.getElementById('severity-group'), pills: document.getElementById('severity-pills') },
+            categories: { param: 'category', group: document.getElementById('category-group'), pills: document.getElementById('category-pills') },
+            issueIds: { param: 'issueId', group: document.getElementById('issue-group'), pills: document.getElementById('issue-pills') }
         },
         templates: {
             group: document.getElementById('tpl-issue-group')
         }
-    };
-
-    const FILTER_CONFIG = {
-        severities: { param: 'severity', container: DOM.filters.severities },
-        categories: { param: 'category', container: DOM.filters.categories },
-        issueIds: { param: 'issueId', container: DOM.filters.issueIds }
     };
 
     const state = {
@@ -764,11 +757,11 @@
 
         state.categories = new Set(state.rawIssues.flatMap(issue => issue.categories));
         state.filters.categories.forEach(c => { if (c !== FILTER_ALL) state.categories.add(c); });
-        renderPills(FILTER_CONFIG.categories.container, state.categories, state.filters.categories);
+        renderPills('categories');
 
         state.issueIds = new Set(state.rawIssues.map(issue => issue.id));
         state.filters.issueIds.forEach(id => { if (id !== FILTER_ALL) state.issueIds.add(id); });
-        renderPills(FILTER_CONFIG.issueIds.container, state.issueIds, state.filters.issueIds);
+        renderPills('issueIds');
 
         updateMetrics();
         applyFilters();
@@ -813,7 +806,7 @@
         state.fileLastModified = lastModified || Date.now();
         processSarif(json);
         updateMetricCards(state.filters.severities);
-        updatePillStates(FILTER_CONFIG.severities.container, state.filters.severities);
+        updatePillStates('severities');
         showResultsUI();
     }
 
@@ -861,7 +854,7 @@
             state.categories.add(c);
             needsCategoriesPillsRender = true;
         });
-        if (needsCategoriesPillsRender) renderPills(FILTER_CONFIG.categories.container, state.categories, state.filters.categories);
+        if (needsCategoriesPillsRender) renderPills('categories');
 
         let needsIssueIdsPillsRender = false;
         state.filters.issueIds.forEach(id => {
@@ -869,7 +862,7 @@
             state.issueIds.add(id);
             needsIssueIdsPillsRender = true;
         });
-        if (needsIssueIdsPillsRender) renderPills(FILTER_CONFIG.issueIds.container, state.issueIds, state.filters.issueIds);
+        if (needsIssueIdsPillsRender) renderPills('issueIds');
 
         const query = state.filters.text;
         const queryNormalized = normalize(query);
@@ -942,9 +935,9 @@
         DOM.regexToggle.classList.toggle('is-active', state.filters.isRegex);
         DOM.filterText.classList.toggle('is-regex', state.filters.isRegex);
 
-        renderPills(FILTER_CONFIG.categories.container, [], state.filters.categories)
-        renderPills(FILTER_CONFIG.issueIds.container, [], state.filters.issueIds)
-        updatePillStates(FILTER_CONFIG.severities.container, state.filters.severities);
+        renderPills('categories');
+        renderPills('issueIds');
+        updatePillStates('severities');
 
         updateMetricCards(state.filters.severities);
     }
@@ -959,13 +952,13 @@
         DOM.regexToggle.classList.toggle('is-active', state.filters.isRegex);
         DOM.filterText.classList.toggle('is-regex', state.filters.isRegex);
 
-        Object.entries(FILTER_CONFIG).forEach(([key, config]) => {
+        Object.entries(DOM.filters).forEach(([type, config]) => {
             const value = params.get(config.param);
-            state.filters[key].clear();
+            state.filters[type].clear();
             if (value) {
-                value.split(',').forEach(v => state.filters[key].add(v.trim()));
+                value.split(',').forEach(v => state.filters[type].add(v.trim()));
             } else {
-                state.filters[key].add(FILTER_ALL);
+                state.filters[type].add(FILTER_ALL);
             }
         });
     }
@@ -975,8 +968,8 @@
         if (state.filters.text) params.set('query', state.filters.text);
         if (state.filters.isRegex) params.set('regex', 'true');
 
-        Object.entries(FILTER_CONFIG).forEach(([key, config]) => {
-            const set = state.filters[key];
+        Object.entries(DOM.filters).forEach(([type, config]) => {
+            const set = state.filters[type];
             if (!set.has(FILTER_ALL) && set.size > 0) {
                 params.set(config.param, Array.from(set).join(','));
             }
@@ -1090,20 +1083,25 @@
         return `<button class="issue-location"><span class="path-dir">${dir}</span><span class="path-name">${name}</span>${lineHtml}${colHtml}</button>`;
     }
 
-    function renderPills(container, items, filterSet) {
-        const activeSet = filterSet || new Set([FILTER_ALL]);
-        container.innerHTML = [FILTER_ALL, ...Array.from(items).sort()].map(item => {
-            const activeClass = activeSet.has(item) ? ' is-active' : '';
-            if (item === FILTER_ALL) return `<button class="pill${activeClass}" data-value="${FILTER_ALL}">All</button>`;
+    function renderPills(type) {
+        const filter = DOM.filters[type];
+        const items = state[type];
+        const filters = state.filters[type];
+        if (!filter || !items || !filters) return;
+
+        filter.pills.innerHTML = Array.from(items).sort().map(item => {
+            const activeClass = filters.has(item) ? ' is-active' : '';
             const sanitized = sanitize(item);
             return `<button class="pill${activeClass}" data-value="${sanitized}"><span class="pill-label">${sanitized}</span><span class="pill-count"></span></button>`;
         }).join('');
     }
 
-    function updatePillStates(container, filterSet) {
-        if (!container) return;
-        Array.from(container.children).forEach(pill => {
-            pill.classList.toggle('is-active', filterSet.has(pill.getAttribute('data-value')));
+    function updatePillStates(type) {
+        const filter = DOM.filters[type];
+        const filters = state.filters[type];
+        if (!filter || !filters) return;
+        Array.from(filter.group.querySelectorAll('.pill')).forEach(pill => {
+            pill.classList.toggle('is-active', filters.has(pill.getAttribute('data-value')));
         });
     }
 
@@ -1115,13 +1113,13 @@
             counts.severities[getSeverity(issue.level)]++;
         });
 
-        const update = (key, val, count, label) => {
-            const element = FILTER_CONFIG[key].container.querySelector(`[data-value="${val}"]`);
+        const update = (type, val, count, label) => {
+            const element = DOM.filters[type].group.querySelector(`[data-value="${val}"]`);
             if (!element) return;
             const name = label || val;
             element.innerHTML = `<span class="pill-label">${sanitize(name)}</span><span class="pill-count">(${count})</span>`;
 
-            const isActive = state.filters[key].has(val);
+            const isActive = state.filters[type].has(val);
             const matchesQuery = state.filters.text && name.toLowerCase().includes(state.filters.text.toLowerCase());
 
             element.classList.toggle('is-hidden', count === 0 && val !== FILTER_ALL && !isActive && !matchesQuery);
@@ -1144,10 +1142,10 @@
         DOM.metrics.info.textContent = counts.info;
     }
 
-    function updateMetricCards(filterSet) {
+    function updateMetricCards(filters) {
         Array.from(DOM.metrics.grid.children).forEach(card => {
             const value = card.getAttribute('data-value');
-            const isActive = filterSet.has(value);
+            const isActive = filters.has(value);
             card.classList.toggle('is-active', isActive);
             card.querySelector('use').setAttribute('href', `#icon-${value === 'all' ? 'list' : value}-${isActive ? 'fill' : 'outline'}`);
         });
@@ -1171,24 +1169,21 @@
         if (!target) return;
 
         const value = target.getAttribute('data-value');
-        const filterSet = state.filters[filterType];
+        const filters = state.filters[filterType];
 
         if (value === FILTER_ALL) {
-            filterSet.clear();
-            filterSet.add(FILTER_ALL);
+            filters.clear();
+            filters.add(FILTER_ALL);
         } else {
-            filterSet.delete(FILTER_ALL);
-            if (filterSet.has(value)) filterSet.delete(value);
-            else filterSet.add(value);
-            if (filterSet.size === 0) filterSet.add(FILTER_ALL);
+            filters.delete(FILTER_ALL);
+            if (filters.has(value)) filters.delete(value);
+            else filters.add(value);
+            if (filters.size === 0) filters.add(FILTER_ALL);
         }
 
-        if (filterType === 'severities') {
-            updateMetricCards(state.filters.severities);
-            updatePillStates(FILTER_CONFIG.severities.container, state.filters.severities);
-        } else {
-            updatePillStates(FILTER_CONFIG[filterType].container, filterSet);
-        }
+        if (filterType === 'severities') updateMetricCards(state.filters.severities);
+
+        updatePillStates(filterType);
 
         applyFilters();
     }
@@ -1219,9 +1214,7 @@
         readURL();
         if (state.rawIssues.length === 0) return;
         updateMetricCards(state.filters.severities);
-        Object.entries(FILTER_CONFIG).forEach(([key, config]) => {
-            updatePillStates(config.container, state.filters[key]);
-        });
+        Object.entries(DOM.filters).forEach(([type]) => updatePillStates(type));
         applyFilters();
     });
 
@@ -1314,8 +1307,8 @@
     });
 
     DOM.metrics.grid.addEventListener('click', event => handlePillClick(event, 'severities'));
-    Object.entries(FILTER_CONFIG).forEach(([key, config]) => {
-        config.container.addEventListener('click', event => handlePillClick(event, key));
+    Object.entries(DOM.filters).forEach(([type, config]) => {
+        config.group.addEventListener('click', event => handlePillClick(event, type));
     });
     // #endregion
 
