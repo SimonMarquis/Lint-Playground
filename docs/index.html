@@ -1085,11 +1085,9 @@
         const showColumn = showLine && column > 0;
         const linePart = showLine ? `:${line}` : '';
         const colPart = showColumn ? `:${column}` : '';
-        const pathData = `${sanitize(file)}${linePart}${colPart}`;
         const lineHtml = showLine ? `<span class="line-number">${linePart}</span>` : '';
         const colHtml = showColumn ? `<span class="line-number">${colPart}</span>` : '';
-        return `<button class="issue-location" data-path="${pathData}">` +
-               `<span class="path-dir">${dir}</span><span class="path-name">${name}</span>${lineHtml}${colHtml}</button>`;
+        return `<button class="issue-location"><span class="path-dir">${dir}</span><span class="path-name">${name}</span>${lineHtml}${colHtml}</button>`;
     }
 
     function renderPills(container, items, filterSet) {
@@ -1309,9 +1307,9 @@
             return;
         }
         const locationButton = event.target.closest('.issue-location');
-        if (locationButton && locationButton.getAttribute('data-path')) {
+        if (locationButton) {
             event.preventDefault();
-            copyToClipboard(locationButton.getAttribute('data-path'));
+            copyToClipboard(locationButton.textContent);
         }
     });
 
