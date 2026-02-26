@@ -265,10 +265,10 @@
         .pill-count { white-space: nowrap; padding-left: 0.35rem; flex: 0 0 auto; }
 
         .pill.is-active { background-color: var(--primary-bg); color: var(--primary); border-color: var(--primary); text-shadow: 0 0 0.65px currentColor; font-weight: normal; }
-        .pill[data-severity="error"].is-active { --pill-color: var(--severity-error); }
-        .pill[data-severity="warning"].is-active { --pill-color: var(--severity-warning); }
-        .pill[data-severity="info"].is-active { --pill-color: var(--severity-info); }
-        .pill[data-severity].is-active { background-color: color-mix(in srgb, var(--pill-color) 15%, transparent); color: var(--pill-color); border-color: var(--pill-color); }
+        .pill[data-value="error"].is-active { --pill-color: var(--severity-error); }
+        .pill[data-value="warning"].is-active { --pill-color: var(--severity-warning); }
+        .pill[data-value="info"].is-active { --pill-color: var(--severity-info); }
+        #severity-pills .pill[data-value].is-active { background-color: color-mix(in srgb, var(--pill-color) 15%, transparent); color: var(--pill-color); border-color: var(--pill-color); }
 
         .issue-list { display: flex; flex-direction: column; gap: 1.5rem; }
         .issue-group { overflow: hidden; content-visibility: auto; contain-intrinsic-size: 500px; border-radius: 12px; }
@@ -431,7 +431,7 @@
 
     <div id="results-container" class="is-hidden">
         <div class="metric-grid">
-            <div class="metric-card is-active" data-value="all">
+            <div class="metric-card is-active">
                 <div class="metric-icon"><svg class="svg-icon"><use href="#icon-list-fill"/></svg></div>
                 <div class="metric-value" id="metric-total">0</div>
                 <div class="metric-label">Total Issues</div>
@@ -467,21 +467,21 @@
             </div>
             <div class="filter-group" id="severity-group">
                 <div class="filter-label">Severity</div>
-                <button class="pill is-active all-pill" data-value="all">All</button>
+                <button class="pill is-active all-pill">All</button>
                 <div class="pill-container" id="severity-pills">
-                    <button class="pill" data-value="error" data-severity="error">Error</button>
-                    <button class="pill" data-value="warning" data-severity="warning">Warning</button>
-                    <button class="pill" data-value="info" data-severity="info">Hint</button>
+                    <button class="pill" data-value="error">Error</button>
+                    <button class="pill" data-value="warning">Warning</button>
+                    <button class="pill" data-value="info">Hint</button>
                 </div>
             </div>
             <div class="filter-group" id="category-group">
                 <div class="filter-label">Category</div>
-                <button class="pill is-active all-pill" data-value="all">All</button>
+                <button class="pill is-active all-pill">All</button>
                 <div class="pill-container" id="category-pills"></div>
             </div>
             <div class="filter-group" id="issue-group">
                 <div class="filter-label">Issue ID</div>
-                <button class="pill is-active all-pill" data-value="all">All</button>
+                <button class="pill is-active all-pill">All</button>
                 <div class="pill-container" id="issue-pills"></div>
             </div>
         </div>
@@ -572,15 +572,20 @@
          .replace(/[\u0300-\u036f]/g, "")
          .toLowerCase();
 
-    const sortBy = (array, ...comparators) => array.sort((a, b) => {
-        for (const compare of comparators) {
-            const result = compare(a, b);
-            if (result !== 0) return result;
-        }
-        return 0;
+    // Custom sortBy with mutliple comparators
+    [Array, Set].forEach(Ctor => {
+        Ctor.prototype.sortBy = function(...comparators) {
+            const arr = this instanceof Set ? Array.from(this) : this;
+            return arr.sort((a, b) => {
+                for (const compare of comparators) {
+                    const result = compare(a, b);
+                    if (result !== 0) return result;
+                }
+                return 0;
+            });
+        };
     });
 
-    const FILTER_ALL = 'all';
     const SEVERITY_LEVELS = { error: 'error', warning: 'warning', note: 'info', none: 'info' };
     const SEVERITY_LABELS = { error: 'Error', warning: 'Warning', info: 'Hint' };
     const SEVERITY_WEIGHTS = { error: 3, warning: 2, info: 1 };
@@ -637,9 +642,9 @@
             text: '',
             isRegex: false,
             isSortingByCount: false,
-            categories: new Set([FILTER_ALL]),
-            issueIds: new Set([FILTER_ALL]),
-            severities: new Set([FILTER_ALL])
+            categories: new Set(),
+            issueIds: new Set(),
+            severities: new Set()
         }
     };
     // #endregion
@@ -774,14 +779,18 @@
                     message: getMarkdownOrText(related.message) || ""
                 }))
             };
-        }).sort((a, b) => a.file.localeCompare(b.file) || (a.line || 0) - (b.line || 0) || (a.column || 0) - (b.column || 0));
+        }).sortBy(
+            (a, b) => a.file.localeCompare(b.file),
+            (a, b) => (a.line || 0) - (b.line || 0),
+            (a, b) => (a.column || 0) - (b.column || 0),
+        );
         Perf.end('Extract Issues');
 
         state.categories = new Set(state.rawIssues.flatMap(issue => issue.categories));
-        state.filters.categories.forEach(c => { if (c !== FILTER_ALL) state.categories.add(c); });
+        state.filters.categories.forEach(c => state.categories.add(c));
 
         state.issueIds = new Set(state.rawIssues.map(issue => issue.id));
-        state.filters.issueIds.forEach(id => { if (id !== FILTER_ALL) state.issueIds.add(id); });
+        state.filters.issueIds.forEach(id => state.issueIds.add(id));
 
         updateMetrics();
         applyFilters();
@@ -870,7 +879,7 @@
 
         let needsCategoriesPillsRender = false;
         state.filters.categories.forEach(c => {
-            if (c == FILTER_ALL || state.categories.has(c)) return
+            if (state.categories.has(c)) return
             state.categories.add(c);
             needsCategoriesPillsRender = true;
         });
@@ -878,7 +887,7 @@
 
         let needsIssueIdsPillsRender = false;
         state.filters.issueIds.forEach(id => {
-            if (id == FILTER_ALL || state.issueIds.has(id)) return
+            if (state.issueIds.has(id)) return
             state.issueIds.add(id);
             needsIssueIdsPillsRender = true;
         });
@@ -908,9 +917,9 @@
         updatePillCounts(matchedIssues);
 
         state.filteredIssues = matchedIssues.filter(issue => {
-            if (!state.filters.severities.has(FILTER_ALL) && !state.filters.severities.has(issue.level)) return false;
-            if (!state.filters.categories.has(FILTER_ALL) && !issue.categories.some(c => state.filters.categories.has(c))) return false;
-            if (!state.filters.issueIds.has(FILTER_ALL) && !state.filters.issueIds.has(issue.id)) return false;
+            if (state.filters.severities.size > 0 && !state.filters.severities.has(issue.level)) return false;
+            if (state.filters.categories.size > 0 && !issue.categories.some(c => state.filters.categories.has(c))) return false;
+            if (state.filters.issueIds.size > 0 && !state.filters.issueIds.has(issue.id)) return false;
             return true;
         });
 
@@ -926,9 +935,9 @@
         if (resetFilters) {
             state.filters.text = '';
             state.filters.isRegex = false;
-            state.filters.categories = new Set([FILTER_ALL]);
-            state.filters.issueIds = new Set([FILTER_ALL]);
-            state.filters.severities = new Set([FILTER_ALL]);
+            state.filters.categories.clear();
+            state.filters.issueIds.clear();
+            state.filters.severities.clear();
             updateURL();
         }
 
@@ -974,11 +983,8 @@
         Object.entries(DOM.filters).forEach(([type, config]) => {
             const value = params.get(config.param);
             state.filters[type].clear();
-            if (value) {
-                value.split(',').forEach(v => state.filters[type].add(v.trim()));
-            } else {
-                state.filters[type].add(FILTER_ALL);
-            }
+            if (!value) return;
+            value.split(',').forEach(v => state.filters[type].add(v.trim()));
         });
     }
 
@@ -989,9 +995,8 @@
 
         Object.entries(DOM.filters).forEach(([type, config]) => {
             const set = state.filters[type];
-            if (!set.has(FILTER_ALL) && set.size > 0) {
-                params.set(config.param, Array.from(set).join(','));
-            }
+            if (set.size === 0) return;
+            params.set(config.param, Array.from(set).join(','));
         });
 
         const queryString = params.toString();
@@ -1012,12 +1017,12 @@
         if (state.filteredIssues.length === 0) return DOM.emptyFilterState.classList.remove('is-hidden');
 
         const fragment = document.createDocumentFragment();
-        sortBy(
-            Object.values(state.filteredIssues.reduce((acc, issue) => {
-                const key = `${issue.id}::${issue.level}`;
-                (acc[key] || (acc[key] = { id: issue.id, level: issue.level, categories: issue.categories, issues: [] })).issues.push(issue);
-                return acc;
-            }, {})),
+        Object.values(state.filteredIssues.reduce((acc, issue) => {
+            const key = `${issue.id}::${issue.level}`;
+            (acc[key] || (acc[key] = { id: issue.id, level: issue.level, categories: issue.categories, issues: [] })).issues.push(issue);
+            return acc;
+        }, {}))
+        .sortBy(
             (a, b) => state.filters.isSortingByCount ? b.issues.length - a.issues.length : 0, // by count if enabled
             (a, b) => SEVERITY_WEIGHTS[b.level] - SEVERITY_WEIGHTS[a.level], // by severity
             (a, b) => a.id.localeCompare(b.id), // by issueId
@@ -1100,29 +1105,23 @@
 
     function renderPills(type, counts = {}) {
         const filter = DOM.filters[type];
-        const items = Array.from(type === 'severities' ? Object.keys(SEVERITY_LABELS) : state[type]);
         const filters = state.filters[type];
-        if (!filter || !items || !filters) return;
+        if (!filter || !filters) return;
+        const isSeverityPills = type === 'severities';
 
-        sortBy(
-            items,
-            (a, b) => state.filters.isSortingByCount ? (counts[b] || 0) - (counts[a] || 0) : 0, // by count
-            (a, b) => type === 'severities' ? SEVERITY_WEIGHTS[b] - SEVERITY_WEIGHTS[a] : a.localeCompare(b) // by severity or name
-        );
-
-        const query = (state.filters.text || '').toLowerCase();
-        filter.pills.innerHTML = items.map(item => {
-            const count = counts[item] || 0;
-            const isActive = filters.has(item);
-            const label = type === 'severities' ? SEVERITY_LABELS[item] : item;
-            const matchesQuery = query && label.toLowerCase().includes(query);
-            const isHidden = count === 0 && !isActive && !matchesQuery;
-            const activeClass = isActive ? ' is-active' : '';
-            const hiddenClass = isHidden ? ' is-hidden' : '';
-            const severityAttr = type === 'severities' ? ` data-severity="${item}"` : '';
-            const sanitized = sanitize(item);
-            return `<button class="pill${activeClass}${hiddenClass}" data-value="${sanitized}"${severityAttr}><span class="pill-label">${sanitize(label)}</span><span class="pill-count">(${count})</span></button>`;
-        }).join('');
+        filter.pills.innerHTML = (isSeverityPills ? Object.keys(SEVERITY_LABELS) : state[type])
+            .sortBy(
+                (a, b) => state.filters.isSortingByCount ? (counts[b] || 0) - (counts[a] || 0) : 0, // by count
+                (a, b) => isSeverityPills ? SEVERITY_WEIGHTS[b] - SEVERITY_WEIGHTS[a] : a.localeCompare(b), // by severity or name
+            )
+            .map(item => {
+                const count = counts[item] || 0;
+                const isActive = filters.has(item);
+                const label = isSeverityPills ? SEVERITY_LABELS[item] : item;
+                const status = isActive ? 'is-active' : (count === 0 ? 'is-hidden' : '');
+                return `<button class="pill ${status}" data-value="${sanitize(item)}"><span class="pill-label">${sanitize(label)}</span><span class="pill-count">(${count})</span></button>`;
+            })
+            .join('');
     }
 
     function updatePillStates(type) {
@@ -1130,7 +1129,9 @@
         const filters = state.filters[type];
         if (!filter || !filters) return;
         Array.from(filter.group.querySelectorAll('.pill')).forEach(pill => {
-            pill.classList.toggle('is-active', filters.has(pill.getAttribute('data-value')));
+            const val = pill.getAttribute('data-value');
+            const isActive = val ? filters.has(val) : filters.size === 0;
+            pill.classList.toggle('is-active', isActive);
         });
     }
 
@@ -1161,9 +1162,9 @@
     function updateMetricCards(filters) {
         Array.from(DOM.metrics.grid.children).forEach(card => {
             const value = card.getAttribute('data-value');
-            const isActive = filters.has(value);
+            const isActive = value ? filters.has(value) : filters.size === 0;
             card.classList.toggle('is-active', isActive);
-            card.querySelector('use').setAttribute('href', `#icon-${value === 'all' ? 'list' : value}-${isActive ? 'fill' : 'outline'}`);
+            card.querySelector('use').setAttribute('href', `#icon-${value ? value : 'list'}-${isActive ? 'fill' : 'outline'}`);
         });
     }
 
@@ -1193,14 +1194,11 @@
         const value = target.getAttribute('data-value');
         const filters = state.filters[filterType];
 
-        if (value === FILTER_ALL) {
+        if (!value) {
             filters.clear();
-            filters.add(FILTER_ALL);
         } else {
-            filters.delete(FILTER_ALL);
             if (filters.has(value)) filters.delete(value);
             else filters.add(value);
-            if (filters.size === 0) filters.add(FILTER_ALL);
         }
 
         if (filterType === 'severities') updateMetricCards(state.filters.severities);
