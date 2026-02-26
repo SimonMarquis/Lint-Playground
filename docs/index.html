@@ -26,6 +26,8 @@
     <link rel="shortcut icon" href="favicon.ico" />
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20height%3D%2224px%22%20viewBox%3D%220%20-960%20960%20960%22%20width%3D%2224px%22%20fill%3D%22%233ddc84%22%3E%3Cpath%20d%3D%22M467-85q-6-1-12-3-135-45-215-166.5T160-516v-189q0-25%2014.5-45t37.5-29l240-90q14-5%2028-5t28%205l240%2090q23%209%2037.5%2029t14.5%2045v189q0%2075-23.5%20146.5T709-240q-8%2011-21.5%2011.5T664-238L560-342q-18%2011-38.5%2016.5T480-320q-66%200-113-47t-47-113q0-66%2047-113t113-47q66%200%20113%2047t47%20113q0%2022-5.5%2042.5T618-398l60%2060q20-41%2031-86t11-92v-189l-240-90-240%2090v189q0%20121%2068%20220t172%20132q16-5%2031.5-12t30.5-16q14-8%2030.5-6t26.5%2016q10%2014%206.5%2030T588-127q-20%2012-40%2021.5T505-88q-6%202-12%203t-13%201q-7%200-13-1Zm69.5-338.5Q560-447%20560-480t-23.5-56.5Q513-560%20480-560t-56.5%2023.5Q400-513%20400-480t23.5%2056.5Q447-400%20480-400t56.5-23.5ZM488-477Z%22%2F%3E%3C%2Fsvg%3E"/>
 
+    <link rel="manifest" href="manifest.json" />
+
     <style>
         :root {
             --primary: #3ddc84;
@@ -872,6 +874,8 @@
     function applyTheme(theme, persist = true) {
         document.documentElement.setAttribute('data-theme', theme);
         if (persist) localStorage.setItem('theme', theme);
+        const color = getComputedStyle(document.documentElement).getPropertyValue('--bg-surface').trim();
+        document.querySelector('meta[name="theme-color"]')?.setAttribute('content', color);
     }
 
     function applyFilters() {
@@ -1336,6 +1340,19 @@
     Object.entries(DOM.filters).forEach(([type, config]) => {
         config.group.addEventListener('click', event => handlePillClick(event, type));
     });
+
+    // PWA file_handlers
+    if ('launchQueue' in window) {
+      window.launchQueue.setConsumer(async (launchParams) => {
+        if (!launchParams.files || launchParams.files.length === 0) return;
+        const file = await launchParams.files[0].getFile();
+        try {
+          loadSarifData(parseJson(await file.text()), file.name, file.lastModified);
+        } catch (err) {
+          showError(err.message || "Could not parse launched file.");
+        }
+      });
+    }
     // #endregion
 
     // #region Initialization
