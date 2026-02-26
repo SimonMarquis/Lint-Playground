@@ -21,9 +21,10 @@
 
     <link rel="canonical" href="https://simonmarquis.github.io/Lint-Playground/">
 
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='48px' viewBox='0 -960 960 960' width='48px' fill='%233ddc84'%3E%3Cpath d='M480-200q66 0 113-47t47-113v-160q0-66-47-113t-113-47q-66 0-113 47t-47 113v160q0 66 47 113t113 47Zm-80-120h160v-80H400v80Zm0-160h160v-80H400v80Zm80 40Zm0 320q-65 0-120.5-32T272-240H160v-80h84q-3-20-3.5-40t-.5-40h-80v-80h80q0-20 .5-40t3.5-40h-84v-80h112q14-23 31.5-43t40.5-35l-64-66 56-56 86 86q28-9 57-9t57 9l88-86 56 56-66 66q23 15 41.5 34.5T688-640h112v80h-84q3 20 3.5 40t.5 40h80v80h-80q0 20-.5 40t-3.5 40h84v80H688q-32 56-87.5 88T480-120Z'/%3E%3C/svg%3E"/>
-    <link rel="alternate icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="icon" type="image/png" href="96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20height%3D%2224px%22%20viewBox%3D%220%20-960%20960%20960%22%20width%3D%2224px%22%20fill%3D%22%233ddc84%22%3E%3Cpath%20d%3D%22M467-85q-6-1-12-3-135-45-215-166.5T160-516v-189q0-25%2014.5-45t37.5-29l240-90q14-5%2028-5t28%205l240%2090q23%209%2037.5%2029t14.5%2045v189q0%2075-23.5%20146.5T709-240q-8%2011-21.5%2011.5T664-238L560-342q-18%2011-38.5%2016.5T480-320q-66%200-113-47t-47-113q0-66%2047-113t113-47q66%200%20113%2047t47%20113q0%2022-5.5%2042.5T618-398l60%2060q20-41%2031-86t11-92v-189l-240-90-240%2090v189q0%20121%2068%20220t172%20132q16-5%2031.5-12t30.5-16q14-8%2030.5-6t26.5%2016q10%2014%206.5%2030T588-127q-20%2012-40%2021.5T505-88q-6%202-12%203t-13%201q-7%200-13-1Zm69.5-338.5Q560-447%20560-480t-23.5-56.5Q513-560%20480-560t-56.5%2023.5Q400-513%20400-480t23.5%2056.5Q447-400%20480-400t56.5-23.5ZM488-477Z%22%2F%3E%3C%2Fsvg%3E"/>
 
     <style>
         :root {
@@ -76,8 +77,8 @@
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        .svg-icon { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-        .svg-icon-fill { fill: currentColor; stroke: none; }
+        .svg-icon { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; display: block; }
+        .svg-icon-fill { fill: currentColor; stroke: none; display: block; }
 
         header {
             background-color: var(--bg-surface); border-bottom: 1px solid var(--border);
@@ -356,7 +357,7 @@
 
 <svg class="svg-sprites" xmlns="http://www.w3.org/2000/svg">
     <defs>
-        <symbol id="icon-logo" viewBox="0 0 24 24"><path d="M20 8h-2.81c-.45-.78-1.07-1.45-1.82-1.96L17 4.41 15.59 3l-2.17 2.17C12.96 5.06 12.49 5 12 5c-.49 0-.96.06-1.41.17L8.41 3 7 4.41l1.62 1.63C7.88 6.55 7.26 7.22 6.81 8H4v2h2.09c-.05.33-.09.66-.09 1v1H4v2h2v1c0 .34.04.67.09 1H4v2h2.81c1.04 1.79 2.97 3 5.19 3s4.15-1.21 5.19-3H20v-2h-2.09c.05-.33.09-.66.09-1v-1h2v-2h-2v-1c0-.34-.04-.67-.09-1H20V8zm-6 8h-4v-2h4v2zm0-4h-4v-2h4v2z"/></symbol>
+        <symbol id="icon-logo" viewBox="0 -960 960 960" fill="#3ddc84"><path d="M467-85q-6-1-12-3-135-45-215-166.5T160-516v-189q0-25 14.5-45t37.5-29l240-90q14-5 28-5t28 5l240 90q23 9 37.5 29t14.5 45v189q0 75-23.5 146.5T709-240q-8 11-21.5 11.5T664-238L560-342q-18 11-38.5 16.5T480-320q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 22-5.5 42.5T618-398l60 60q20-41 31-86t11-92v-189l-240-90-240 90v189q0 121 68 220t172 132q16-5 31.5-12t30.5-16q14-8 30.5-6t26.5 16q10 14 6.5 30T588-127q-20 12-40 21.5T505-88q-6 2-12 3t-13 1q-7 0-13-1Zm69.5-338.5Q560-447 560-480t-23.5-56.5Q513-560 480-560t-56.5 23.5Q400-513 400-480t23.5 56.5Q447-400 480-400t56.5-23.5ZM488-477Z"></path></symbol>
         <symbol id="icon-open" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path><line x1="12" y1="11" x2="12" y2="17"></line><line x1="9" y1="14" x2="15" y2="14"></line></symbol>
         <symbol id="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></symbol>
         <symbol id="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></symbol>
@@ -378,7 +379,7 @@
 
 <header>
     <h1>
-        <svg class="svg-icon-fill header-logo" width="28" height="28"><use href="#icon-logo"/></svg>
+        <svg class="svg-icon-fill header-logo"><use href="#icon-logo"/></svg>
         <span class="title-text">
             <span class="title-prefix">Android Lint</span><span class="title-suffix">SARIF Viewer</span>
         </span>
