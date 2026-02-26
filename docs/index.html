@@ -560,6 +560,7 @@
     const FILTER_ALL = 'all';
     const SEVERITY_LEVELS = { error: 'error', warning: 'warning', note: 'info', none: 'info' };
     const SEVERITY_LABELS = { error: 'Error', warning: 'Warning', info: 'Hint' };
+    const SEVERITY_WEIGHTS = { error: 3, warning: 2, info: 1 };
     // #endregion
 
     // #region State
@@ -988,20 +989,17 @@
         if (state.rawIssues.length === 0) return DOM.emptyReportState.classList.remove('is-hidden');
         if (state.filteredIssues.length === 0) return DOM.emptyFilterState.classList.remove('is-hidden');
 
-        const groups = state.filteredIssues.reduce((acc, issue) => {
-            const key = `${issue.id}::${issue.level}`;
-            if (!acc[key]) acc[key] = { id: issue.id, level: issue.level, categories: issue.categories, issues: [] };
-            acc[key].issues.push(issue);
-            return acc;
-        }, {});
-
         const fragment = document.createDocumentFragment();
-        const weight = { error: 3, warning: 2, info: 1 };
-
-        Object.values(groups).sort((a, b) => {
-            const diff = a.id.localeCompare(b.id);
-            return diff !== 0 ? diff : weight[b.level] - weight[a.level];
-        }).forEach(group => {
+        Object.values(state.filteredIssues.reduce((acc, issue) => {
+            const key = `${issue.id}::${issue.level}`;
+            (acc[key] || (acc[key] = { id: issue.id, level: issue.level, categories: issue.categories, issues: [] })).issues.push(issue);
+            return acc;
+        }, {}))
+        .sort((a, b) => {
+            const sevDiff = SEVERITY_WEIGHTS[b.level] - SEVERITY_WEIGHTS[a.level];
+            return sevDiff !== 0 ? sevDiff : a.id.localeCompare(b.id);
+        })
+        .forEach(group => {
             const rule = state.rules.get(group.id);
             const description = rule?.description || "No description provided.";
             const severityClass = `severity-${group.level}`;
