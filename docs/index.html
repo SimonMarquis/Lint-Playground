@@ -205,7 +205,15 @@
         .filter-section { padding: 1rem; margin-bottom: 1.5rem; display: grid; grid-template-columns: max-content max-content 1fr; gap: 0.5rem 1rem; align-items: start; }
         .filter-section:hover, .issue-group:hover, .empty-state:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.3); border-color: var(--text-tertiary); }
 
-        .search-row { grid-column: 1 / -1; margin-bottom: 0.5rem; position: relative; display: flex; align-items: center; }
+        .search-container { grid-column: 1 / -1; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+        .search-row { flex: 1; margin-bottom: 0; position: relative; display: flex; align-items: center; }
+
+        .sort-button {
+            width: 46px; height: 46px; flex-shrink: 0; background-color: var(--bg-body); border: 1px solid var(--border);
+            border-radius: 6px; color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s ease;
+        }
+        .sort-button:hover { background-color: var(--bg-elevation); color: var(--text-main); border-color: var(--text-tertiary); }
 
         .filter-input {
             width: 100%; background-color: var(--bg-body); border: 1px solid var(--border); color: var(--text-main);
@@ -373,6 +381,8 @@
         <symbol id="icon-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></symbol>
         <symbol id="icon-empty-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="8" y1="11" x2="14" y2="11"></line></symbol>
         <symbol id="icon-empty-report" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></symbol>
+        <symbol id="icon-sort-name" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 0-2 2v8h2v-4h2v4h2V9a2 2 0 0 0-2-2zm0 2h2v2H3m12-.5V9a2 2 0 0 0-2-2H9v10h4a2 2 0 0 0 2-2v-1.5a1.5 1.5 0 0 0-1.5-1.5 1.5 1.5 0 0 0 1.5-1.5M13 15h-2v-2h2zm0-4h-2V9h2m6-2a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-1h-2v1h-2V9h2v1h2V9a2 2 0 0 0-2-2Z"/></symbol>
+        <symbol id="icon-sort-count" viewBox="0 0 24 24"><path d="M4 17V9H2V7h4v10zm18-2a2 2 0 0 1-2 2h-4v-2h4v-2h-2v-2h2V9h-4V7h4a2 2 0 0 1 2 2v1.5a1.5 1.5 0 0 1-1.5 1.5 1.5 1.5 0 0 1 1.5 1.5zm-8 0v2H8v-4q.2-1.8 2-2h2V9H8V7h4a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-2v2z"/></symbol>
         <symbol id="icon-chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></symbol>
     </defs>
 </svg>
@@ -444,11 +454,16 @@
         </div>
 
         <div class="filter-section">
-            <div class="search-row">
-                <div class="search-icon"><svg class="svg-icon" width="20" height="20"><use href="#icon-search"/></svg></div>
-                <input type="text" id="filter-text" class="filter-input">
-                <span class="search-hint" id="search-hint">Type <kbd>/</kbd> to search</span>
-                <button id="regex-toggle" class="regex-toggle" title="Use Regular Expression">.*</button>
+            <div class="search-container">
+                <div class="search-row">
+                    <div class="search-icon"><svg class="svg-icon" width="20" height="20"><use href="#icon-search"/></svg></div>
+                    <input type="text" id="filter-text" class="filter-input">
+                    <span class="search-hint" id="search-hint">Type <kbd>/</kbd> to search</span>
+                    <button id="regex-toggle" class="regex-toggle" title="Use Regular Expression">.*</button>
+                </div>
+                <button id="sort-toggle" class="sort-button" title="Sorted by name">
+                    <svg class="svg-icon-fill" width="22" height="22"><use href="#icon-sort-name"/></svg>
+                </button>
             </div>
             <div class="filter-group" id="severity-group">
                 <div class="filter-label">Severity</div>
@@ -557,6 +572,14 @@
          .replace(/[\u0300-\u036f]/g, "")
          .toLowerCase();
 
+    const sortBy = (array, ...comparators) => array.sort((a, b) => {
+        for (const compare of comparators) {
+            const result = compare(a, b);
+            if (result !== 0) return result;
+        }
+        return 0;
+    });
+
     const FILTER_ALL = 'all';
     const SEVERITY_LEVELS = { error: 'error', warning: 'warning', note: 'info', none: 'info' };
     const SEVERITY_LABELS = { error: 'Error', warning: 'Warning', info: 'Hint' };
@@ -577,6 +600,7 @@
         filterText: document.getElementById('filter-text'),
         searchHint: document.getElementById('search-hint'),
         regexToggle: document.getElementById('regex-toggle'),
+        sortToggle: document.getElementById('sort-toggle'),
         dragOverlay: document.getElementById('drag-overlay'),
         loaderContainer: document.getElementById('loader-container'),
         exampleContainer: document.getElementById('example-container'),
@@ -612,6 +636,7 @@
         filters: {
             text: '',
             isRegex: false,
+            isSortingByCount: false,
             categories: new Set([FILTER_ALL]),
             issueIds: new Set([FILTER_ALL]),
             severities: new Set([FILTER_ALL])
@@ -754,11 +779,9 @@
 
         state.categories = new Set(state.rawIssues.flatMap(issue => issue.categories));
         state.filters.categories.forEach(c => { if (c !== FILTER_ALL) state.categories.add(c); });
-        renderPills('categories');
 
         state.issueIds = new Set(state.rawIssues.map(issue => issue.id));
         state.filters.issueIds.forEach(id => { if (id !== FILTER_ALL) state.issueIds.add(id); });
-        renderPills('issueIds');
 
         updateMetrics();
         applyFilters();
@@ -932,10 +955,9 @@
         DOM.regexToggle.classList.toggle('is-active', state.filters.isRegex);
         DOM.filterText.classList.toggle('is-regex', state.filters.isRegex);
 
-        renderPills('categories');
-        renderPills('issueIds');
-        updatePillStates('severities');
+        updateSortToggleUI();
 
+        updatePillCounts([]);
         updateMetricCards(state.filters.severities);
     }
 
@@ -990,16 +1012,16 @@
         if (state.filteredIssues.length === 0) return DOM.emptyFilterState.classList.remove('is-hidden');
 
         const fragment = document.createDocumentFragment();
-        Object.values(state.filteredIssues.reduce((acc, issue) => {
-            const key = `${issue.id}::${issue.level}`;
-            (acc[key] || (acc[key] = { id: issue.id, level: issue.level, categories: issue.categories, issues: [] })).issues.push(issue);
-            return acc;
-        }, {}))
-        .sort((a, b) => {
-            const sevDiff = SEVERITY_WEIGHTS[b.level] - SEVERITY_WEIGHTS[a.level];
-            return sevDiff !== 0 ? sevDiff : a.id.localeCompare(b.id);
-        })
-        .forEach(group => {
+        sortBy(
+            Object.values(state.filteredIssues.reduce((acc, issue) => {
+                const key = `${issue.id}::${issue.level}`;
+                (acc[key] || (acc[key] = { id: issue.id, level: issue.level, categories: issue.categories, issues: [] })).issues.push(issue);
+                return acc;
+            }, {})),
+            (a, b) => state.filters.isSortingByCount ? b.issues.length - a.issues.length : 0, // by count if enabled
+            (a, b) => SEVERITY_WEIGHTS[b.level] - SEVERITY_WEIGHTS[a.level], // by severity
+            (a, b) => a.id.localeCompare(b.id), // by issueId
+        ).forEach(group => {
             const rule = state.rules.get(group.id);
             const description = rule?.description || "No description provided.";
             const severityClass = `severity-${group.level}`;
@@ -1076,16 +1098,30 @@
         return `<button class="issue-location"><span class="path-dir">${dir}</span><span class="path-name">${name}</span>${lineHtml}${colHtml}</button>`;
     }
 
-    function renderPills(type) {
+    function renderPills(type, counts = {}) {
         const filter = DOM.filters[type];
-        const items = state[type];
+        const items = Array.from(type === 'severities' ? Object.keys(SEVERITY_LABELS) : state[type]);
         const filters = state.filters[type];
         if (!filter || !items || !filters) return;
 
-        filter.pills.innerHTML = Array.from(items).sort().map(item => {
-            const activeClass = filters.has(item) ? ' is-active' : '';
+        sortBy(
+            items,
+            (a, b) => state.filters.isSortingByCount ? (counts[b] || 0) - (counts[a] || 0) : 0, // by count
+            (a, b) => type === 'severities' ? SEVERITY_WEIGHTS[b] - SEVERITY_WEIGHTS[a] : a.localeCompare(b) // by severity or name
+        );
+
+        const query = (state.filters.text || '').toLowerCase();
+        filter.pills.innerHTML = items.map(item => {
+            const count = counts[item] || 0;
+            const isActive = filters.has(item);
+            const label = type === 'severities' ? SEVERITY_LABELS[item] : item;
+            const matchesQuery = query && label.toLowerCase().includes(query);
+            const isHidden = count === 0 && !isActive && !matchesQuery;
+            const activeClass = isActive ? ' is-active' : '';
+            const hiddenClass = isHidden ? ' is-hidden' : '';
+            const severityAttr = type === 'severities' ? ` data-severity="${item}"` : '';
             const sanitized = sanitize(item);
-            return `<button class="pill${activeClass}" data-value="${sanitized}"><span class="pill-label">${sanitized}</span><span class="pill-count"></span></button>`;
+            return `<button class="pill${activeClass}${hiddenClass}" data-value="${sanitized}"${severityAttr}><span class="pill-label">${sanitize(label)}</span><span class="pill-count">(${count})</span></button>`;
         }).join('');
     }
 
@@ -1106,22 +1142,10 @@
             counts.severities[issue.level]++;
         });
 
-        const update = (type, val, count, label) => {
-            const element = DOM.filters[type].group.querySelector(`[data-value="${val}"]`);
-            if (!element) return;
-            const name = label || val;
-            element.innerHTML = `<span class="pill-label">${sanitize(name)}</span><span class="pill-count">(${count})</span>`;
-
-            const isActive = state.filters[type].has(val);
-            const matchesQuery = state.filters.text && name.toLowerCase().includes(state.filters.text.toLowerCase());
-
-            element.classList.toggle('is-hidden', count === 0 && val !== FILTER_ALL && !isActive && !matchesQuery);
-            element.classList.toggle('is-active', isActive);
-        };
-
-        Object.entries(SEVERITY_LABELS).forEach(([id, label]) => update('severities', id, counts.severities[id], label));
-        Array.from(state.categories).forEach(category => update('categories', category, counts.categories[category] || 0));
-        Array.from(state.issueIds).forEach(id => update('issueIds', id, counts.issueIds[id] || 0));
+        Object.entries(counts).forEach(([type, countData]) => {
+            renderPills(type, countData);
+            updatePillStates(type);
+        });
     }
 
     function updateMetrics() {
@@ -1141,6 +1165,12 @@
             card.classList.toggle('is-active', isActive);
             card.querySelector('use').setAttribute('href', `#icon-${value === 'all' ? 'list' : value}-${isActive ? 'fill' : 'outline'}`);
         });
+    }
+
+    function updateSortToggleUI() {
+        const isCount = state.filters.isSortingByCount;
+        DOM.sortToggle.title = isCount ? 'Sorted by count' : 'Sorted by name';
+        DOM.sortToggle.querySelector('use').setAttribute('href', `#icon-sort-${isCount ? 'count' : 'name'}`);
     }
 
     function showResultsUI() {
@@ -1236,6 +1266,12 @@
         state.filters.isRegex = !state.filters.isRegex;
         DOM.regexToggle.classList.toggle('is-active', state.filters.isRegex);
         DOM.filterText.classList.toggle('is-regex', state.filters.isRegex);
+        applyFilters();
+    });
+
+    DOM.sortToggle.addEventListener('click', () => {
+        state.filters.isSortingByCount = !state.filters.isSortingByCount;
+        updateSortToggleUI();
         applyFilters();
     });
 
