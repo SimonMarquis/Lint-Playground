@@ -1,0 +1,59 @@
+{
+  "name": "Android Lint SARIF Viewer",
+  "short_name": "SARIF Viewer",
+  "description": "A modern, offline-first viewer for Android Lint SARIF reports. Analyze your lint issues, filter by severity, and visualize code snippets directly in your browser.",
+  "lang": "en",
+  "start_url": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "theme_color": "#3ddc84",
+  "background_color": "white",
+  "icons": [
+    {
+      "src": "192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshot-dark.png",
+      "sizes": "2160x1570",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "screenshot-light.png",
+      "sizes": "2160x1570",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "screenshot-dark.png",
+      "sizes": "2160x1570",
+      "type": "image/png",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "screenshot-light.png",
+      "sizes": "2160x1570",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ],
+  "file_handlers": [
+    {
+      "action": "./",
+      "accept": {
+        "application/sarif+json": [
+          ".sarif"
+        ]
+      }
+    }
+  ]
+}
