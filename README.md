@@ -51,12 +51,15 @@
 >     output="report.html"        # HTML output file
 >   
 >     {
->       sed -n '1,/<!--region SARIF-->/p' "$template"
+>       sed -n '1,/<!--region SARIF-EMBEDDED-REPORT-->/p' "$template"
 >       printf '<script id="sarif-report" type="application/gzip+base64">'
 >       jq -c . "$sarif" | gzip -cn | base64 | tr -d '\n'
 >       printf '</script>\n'
->       sed -n '/<!--endregion SARIF-->/,$p' "$template"
->     } > "$output"
+>       sed -n '/<!--endregion SARIF-EMBEDDED-REPORT-->/,$p' "$template"
+>     } |
+>     sed -e '/<!--region REMOVE-IN-EMBEDDED-REPORT-->/,/<!--endregion REMOVE-IN-EMBEDDED-REPORT-->/d' \
+>         -e '/\/\/ #region REMOVE-IN-EMBEDDED-REPORT/,/\/\/ #endregion REMOVE-IN-EMBEDDED-REPORT/d' \
+>     > "$output"
 >   )
 >   ```
 > </details>

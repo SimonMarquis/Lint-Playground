@@ -12,6 +12,7 @@
     <meta name="theme-color" content="#3ddc84">
     <meta name="color-scheme" content="dark light">
 
+    <!--region REMOVE-IN-EMBEDDED-REPORT-->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://simonmarquis.github.io/Lint-Playground/">
     <meta property="og:title" content="Android Lint SARIF Viewer">
@@ -20,13 +21,12 @@
     <meta property="og:locale" content="en_US">
 
     <link rel="canonical" href="https://simonmarquis.github.io/Lint-Playground/">
-
     <link rel="icon" type="image/png" href="96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <link rel="shortcut icon" href="favicon.ico" />
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20height%3D%2224px%22%20viewBox%3D%220%20-960%20960%20960%22%20width%3D%2224px%22%20fill%3D%22%233ddc84%22%3E%3Cpath%20d%3D%22M467-85q-6-1-12-3-135-45-215-166.5T160-516v-189q0-25%2014.5-45t37.5-29l240-90q14-5%2028-5t28%205l240%2090q23%209%2037.5%2029t14.5%2045v189q0%2075-23.5%20146.5T709-240q-8%2011-21.5%2011.5T664-238L560-342q-18%2011-38.5%2016.5T480-320q-66%200-113-47t-47-113q0-66%2047-113t113-47q66%200%20113%2047t47%20113q0%2022-5.5%2042.5T618-398l60%2060q20-41%2031-86t11-92v-189l-240-90-240%2090v189q0%20121%2068%20220t172%20132q16-5%2031.5-12t30.5-16q14-8%2030.5-6t26.5%2016q10%2014%206.5%2030T588-127q-20%2012-40%2021.5T505-88q-6%202-12%203t-13%201q-7%200-13-1Zm69.5-338.5Q560-447%20560-480t-23.5-56.5Q513-560%20480-560t-56.5%2023.5Q400-513%20400-480t23.5%2056.5Q447-400%20480-400t56.5-23.5ZM488-477Z%22%2F%3E%3C%2Fsvg%3E"/>
-
     <link rel="manifest" href="manifest.json" />
+    <!--endregion REMOVE-IN-EMBEDDED-REPORT-->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20height%3D%2224px%22%20viewBox%3D%220%20-960%20960%20960%22%20width%3D%2224px%22%20fill%3D%22%233ddc84%22%3E%3Cpath%20d%3D%22M467-85q-6-1-12-3-135-45-215-166.5T160-516v-189q0-25%2014.5-45t37.5-29l240-90q14-5%2028-5t28%205l240%2090q23%209%2037.5%2029t14.5%2045v189q0%2075-23.5%20146.5T709-240q-8%2011-21.5%2011.5T664-238L560-342q-18%2011-38.5%2016.5T480-320q-66%200-113-47t-47-113q0-66%2047-113t113-47q66%200%20113%2047t47%20113q0%2022-5.5%2042.5T618-398l60%2060q20-41%2031-86t11-92v-189l-240-90-240%2090v189q0%20121%2068%20220t172%20132q16-5%2031.5-12t30.5-16q14-8%2030.5-6t26.5%2016q10%2014%206.5%2030T588-127q-20%2012-40%2021.5T505-88q-6%202-12%203t-13%201q-7%200-13-1Zm69.5-338.5Q560-447%20560-480t-23.5-56.5Q513-560%20480-560t-56.5%2023.5Q400-513%20400-480t23.5%2056.5Q447-400%20480-400t56.5-23.5ZM488-477Z%22%2F%3E%3C%2Fsvg%3E"/>
 
     <style>
         :root {
@@ -211,7 +211,7 @@
         .search-row { flex: 1; margin-bottom: 0; position: relative; display: flex; align-items: center; }
 
         .sort-button {
-            width: 46px; height: 46px; flex-shrink: 0; background-color: var(--bg-body); border: 1px solid var(--border);
+            width: 2.75rem; height: 2.75rem; padding: 0.75rem; flex-shrink: 0; background-color: var(--bg-body); border: 1px solid var(--border);
             border-radius: 6px; color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center;
             transition: all 0.2s ease;
         }
@@ -234,7 +234,7 @@
         .regex-toggle.is-active { background-color: var(--primary-bg); color: var(--primary); border-color: var(--primary); }
 
         .search-icon { position: absolute; left: 12px; color: var(--text-secondary); pointer-events: none; display: flex; align-items: center; }
-        .search-hint { position: absolute; left: 40px; font-size: 0.95rem; color: var(--text-secondary); pointer-events: none; user-select: none; display: flex; align-items: center; gap: 8px; transition: opacity 0.1s ease; }
+        .search-hint { position: absolute; left: 40px; font-size: 1rem; color: var(--text-secondary); pointer-events: none; user-select: none; display: flex; align-items: center; gap: 8px; transition: opacity 0.1s ease; }
 
         kbd {
             background-color: var(--bg-elevation); border: 1px solid var(--border); border-radius: 4px;
@@ -460,7 +460,7 @@
                 <div class="search-row">
                     <div class="search-icon"><svg class="svg-icon" width="20" height="20"><use href="#icon-search"/></svg></div>
                     <input type="text" id="filter-text" class="filter-input">
-                    <span class="search-hint" id="search-hint">Type <kbd>/</kbd> to search</span>
+                    <label class="search-hint" id="search-hint" for="filter-text">Type <kbd>/</kbd> to search</label>
                     <button id="regex-toggle" class="regex-toggle" title="Use Regular Expression">.*</button>
                 </div>
                 <button id="sort-toggle" class="sort-button" title="Sorted by name">
@@ -470,21 +470,17 @@
             <div class="filter-group" id="severity-group">
                 <div class="filter-label">Severity</div>
                 <button class="pill is-active all-pill">All</button>
-                <div class="pill-container" id="severity-pills">
-                    <button class="pill" data-value="error">Error</button>
-                    <button class="pill" data-value="warning">Warning</button>
-                    <button class="pill" data-value="info">Hint</button>
-                </div>
+                <div class="pill-container" id="severity-pills"></div>
             </div>
             <div class="filter-group" id="category-group">
                 <div class="filter-label">Category</div>
                 <button class="pill is-active all-pill">All</button>
                 <div class="pill-container" id="category-pills"></div>
             </div>
-            <div class="filter-group" id="issue-group">
-                <div class="filter-label">Issue ID</div>
+            <div class="filter-group" id="rule-group">
+                <div class="filter-label">Rule ID</div>
                 <button class="pill is-active all-pill">All</button>
-                <div class="pill-container" id="issue-pills"></div>
+                <div class="pill-container" id="rule-pills"></div>
             </div>
         </div>
 
@@ -531,7 +527,7 @@
     <h2>Drop to Load New File</h2>
 </div>
 
-<!--region SARIF-->
+<!--region SARIF-EMBEDDED-REPORT-->
 <script id="sarif-example" data-src="lint-results-demoDebug.sarif" data-project="android/nowinandroid" type="application/json"></script>
 <!-- Placeholders for embedded report (populated by CI/CD or other tools) -->
 <!--SARIF raw-->
@@ -540,7 +536,7 @@
 <!--<script id="sarif-report" type="application/json" data-src="lint-results-demoDebug.sarif"></script>-->
 <!--SARIF b64 GZIP-->
 <!--<script id="sarif-report" type="application/gzip+base64">H4sICJmRi2kAA3NtYWxsLnNhcmlmAMVVTW/bMAz9K4IwoIel9up2wJqlWbvusAIdMDTdaRkCxWJsDbZkSHTSrMh/H2U7qfPdw4A5h+iDfHokn6hn/sbFKeSCd3mKWLhuGFoxCxKFaTkuHdjYaASNQWzy0Ain3CnGLnTCqsmpKyAOc+EQbDioYFAst6rpaRScBe+C385o3uFTsE7RqMurZVqxpXa8+/OZozEZ7z5zaRVZ+ZEWOZDljZbWKMnulcY1iA9B1EBkUGMoSctfhZWxkSAf4ck7uNRY/AIutqrAypMO81stU1YtLDpcwkSUGd4aPVFJacXSIYMpED0O1hrrDQtrCrCo/MmEJxLPgN8aayFGDc7RyXeUN6srDJGpPzXYr8Wi0zD9oSm98gGcKW0M7jDX2pjZlfUr2M6E1Uon+/l+BzsxNhc6hjaxx3lhjtAZFJBlhM1WGTlGRhuE12WOmHgynGIlwLq0vsh3u8qbk4dIYGdVHVpPccgH5ThXOOQdRiGVmWSUS3bdbC9T6smt15nmJq4CqUkU6dypWGT3zao/VFAoExFje620ijBEUYTO+uuhdEiHhJmYmxJDMlZThfOR3wie8oxXsSaNs0OCJLFTSGfvO/X01mRlTrvReYeDli+7NFntXRJMdVef8GEnWkRoWhUFYCtbjL7e5xLR6KFmzSfqO9dV8mrIr98qGboqg6Nxbci3TevgRjMlMSWnmRXFqOkcu8z96VcvhdmLl4JKUtwCZGGfLxZeJ52WNrYv1LY6HlNYVZydPAS1CIKych3VsxNGtQNhHUPDxsDqzbY+ljfrHytkKrKS/moW7qA2LjakcXbZksbFmjLOoyPK2C+M5or4Vkw1IL4jPxzy/rc5uymKXkO1X9dv0zz24Y4cIPpwyGvQDA/7rdWCvJrWN6jmh10zkyiSZ//e/69Md0hl2eK2BULtwj85ykiSmXJMMHr4cqNZrpxrut5HJulFIoGyHIRuPEi1Q/6prZKq5f0/iUQbEjmPWhKJ1iVytHnskkhv9RrtEcC6XuqsbuimF76ANHXyv7+XESPqlwgAAA==</script>-->
-<!--endregion SARIF-->
+<!--endregion SARIF-EMBEDDED-REPORT-->
 
 <script>
     // #region Utilities
@@ -553,7 +549,19 @@
             performance.clearMarks(`${name}-start`);
             performance.clearMarks(`${name}-end`);
             performance.clearMeasures(name);
-        }
+        },
+        trace: (name, fn) => {
+            Perf.start(name);
+            try {
+                const result = fn();
+                if (result && typeof result.then === "function") return result.finally(() => Perf.end(name));
+                Perf.end(name);
+                return result;
+            } catch (err) {
+                Perf.end(name);
+                throw err;
+            }
+        },
     };
 
     const debounce = (fn, delay) => {
@@ -574,6 +582,10 @@
          .replace(/[\u0300-\u036f]/g, "")
          .toLowerCase();
 
+    const truncate = (str, maxLength) => str.length <= maxLength ? str : str.slice(0, maxLength - 1) + '…';
+
+    const searchRegex = (query) => new RegExp(query, 'i');
+
     // Custom sortBy with mutliple comparators
     [Array, Set].forEach(Ctor => {
         Ctor.prototype.sortBy = function(...comparators) {
@@ -588,6 +600,12 @@
         };
     });
 
+    Array.prototype.toSet = function() { return new Set(this); };
+
+    Array.prototype.associateBy = function(keySelector, valueTransform) {
+      return Object.fromEntries(this.map(item => [keySelector(item), valueTransform(item)]));
+    };
+
     const SEVERITY_LEVELS = { error: 'error', warning: 'warning', note: 'info', none: 'info' };
     const SEVERITY_LABELS = { error: 'Error', warning: 'Warning', info: 'Hint' };
     const SEVERITY_WEIGHTS = { error: 3, warning: 2, info: 1 };
@@ -595,24 +613,21 @@
 
     // #region State
     const DOM = {
-        themeToggle: document.getElementById('theme-toggle'),
+        dragOverlay: document.getElementById('drag-overlay'),
         dropZone: document.getElementById('drop-zone'),
-        fileInput: document.getElementById('file-input'),
-        resultsContainer: document.getElementById('results-container'),
-        reportInfo: document.getElementById('report-info'),
-        openButton: document.getElementById('open-button'),
-        issueList: document.getElementById('issue-list'),
         emptyFilterState: document.getElementById('empty-filter-state'),
         emptyReportState: document.getElementById('empty-report-state'),
-        filterText: document.getElementById('filter-text'),
-        searchHint: document.getElementById('search-hint'),
-        regexToggle: document.getElementById('regex-toggle'),
-        sortToggle: document.getElementById('sort-toggle'),
-        dragOverlay: document.getElementById('drag-overlay'),
-        loaderContainer: document.getElementById('loader-container'),
         exampleContainer: document.getElementById('example-container'),
+        fileInput: document.getElementById('file-input'),
+        filters: {
+            severities: { param: 'severity', group: document.getElementById('severity-group'), pills: document.getElementById('severity-pills') },
+            categories: { param: 'category', group: document.getElementById('category-group'), pills: document.getElementById('category-pills') },
+            rules: { param: 'rule', group: document.getElementById('rule-group'), pills: document.getElementById('rule-pills') }
+        },
+        filterText: document.getElementById('filter-text'),
+        issueList: document.getElementById('issue-list'),
+        loaderContainer: document.getElementById('loader-container'),
         loadExampleWrapper: document.getElementById('load-example-wrapper'),
-        toast: document.getElementById('toast'),
         metrics: {
             grid: document.querySelector('.metric-grid'),
             total: document.getElementById('metric-total'),
@@ -620,44 +635,38 @@
             warning: document.getElementById('metric-warnings'),
             info: document.getElementById('metric-info')
         },
-        filters: {
-            severities: { param: 'severity', group: document.getElementById('severity-group'), pills: document.getElementById('severity-pills') },
-            categories: { param: 'category', group: document.getElementById('category-group'), pills: document.getElementById('category-pills') },
-            issueIds: { param: 'issueId', group: document.getElementById('issue-group'), pills: document.getElementById('issue-pills') }
-        },
+        openButton: document.getElementById('open-button'),
+        regexToggle: document.getElementById('regex-toggle'),
+        reportInfo: document.getElementById('report-info'),
+        resultsContainer: document.getElementById('results-container'),
+        searchHint: document.getElementById('search-hint'),
+        sortToggle: document.getElementById('sort-toggle'),
         templates: {
             group: document.getElementById('tpl-issue-group')
-        }
+        },
+        themeToggle: document.getElementById('theme-toggle'),
+        toast: document.getElementById('toast'),
     };
 
-    const state = {
-        rawIssues: [],
-        filteredIssues: [],
-        categories: new Set(),
-        issueIds: new Set(),
-        rules: new Map(),
-        filename: '',
-        driverInfo: { name: '', version: '' },
-        reportDate: null,
-        fileLastModified: null,
+    const EMPTY_STATE = Object.freeze({
+        issues: { all: [], matching: [], filtered: [] },
+        rulesById: {},
+        metadata: null,
         filters: {
             text: '',
             isRegex: false,
             isSortingByCount: false,
+            severities: new Set(),
             categories: new Set(),
-            issueIds: new Set(),
-            severities: new Set()
+            rules: new Set(),
         }
-    };
+    });
+
+    const state = structuredClone(EMPTY_STATE);
     // #endregion
 
     // #region Helpers
-    function parseJson(text) {
-        Perf.start('JSON Parse');
-        const json = JSON.parse(text);
-        Perf.end('JSON Parse');
-        return json;
-    }
+    const parseJson = text => Perf.trace('JSON Parse', () => JSON.parse(text));
 
     async function decodeGzipBase64(base64) {
         if (!("DecompressionStream" in window)) {
@@ -665,15 +674,13 @@
             return null;
         }
         try {
-            Perf.start('Base64 Decode & Unzip');
-            const bytes = Uint8Array.from(atob(base64.trim()), c => c.charCodeAt(0));
-            const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream("gzip"));
-            const text = await new Response(stream).text();
-            Perf.end('Base64 Decode & Unzip');
-            return text;
+            return await Perf.trace('Base64 Decode & Unzip', async () => {
+                const bytes = Uint8Array.from(atob(base64.trim()), c => c.charCodeAt(0));
+                const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream("gzip"));
+                return await new Response(stream).text();
+            });
         } catch (err) {
-            console.error("Decompression failed", err);
-            showError(`Failed to decompress embedded file: ${err.message}`);
+            showError(`Failed to decompress embedded file: ${err.message}`, err);
             return null;
         }
     }
@@ -683,8 +690,7 @@
             await navigator.clipboard.writeText(text);
             showToast('Path copied to clipboard!', false);
         } catch (err) {
-            console.error('Failed to copy: ', err);
-            showToast('Failed to copy to clipboard', true);
+            showError('Failed to copy to clipboard', err);
         }
     }
 
@@ -695,7 +701,8 @@
         setTimeout(() => DOM.toast.classList.add('is-hidden'), isError ? 10000 : 3000);
     }
 
-    function showError(message) {
+    function showError(message, error) {
+        if (error) console.error(error);
         showToast(message, true);
     }
 
@@ -723,81 +730,11 @@
                        .replace(/\n/g, '<br>');
         }).join('');
     }
+
+    const getMarkdownOrText = obj => obj?.markdown || obj?.text || "";
     // #endregion
 
     // #region SARIF
-    function processSarif(sarif) {
-        if (!sarif?.runs || !Array.isArray(sarif.runs)) {
-            throw new Error("Invalid SARIF: Missing 'runs' array.");
-        }
-
-        const run = sarif.runs[0] || {};
-        const driver = run.tool?.driver || {};
-        state.driverInfo = {
-            name: driver.fullName || driver.name || "Unknown Tool",
-            version: driver.semanticVersion || driver.version || ""
-        };
-
-        const dateValue = run.invocations?.[0]?.endTimeUtc || run.invocations?.[0]?.startTimeUtc || sarif.time;
-        state.reportDate = dateValue ? new Date(dateValue) : (state.fileLastModified ? new Date(state.fileLastModified) : new Date());
-
-        const getMarkdownOrText = obj => obj?.markdown || obj?.text || "";
-
-        Perf.start('Extract Rules');
-        state.rules.clear();
-        (driver.rules || []).forEach(rule => {
-            state.rules.set(rule.id, {
-                label: rule.shortDescription?.text,
-                categories: rule.tags || rule.properties?.tags || ["General"],
-                level: SEVERITY_LEVELS[rule.defaultConfiguration?.level] || SEVERITY_LEVELS.warning,
-                description: getMarkdownOrText(rule.fullDescription)
-            });
-        });
-        Perf.end('Extract Rules');
-
-        Perf.start('Extract Issues');
-        state.rawIssues = (run.results || []).map(result => {
-            const rule = state.rules.get(result.ruleId);
-            const location = result.locations?.[0]?.physicalLocation;
-            const context = location?.contextRegion;
-
-            return {
-                id: result.ruleId,
-                categories: rule?.categories,
-                message: getMarkdownOrText(result.message) || "No message",
-                file: location?.artifactLocation?.uri || "Unknown",
-                line: location?.region?.startLine,
-                column: location?.region?.startColumn,
-                level: result.level || rule?.level || "warning",
-                snippet: context?.snippet?.text ? {
-                    text: context?.snippet.text,
-                    startLine: context?.startLine
-                } : null,
-                region: location?.region || {},
-                relatedLocations: (result.relatedLocations || []).map(related => ({
-                    file: related.physicalLocation?.artifactLocation?.uri || "Unknown",
-                    line: related.physicalLocation?.region?.startLine,
-                    column: related.physicalLocation?.region?.startColumn,
-                    message: getMarkdownOrText(related.message) || ""
-                }))
-            };
-        }).sortBy(
-            (a, b) => a.file.localeCompare(b.file),
-            (a, b) => (a.line || 0) - (b.line || 0),
-            (a, b) => (a.column || 0) - (b.column || 0),
-        );
-        Perf.end('Extract Issues');
-
-        state.categories = new Set(state.rawIssues.flatMap(issue => issue.categories));
-        state.filters.categories.forEach(c => state.categories.add(c));
-
-        state.issueIds = new Set(state.rawIssues.map(issue => issue.id));
-        state.filters.issueIds.forEach(id => state.issueIds.add(id));
-
-        updateMetrics();
-        applyFilters();
-    }
-
     async function loadSarifFromScript(elementId, defaultFilename, keepUrlParams = false) {
         const element = document.getElementById(elementId);
         if (!element) return false;
@@ -807,41 +744,25 @@
         const content = element.textContent.trim();
         if (!src && !content) return false;
 
-        Perf.start('Fetch / Process Data');
-        let json = null;
-        try {
+        const json = await Perf.trace('Fetch / Process Data', async () => {
             if (src) {
                 const response = await fetch(src);
                 if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                json = await response.text();
+                return parseJson(await response.text());
             } else if (type === 'application/json') {
-                json = content;
+                return parseJson(content);
             } else if (type === 'application/gzip+base64') {
-                json = await decodeGzipBase64(content);
-            } else {
-                throw new Error("Unknown data format type.");
+                return parseJson(await decodeGzipBase64(content));
             }
-            json = parseJson(json);
-        } finally {
-            Perf.end('Fetch / Process Data');
-        }
+            throw new Error("Unknown data format type.");
+        });
 
         if (!json) return false;
         loadSarifData(json, element.getAttribute('title') || src || defaultFilename, Date.now(), keepUrlParams);
         return true;
     }
 
-    function loadSarifData(json, filename, lastModified, keepUrlParams = false) {
-        resetApp(!keepUrlParams);
-        state.filename = filename || "Unknown";
-        state.fileLastModified = lastModified || Date.now();
-        processSarif(json);
-        updateMetricCards(state.filters.severities);
-        updatePillStates('severities');
-        showResultsUI();
-    }
-
-    function handleFiles(files) {
+    function loadSarifFromFiles(files) {
         if (!files || files.length === 0) return;
         const file = files[0];
         const fileName = file.name.toLowerCase();
@@ -859,7 +780,7 @@
             } catch (err) {
                 state.filename = '';
                 DOM.reportInfo.innerHTML = '';
-                showError(err.message || "Could not parse JSON.");
+                showError(err.message || "Could not parse JSON.", err);
             }
         };
         reader.onerror = () => {
@@ -868,122 +789,157 @@
         };
         reader.readAsText(file);
     }
+
+    function loadSarifData(json, filename, lastModified, keepUrlParams = false) {
+        resetApp(!keepUrlParams);
+        processSarif(json, { filename: filename, fileLastModified: lastModified });
+    }
+
+    function processSarif(sarif, metadata) {
+        if (!sarif?.runs || !Array.isArray(sarif.runs)) throw new Error("Invalid SARIF: Missing 'runs' array.");
+        const run = sarif.runs[0] || {};
+
+        const driver = run.tool?.driver || {};
+        const sarifDate = run.invocations?.[0]?.endTimeUtc || run.invocations?.[0]?.startTimeUtc;
+        state.metadata = {
+            ...metadata,
+            driverInfo: {
+                name: driver.fullName || driver.name || "Unknown Tool",
+                version: driver.semanticVersion || driver.version || ""
+            },
+            reportDate: sarifDate ? new Date(sarifDate) : (metadata.fileLastModified ? new Date(metadata.fileLastModified) : new Date()),
+        }
+        renderMetadata();
+
+        state.rulesById = Perf.trace(
+            'Extract Rules',
+            () => (driver.rules || []).associateBy(
+                r => r.id,
+                r => ({
+                    id: r.id,
+                    label: r.shortDescription?.text,
+                    categories: r.tags || r.properties?.tags || [],
+                    level: SEVERITY_LEVELS[r.defaultConfiguration?.level] || SEVERITY_LEVELS.warning,
+                    description: getMarkdownOrText(r.fullDescription)
+                }),
+            ),
+        );
+
+        state.issues.all = Perf.trace(
+            'Extract Issues',
+            () => (run.results || []).map(it => {
+                const rule = state.rulesById[it.ruleId];
+                const location = it.locations?.[0]?.physicalLocation;
+                const context = location?.contextRegion;
+
+                return {
+                    ruleId: it.ruleId,
+                    message: getMarkdownOrText(it.message) || "No message",
+                    categories: rule?.categories || [],
+                    file: location?.artifactLocation?.uri || "Unknown",
+                    line: location?.region?.startLine,
+                    column: location?.region?.startColumn,
+                    level: it.level || rule?.level || SEVERITY_LEVELS.warning,
+                    snippet: context?.snippet?.text ? {
+                        text: context?.snippet.text,
+                        startLine: context?.startLine
+                    } : null,
+                    region: location?.region || {},
+                    relatedLocations: (it.relatedLocations || []).map(l => ({
+                        file: l.physicalLocation?.artifactLocation?.uri || "Unknown",
+                        line: l.physicalLocation?.region?.startLine,
+                        column: l.physicalLocation?.region?.startColumn,
+                        message: getMarkdownOrText(l.message) || ""
+                    }))
+                };
+            }).sortBy(
+                (a, b) => a.file.localeCompare(b.file),
+                (a, b) => (a.line || 0) - (b.line || 0),
+                (a, b) => (a.column || 0) - (b.column || 0),
+            ));
+
+        renderMetricsCounters();
+        renderMetricsCards();
+        renderSortToggle();
+        renderPills();
+        showResultsPage();
+        applyFilters();
+    }
     // #endregion
 
     // #region Logic
     function applyTheme(theme, persist = true) {
-        document.documentElement.setAttribute('data-theme', theme);
         if (persist) localStorage.setItem('theme', theme);
-        const color = getComputedStyle(document.documentElement).getPropertyValue('--bg-surface').trim();
-        document.querySelector('meta[name="theme-color"]')?.setAttribute('content', color);
+        renderTheme(theme);
     }
 
     function applyFilters() {
-        Perf.start('Filtering');
+        writeURL();
+        Perf.trace('Filtering', () => {
+            const query = state.filters.text?.trim();
+            const queryNormalized = normalize(query);
 
-        let needsCategoriesPillsRender = false;
-        state.filters.categories.forEach(c => {
-            if (state.categories.has(c)) return
-            state.categories.add(c);
-            needsCategoriesPillsRender = true;
-        });
-        if (needsCategoriesPillsRender) renderPills('categories');
+            // update matching issues based on query
+            if (!query) {
+                state.issues.matching = state.issues.all
+            } else {
+                let regex = null;
+                if (state.filters.isRegex) try { regex = searchRegex(query) } catch (e) { }
 
-        let needsIssueIdsPillsRender = false;
-        state.filters.issueIds.forEach(id => {
-            if (state.issueIds.has(id)) return
-            state.issueIds.add(id);
-            needsIssueIdsPillsRender = true;
-        });
-        if (needsIssueIdsPillsRender) renderPills('issueIds');
+                const matchedCategories = [...Object.values(state.rulesById).flatMap(r => r.categories).toSet()]
+                        .filter(c => state.filters.isRegex && regex ? regex.test(c) : normalize(c).includes(queryNormalized))
+                        .toSet();
 
-        const query = state.filters.text;
-        const queryNormalized = normalize(query);
+                const matchedRules = Object.values(state.rulesById)
+                    .filter(({id, label, description, categories}) => {
+                        if (categories.some(c => matchedCategories.has(c))) return true;
+                        if (regex) {
+                            if (regex.test(id)) return true;
+                            if (regex.test(label)) return true;
+                            if (regex.test(description)) return true;
+                        } else {
+                            if (normalize(id).includes(queryNormalized)) return true;
+                            if (normalize(label).includes(queryNormalized)) return true;
+                            if (normalize(description).includes(queryNormalized)) return true;
+                        }
+                        return false;
+                    })
+                    .map(r => r.id)
+                    .toSet();
 
-        let regex = null;
-        DOM.filterText.classList.remove('is-invalid');
-        if (state.filters.isRegex && query) {
-            try {
-                regex = new RegExp(query, 'i');
-            } catch (e) {
-                DOM.filterText.classList.add('is-invalid');
+                state.issues.matching = state.issues.all
+                    .filter(i => {
+                        if (matchedRules.has(i.ruleId)) return true;
+                        if (regex) {
+                            if (regex.test(i.ruleId)) return true;
+                            if (regex.test(i.message)) return true;
+                            if (regex.test(i.file)) return true;
+                        } else {
+                            if (normalize(i.ruleId).includes(queryNormalized)) return true;
+                            if (normalize(i.message).includes(queryNormalized)) return true;
+                            if (normalize(i.file).includes(queryNormalized)) return true;
+                        }
+                        return false;
+                    });
             }
-        }
 
-        const matchedIssues = state.rawIssues.filter(issue => {
-            if (!query) return true;
-            if (state.filters.isRegex && regex) return regex.test(issue.id) || regex.test(issue.message) || regex.test(issue.file);
-            return normalize(issue.id).includes(queryNormalized) ||
-                   normalize(issue.message).includes(queryNormalized) ||
-                   normalize(issue.file).includes(queryNormalized);
+            // filter issues based on active filters
+            state.issues.filtered = state.issues.matching.filter(i => {
+                if (state.filters.severities.size > 0 && !state.filters.severities.has(i.level)) return false;
+                if (state.filters.categories.size > 0 && !state.rulesById[i.ruleId].categories.some(c => state.filters.categories.has(c))) return false;
+                if (state.filters.rules.size > 0 && !state.filters.rules.has(i.ruleId)) return false;
+                return true;
+            });
         });
 
-        updatePillCounts(matchedIssues);
-
-        state.filteredIssues = matchedIssues.filter(issue => {
-            if (state.filters.severities.size > 0 && !state.filters.severities.has(issue.level)) return false;
-            if (state.filters.categories.size > 0 && !issue.categories.some(c => state.filters.categories.has(c))) return false;
-            if (state.filters.issueIds.size > 0 && !state.filters.issueIds.has(issue.id)) return false;
-            return true;
-        });
-
-        updateURL();
-        Perf.end('Filtering');
-
-        Perf.start('Rendering UI');
-        renderList();
-        Perf.end('Rendering UI');
-    }
-
-    function resetApp(resetFilters = true) {
-        if (resetFilters) {
-            state.filters.text = '';
-            state.filters.isRegex = false;
-            state.filters.categories.clear();
-            state.filters.issueIds.clear();
-            state.filters.severities.clear();
-            updateURL();
-        }
-
-        Object.assign(state, {
-            rawIssues: [],
-            filteredIssues: [],
-            categories: new Set(),
-            issueIds: new Set(),
-            rules: new Map(),
-            filename: '',
-            driverInfo: { name: '', version: '' },
-            reportDate: null,
-            fileLastModified: null
-        });
-
-        DOM.dropZone.classList.remove('is-hidden');
-        DOM.loaderContainer.classList.add('is-hidden');
-        DOM.resultsContainer.classList.add('is-hidden');
-        DOM.reportInfo.innerHTML = '';
-        DOM.fileInput.value = '';
-
-        DOM.filterText.value = state.filters.text;
-        DOM.searchHint.style.opacity = state.filters.text ? '0' : '1';
-        DOM.regexToggle.classList.toggle('is-active', state.filters.isRegex);
-        DOM.filterText.classList.toggle('is-regex', state.filters.isRegex);
-
-        updateSortToggleUI();
-
-        updatePillCounts([]);
-        updateMetricCards(state.filters.severities);
+        updatePills();
+        renderIssues();
     }
 
     function readURL() {
         const params = new URLSearchParams(window.location.search);
         state.filters.text = params.get('query') || '';
-        DOM.filterText.value = state.filters.text;
-        DOM.searchHint.style.opacity = state.filters.text ? '0' : '1';
-
         state.filters.isRegex = params.get('regex') === 'true';
-        DOM.regexToggle.classList.toggle('is-active', state.filters.isRegex);
-        DOM.filterText.classList.toggle('is-regex', state.filters.isRegex);
-
         Object.entries(DOM.filters).forEach(([type, config]) => {
             const value = params.get(config.param);
             state.filters[type].clear();
@@ -992,7 +948,7 @@
         });
     }
 
-    function updateURL() {
+    function writeURL() {
         const params = new URLSearchParams();
         if (state.filters.text) params.set('query', state.filters.text);
         if (state.filters.isRegex) params.set('regex', 'true');
@@ -1009,89 +965,130 @@
             window.history.replaceState({ path: newUrl }, '', newUrl);
         } catch (e) {}
     }
+
+    function onPillClicked(event, filterType) {
+        const target = event.target.closest('.pill') || event.target.closest('.metric-card');
+        if (!target) return;
+
+        const value = target.getAttribute('data-value');
+        const filters = state.filters[filterType];
+
+        if (!value) {
+            filters.clear();
+        } else {
+            if (filters.has(value)) filters.delete(value);
+            else filters.add(value);
+        }
+
+        if (filterType === 'severities') renderMetricsCards();
+        applyFilters();
+    }
+
+    function toggleIssueGroups(collapsed) {
+        DOM.issueList.querySelectorAll('.issue-group').forEach(g => {
+            g.classList.toggle('is-collapsed', collapsed);
+            const use = g.querySelector('.severity-icon use');
+            if (!use) return;
+            const href = use.getAttribute('href');
+            use.setAttribute('href', collapsed ? href.replace('-fill', '-outline') : href.replace('-outline', '-fill'));
+        });
+    }
+
+    function resetApp(resetFilters = true) {
+        Object.assign(state, structuredClone(EMPTY_STATE));
+        if (!resetFilters) readURL();
+        writeURL();
+
+        DOM.fileInput.value = '';
+
+        renderSearch(true);
+        renderMetadata();
+        renderMetricsCards();
+        showStartupPage();
+    }
     // #endregion
 
     // #region Rendering
-    function renderList() {
-        DOM.issueList.innerHTML = '';
-        DOM.emptyFilterState.classList.add('is-hidden');
-        DOM.emptyReportState.classList.add('is-hidden');
+    function showStartupPage() {
+        DOM.dropZone.classList.remove('is-hidden');
+        DOM.loaderContainer.classList.add('is-hidden');
+        DOM.resultsContainer.classList.add('is-hidden');
+    }
 
-        if (state.rawIssues.length === 0) return DOM.emptyReportState.classList.remove('is-hidden');
-        if (state.filteredIssues.length === 0) return DOM.emptyFilterState.classList.remove('is-hidden');
+    function showResultsPage() {
+        DOM.dropZone.classList.add('is-hidden');
+        DOM.loaderContainer.classList.add('is-hidden');
+        DOM.resultsContainer.classList.remove('is-hidden');
+    }
 
-        const fragment = document.createDocumentFragment();
-        Object.values(state.filteredIssues.reduce((acc, issue) => {
-            const key = `${issue.id}::${issue.level}`;
-            (acc[key] || (acc[key] = { id: issue.id, level: issue.level, categories: issue.categories, issues: [] })).issues.push(issue);
-            return acc;
-        }, {}))
-        .sortBy(
-            (a, b) => state.filters.isSortingByCount ? b.issues.length - a.issues.length : 0, // by count if enabled
-            (a, b) => SEVERITY_WEIGHTS[b.level] - SEVERITY_WEIGHTS[a.level], // by severity
-            (a, b) => a.id.localeCompare(b.id), // by issueId
-        ).forEach(group => {
-            const rule = state.rules.get(group.id);
-            const description = rule?.description || "No description provided.";
-            const severityClass = `severity-${group.level}`;
+    function renderTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        const color = getComputedStyle(document.documentElement).getPropertyValue('--bg-surface').trim();
+        document.querySelector('meta[name="theme-color"]')?.setAttribute('content', color);
+    }
 
-            const groupClone = DOM.templates.group.content.cloneNode(true);
-            const groupElement = groupClone.querySelector('.issue-group');
-            groupElement.classList.add(severityClass);
+    function renderIssues() {
+        Perf.trace('Rendering Issues', () => {
+            DOM.issueList.innerHTML = '';
+            DOM.emptyFilterState.classList.add('is-hidden');
+            DOM.emptyReportState.classList.add('is-hidden');
 
-            const icon = groupClone.querySelector('.severity-icon');
-            icon.classList.add(`severity-${group.level}`);
-            icon.querySelector('use').setAttribute('href', `#icon-${group.level}-fill`);
+            if (state.issues.all.length === 0) return DOM.emptyReportState.classList.remove('is-hidden');
+            if (state.issues.filtered.length === 0) return DOM.emptyFilterState.classList.remove('is-hidden');
 
-            const groupIdElement = groupClone.querySelector('.issue-rule-id');
-            groupIdElement.textContent = group.id;
-            groupIdElement.setAttribute('title', sanitize(rule.label));
-            const titleElement = groupClone.querySelector('.issue-group-title');
-            titleElement.style.color = `var(--badge-color)`;
+            const fragment = document.createDocumentFragment();
+            Object.values(state.issues.filtered.reduce((acc, issue) => {
+                const key = `${issue.ruleId}::${issue.level}`;
+                (acc[key] || (acc[key] = { ruleId: issue.ruleId, level: issue.level, categories: state.rulesById[issue.ruleId].categories, issues: [] })).issues.push(issue);
+                return acc;
+            }, {}))
+            .sortBy(
+                (a, b) => state.filters.isSortingByCount ? b.issues.length - a.issues.length : 0, // by count if enabled
+                (a, b) => SEVERITY_WEIGHTS[b.level] - SEVERITY_WEIGHTS[a.level], // by severity
+                (a, b) => a.ruleId.localeCompare(b.ruleId), // by ruleId
+            ).forEach(g => {
+                const rule = state.rulesById[g.ruleId];
+                const description = rule?.description || "No description provided.";
+                const severityClass = `severity-${g.level}`;
 
-            const categoryWrapper = groupClone.querySelector('.category-wrapper');
-            categoryWrapper.innerHTML = group.categories.map(category => `<span class="category-badge">${sanitize(category)}</span>`).join('');
+                const groupClone = DOM.templates.group.content.cloneNode(true);
+                const groupElement = groupClone.querySelector('.issue-group');
+                groupElement.classList.add(severityClass);
 
-            groupClone.querySelector('.issue-group-count').textContent = group.issues.length;
-            groupClone.querySelector('.rule-description-content').innerHTML = formatMarkdown(description);
+                const icon = groupClone.querySelector('.severity-icon');
+                icon.classList.add(`severity-${g.level}`);
+                icon.querySelector('use').setAttribute('href', `#icon-${g.level}-fill`);
 
-            let cardsHtml = '';
-            group.issues.forEach(issue => {
-                cardsHtml += `<div class="issue-card"><div class="issue-message markdown-content"><span>${formatMarkdown(issue.message)}</span></div>`;
-                cardsHtml += createLocationHtml(issue.file, issue.line, issue.column);
+                const groupIdElement = groupClone.querySelector('.issue-rule-id');
+                groupIdElement.textContent = g.ruleId;
+                groupIdElement.setAttribute('title', sanitize(rule.label));
+                const titleElement = groupClone.querySelector('.issue-group-title');
+                titleElement.style.color = `var(--badge-color)`;
 
-                issue.relatedLocations?.forEach(related => {
-                    cardsHtml += `<div class="related-location-card">`;
-                    if (related.message) cardsHtml += `<div class="related-location-msg">${formatMarkdown(related.message)}</div>`;
-                    cardsHtml += createLocationHtml(related.file, related.line, related.column);
-                    cardsHtml += `</div>`;
-                });
+                const categoryWrapper = groupClone.querySelector('.category-wrapper');
+                categoryWrapper.innerHTML = g.categories.map(c => `<span class="category-badge">${sanitize(c)}</span>`).join('');
 
-                if (issue.snippet) {
-                    const lineHtml = issue.snippet.text.split('\n').map((text, idx) => {
-                        let codeText = sanitize(text);
-                        const currentLine = issue.snippet.startLine ? issue.snippet.startLine + idx : '';
-                        const region = issue.region;
-                        const startLine = region.startLine;
-                        const endLine = region.endLine || startLine;
-
-                        if (currentLine && startLine && currentLine >= startLine && currentLine <= endLine) {
-                            const startCol = currentLine === startLine ? Math.max(0, (region.startColumn || 1) - 1) : 0;
-                            const endCol = currentLine === endLine && region.endColumn ? Math.min(text.length, region.endColumn - 1) : text.length;
-                            codeText = `${sanitize(text.substring(0, startCol))}<span class="code-highlight">` +
-                                       `${sanitize(text.substring(startCol, endCol))}</span>${sanitize(text.substring(endCol))}`;
-                        }
-                        return `<span class="code-line-number">${currentLine}</span><span class="code-content">${codeText}</span>`;
-                    }).join('');
-                    cardsHtml += `<div class="issue-code-snippet">${lineHtml}</div>`;
-                }
-                cardsHtml += `</div>`;
+                groupClone.querySelector('.issue-group-count').textContent = g.issues.length;
+                groupClone.querySelector('.rule-description-content').innerHTML = formatMarkdown(description);
+                groupClone.querySelector('.issue-group-content').innerHTML = g.issues.map(i => createIssueCard(i)).join('\n');
+                fragment.appendChild(groupClone);
             });
-
-            groupClone.querySelector('.issue-group-content').innerHTML = cardsHtml;
-            fragment.appendChild(groupClone);
+            DOM.issueList.appendChild(fragment);
         });
-        DOM.issueList.appendChild(fragment);
+    }
+
+    function createIssueCard(issue) {
+        let html = `<div class="issue-card"><div class="issue-message markdown-content"><span>${formatMarkdown(issue.message)}</span></div>`;
+        html += createLocationHtml(issue.file, issue.line, issue.column);
+        issue.relatedLocations?.forEach(l => {
+            html += `<div class="related-location-card">`;
+            if (l.message) html += `<div class="related-location-msg">${formatMarkdown(l.message)}</div>`;
+            html += createLocationHtml(l.file, l.line, l.column);
+            html += `</div>`;
+        });
+        if (issue.snippet) html += createCodeSnippet(issue);
+        html += `</div>`;
+        return html;
     }
 
     function createLocationHtml(file, line, column) {
@@ -1107,138 +1104,127 @@
         return `<button class="issue-location"><span class="path-dir">${dir}</span><span class="path-name">${name}</span>${lineHtml}${colHtml}</button>`;
     }
 
-    function renderPills(type, counts = {}) {
-        const filter = DOM.filters[type];
-        const filters = state.filters[type];
-        if (!filter || !filters) return;
-        const isSeverityPills = type === 'severities';
-
-        filter.pills.innerHTML = (isSeverityPills ? Object.keys(SEVERITY_LABELS) : state[type])
-            .sortBy(
-                (a, b) => state.filters.isSortingByCount ? (counts[b] || 0) - (counts[a] || 0) : 0, // by count
-                (a, b) => isSeverityPills ? SEVERITY_WEIGHTS[b] - SEVERITY_WEIGHTS[a] : a.localeCompare(b), // by severity or name
-            )
-            .map(item => {
-                const count = counts[item] || 0;
-                const isActive = filters.has(item);
-                const label = isSeverityPills ? SEVERITY_LABELS[item] : item;
-                const status = isActive ? 'is-active' : (count === 0 ? 'is-hidden' : '');
-                return `<button class="pill ${status}" data-value="${sanitize(item)}"><span class="pill-label">${sanitize(label)}</span><span class="pill-count">(${count})</span></button>`;
-            })
-            .join('');
+    function createCodeSnippet(issue, max = 1000) {
+        const lines = issue.snippet.text.split('\n').map((line, idx) => {
+            line = truncate(line, max);
+            const currentLine = issue.snippet.startLine ? issue.snippet.startLine + idx : '';
+            const region = issue.region;
+            const startLine = region.startLine;
+            const endLine = region.endLine || startLine;
+            let content;
+            if (currentLine && startLine && currentLine >= startLine && currentLine <= endLine) {
+                const startCol = currentLine === startLine ? Math.max(0, (region.startColumn || 1) - 1) : 0;
+                const endCol = currentLine === endLine && region.endColumn ? Math.min(line.length, region.endColumn - 1) : line.length;
+                const visibleStart = Math.min(line.length, startCol);
+                const visibleEnd = Math.min(line.length, endCol);
+                if (visibleStart < visibleEnd) {
+                    content = `${sanitize(line.substring(0, visibleStart))}<span class="code-highlight">${sanitize(line.substring(visibleStart, visibleEnd))}</span>${sanitize(line.substring(visibleEnd))}`;
+                } else {
+                    content = sanitize(line);
+                }
+            } else {
+                content = sanitize(line);
+            }
+            return `<span class="code-line-number">${currentLine}</span><span class="code-content">${content}</span>`;
+        }).join('');
+        return `<div class="issue-code-snippet">${lines}</div>`;
     }
 
-    function updatePillStates(type) {
-        const filter = DOM.filters[type];
-        const filters = state.filters[type];
-        if (!filter || !filters) return;
-        Array.from(filter.group.querySelectorAll('.pill')).forEach(pill => {
-            const val = pill.getAttribute('data-value');
-            const isActive = val ? filters.has(val) : filters.size === 0;
-            pill.classList.toggle('is-active', isActive);
+    function renderPills() {
+        [
+            [DOM.filters.severities, Object.keys(SEVERITY_LABELS),                                      it => SEVERITY_LABELS[it], (a, b) => SEVERITY_WEIGHTS[b] - SEVERITY_WEIGHTS[a]],
+            [DOM.filters.categories, Object.values(state.rulesById).flatMap(r => r.categories).toSet(), it => it,                  (a, b) => a.localeCompare(b)],
+            [DOM.filters.rules,      Object.keys(state.rulesById),                                      it => it,                  (a, b) => a.localeCompare(b)],
+        ].forEach(([container, items, label, comparator]) => {
+            container.pills.innerHTML = items
+                .sortBy(comparator)
+                .map(it => `<button class="pill" data-value="${sanitize(it)}"><span class="pill-label">${sanitize(label(it))}</span><span class="pill-count"></span></button>`)
+                .join('');
         });
     }
 
-    function updatePillCounts(issues) {
-        const counts = { categories: {}, issueIds: {}, severities: { error: 0, warning: 0, info: 0 } };
-        issues.forEach(issue => {
-            counts.issueIds[issue.id] = (counts.issueIds[issue.id] || 0) + 1;
-            issue.categories.forEach(category => counts.categories[category] = (counts.categories[category] || 0) + 1);
-            counts.severities[issue.level]++;
+    function updatePills() {
+        const counts = { severities: {}, categories: {}, rules: {} };
+        state.issues.matching.forEach(i => {
+            counts.severities[i.level] = (counts.severities[i.level] || 0) + 1;
+            state.rulesById[i.ruleId].categories.forEach(c => counts.categories[c] = (counts.categories[c] || 0) + 1);
+            counts.rules[i.ruleId] = (counts.rules[i.ruleId] || 0) + 1;
         });
-
-        Object.entries(counts).forEach(([type, countData]) => {
-            renderPills(type, countData);
-            updatePillStates(type);
+        Object.entries(DOM.filters).forEach(([type, config]) => {
+            const filter = DOM.filters[type];
+            const activeFilters = state.filters[type];
+            Array.from(filter.group.querySelectorAll('.pill')).forEach(p => {
+                const val = p.getAttribute('data-value');
+                if (!val) return p.classList.toggle('is-active', activeFilters.size === 0);
+                const count = counts[type][val] || 0;
+                const isActive = activeFilters.has(val);
+                p.classList.toggle('is-active', isActive);
+                p.classList.toggle('is-hidden', count === 0 && !isActive);
+                p.querySelector('.pill-count').textContent = `(${count})`;
+                p.style.order = state.filters.isSortingByCount ? -count : null;
+            });
         });
     }
 
-    function updateMetrics() {
+    function renderMetadata() {
+        if (!state.metadata) {
+            DOM.reportInfo.innerHTML = '';
+            return;
+        }
+        DOM.reportInfo.innerHTML = `
+            <div class="info-line-primary">${sanitize(state.metadata.filename || "Unknown")}</div>
+            <div class="info-line-secondary">${sanitize(`${state.metadata.driverInfo.name} ${state.metadata.driverInfo.version ? 'v' + state.metadata.driverInfo.version : ''}`)}</div>
+            <div class="info-line-tertiary">${sanitize(state.metadata.reportDate?.toLocaleString() || '')}</div>
+        `;
+    }
+
+    function renderMetricsCounters() {
         const counts = { error: 0, warning: 0, info: 0 };
-        state.rawIssues.forEach(issue => counts[issue.level]++);
+        state.issues.all.forEach(i => counts[i.level]++);
 
-        DOM.metrics.total.textContent = state.rawIssues.length;
+        DOM.metrics.total.textContent = state.issues.all.length;
         DOM.metrics.error.textContent = counts.error;
         DOM.metrics.warning.textContent = counts.warning;
         DOM.metrics.info.textContent = counts.info;
     }
 
-    function updateMetricCards(filters) {
-        Array.from(DOM.metrics.grid.children).forEach(card => {
-            const value = card.getAttribute('data-value');
+    function renderMetricsCards() {
+        const filters = state.filters.severities;
+        Array.from(DOM.metrics.grid.children).forEach(c => {
+            const value = c.getAttribute('data-value');
             const isActive = value ? filters.has(value) : filters.size === 0;
-            card.classList.toggle('is-active', isActive);
-            card.querySelector('use').setAttribute('href', `#icon-${value ? value : 'list'}-${isActive ? 'fill' : 'outline'}`);
+            c.classList.toggle('is-active', isActive);
+            c.querySelector('use').setAttribute('href', `#icon-${value ? value : 'list'}-${isActive ? 'fill' : 'outline'}`);
         });
     }
 
-    function updateSortToggleUI() {
+    function renderSearch(overwrite) {
+        if (overwrite) DOM.filterText.value = state.filters.text;
+        DOM.filterText.classList.toggle('is-regex', state.filters.isRegex);
+        DOM.searchHint.style.opacity = DOM.filterText.matches(':focus') || state.filters.text ? '0' : '1';
+        DOM.regexToggle.classList.toggle('is-active', state.filters.isRegex);
+        let isRegexInvalid = false;
+        if (state.filters.isRegex) {
+            try { searchRegex(state.filters.text); } catch (e) { isRegexInvalid = true; }
+        }
+        DOM.filterText.classList.toggle('is-invalid', isRegexInvalid);
+    }
+
+    function renderSortToggle() {
         const isCount = state.filters.isSortingByCount;
         DOM.sortToggle.title = isCount ? 'Sorted by count' : 'Sorted by name';
         DOM.sortToggle.querySelector('use').setAttribute('href', `#icon-sort-${isCount ? 'count' : 'name'}`);
     }
-
-    function showResultsUI() {
-        DOM.dropZone.classList.add('is-hidden');
-        DOM.loaderContainer.classList.add('is-hidden');
-        DOM.resultsContainer.classList.remove('is-hidden');
-        const toolStr = `${state.driverInfo.name} ${state.driverInfo.version ? 'v' + state.driverInfo.version : ''}`;
-        const dateStr = state.reportDate?.toLocaleString() || '';
-        DOM.reportInfo.innerHTML = `
-            <div class="info-line-primary">${sanitize(state.filename)}</div>
-            <div class="info-line-secondary">${sanitize(toolStr)}</div>
-            <div class="info-line-tertiary" title="${sanitize(dateStr)}">${sanitize(dateStr)}</div>
-        `;
-    }
-
-    function handlePillClick(event, filterType) {
-        const target = event.target.closest('.pill') || event.target.closest('.metric-card');
-        if (!target) return;
-
-        const value = target.getAttribute('data-value');
-        const filters = state.filters[filterType];
-
-        if (!value) {
-            filters.clear();
-        } else {
-            if (filters.has(value)) filters.delete(value);
-            else filters.add(value);
-        }
-
-        if (filterType === 'severities') updateMetricCards(state.filters.severities);
-
-        updatePillStates(filterType);
-
-        applyFilters();
-    }
-
-    function setAllGroupsCollapsed(collapsed) {
-        DOM.issueList.querySelectorAll('.issue-group').forEach(group => {
-            group.classList.toggle('is-collapsed', collapsed);
-            const use = group.querySelector('.severity-icon use');
-            if (!use) return;
-            const href = use.getAttribute('href');
-            use.setAttribute('href', collapsed ? href.replace('-fill', '-outline') : href.replace('-outline', '-fill'));
-        });
-    }
     // #endregion
 
     // #region Event listeners
-    DOM.themeToggle.addEventListener('click', () => {
-        applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark', true);
-    });
-
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
         if (!localStorage.getItem('theme')) applyTheme(event.matches ? 'dark' : 'light', false);
     });
 
-    document.querySelector('header h1').addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
-
     window.addEventListener('popstate', () => {
         readURL();
-        if (state.rawIssues.length === 0) return;
-        updateMetricCards(state.filters.severities);
-        Object.entries(DOM.filters).forEach(([type]) => updatePillStates(type));
+        if (state.issues.all.length === 0) return;
         applyFilters();
     });
 
@@ -1251,34 +1237,25 @@
         // Collapse all
         if (event.ctrlKey && event.shiftKey && event.code === 'NumpadSubtract') {
             event.preventDefault();
-            setAllGroupsCollapsed(true);
+            toggleIssueGroups(true);
         }
         // Expand all
         if (event.ctrlKey && event.shiftKey && event.code === 'NumpadAdd') {
             event.preventDefault();
-            setAllGroupsCollapsed(false);
+            toggleIssueGroups(false);
         }
     });
 
-    DOM.filterText.addEventListener('focus', () => DOM.searchHint.style.opacity = '0');
-    DOM.filterText.addEventListener('blur', () => { if (!DOM.filterText.value) DOM.searchHint.style.opacity = '1'; });
-    DOM.filterText.addEventListener('input', debounce(() => { state.filters.text = DOM.filterText.value; applyFilters(); }, 200));
+    document.querySelector('header h1').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
-    DOM.regexToggle.addEventListener('click', () => {
-        state.filters.isRegex = !state.filters.isRegex;
-        DOM.regexToggle.classList.toggle('is-active', state.filters.isRegex);
-        DOM.filterText.classList.toggle('is-regex', state.filters.isRegex);
-        applyFilters();
-    });
-
-    DOM.sortToggle.addEventListener('click', () => {
-        state.filters.isSortingByCount = !state.filters.isSortingByCount;
-        updateSortToggleUI();
-        applyFilters();
-    });
-
+    DOM.themeToggle.addEventListener('click', () => applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark', true));
+    DOM.filterText.addEventListener('focus', () => renderSearch());
+    DOM.filterText.addEventListener('blur', () => renderSearch());
+    DOM.filterText.addEventListener('input', debounce(() => { state.filters.text = DOM.filterText.value; renderSearch(); applyFilters(); }, 200));
+    DOM.regexToggle.addEventListener('click', () => { state.filters.isRegex = !state.filters.isRegex; renderSearch(); applyFilters(); });
+    DOM.sortToggle.addEventListener('click', () => { state.filters.isSortingByCount = !state.filters.isSortingByCount; renderSortToggle(); applyFilters(); });
     DOM.dropZone.addEventListener('click', event => { if (!event.target.closest('#load-example-wrapper')) DOM.fileInput.click(); });
-    DOM.fileInput.addEventListener('change', event => handleFiles(event.target.files));
+    DOM.fileInput.addEventListener('change', event => loadSarifFromFiles(event.target.files));
     DOM.openButton.addEventListener('click', () => DOM.fileInput.click());
 
     // Drag and Drop
@@ -1290,7 +1267,7 @@
             event.preventDefault();
             event.stopPropagation();
             DOM.dropZone.classList.toggle('highlight', (eventName === 'dragenter' || eventName === 'dragover') && hasFiles(event));
-            if (eventName === 'drop') handleFiles(event.dataTransfer.files);
+            if (eventName === 'drop') loadSarifFromFiles(event.dataTransfer.files);
         });
 
         window.addEventListener(eventName, event => {
@@ -1298,7 +1275,7 @@
             if (eventName === 'dragover' || !hasFiles(event)) return;
             if (eventName === 'dragenter') dragCounter++;
             else if (eventName === 'dragleave') dragCounter--;
-            else if (eventName === 'drop') dragCounter = 0, handleFiles(event.dataTransfer.files);
+            else if (eventName === 'drop') dragCounter = 0, loadSarifFromFiles(event.dataTransfer.files);
 
             DOM.dragOverlay.classList.toggle('is-hidden', dragCounter <= 0);
             if (dragCounter < 0) dragCounter = 0;
@@ -1311,7 +1288,7 @@
         try {
             if (!(await loadSarifFromScript('sarif-example', "Unknown"))) showError("Example data not found.");
         } catch (err) {
-            showError(`Failed to load: ${err.message}`);
+            showError(`Failed to load: ${err.message}`, err);
         }
     });
 
@@ -1336,12 +1313,10 @@
         }
     });
 
-    DOM.metrics.grid.addEventListener('click', event => handlePillClick(event, 'severities'));
-    Object.entries(DOM.filters).forEach(([type, config]) => {
-        config.group.addEventListener('click', event => handlePillClick(event, type));
-    });
+    DOM.metrics.grid.addEventListener('click', event => onPillClicked(event, 'severities'));
+    Object.entries(DOM.filters).forEach(([type, config]) => config.group.addEventListener('click', event => onPillClicked(event, type)));
 
-    // PWA file_handlers
+    // #region REMOVE-IN-EMBEDDED-REPORT file_handlers
     if ('launchQueue' in window) {
         window.launchQueue.setConsumer(async (launchParams) => {
             if (!launchParams.files || launchParams.files.length === 0) return;
@@ -1349,10 +1324,11 @@
                 const file = await launchParams.files[0].getFile();
                 loadSarifData(parseJson(await file.text()), file.name, file.lastModified);
             } catch (err) {
-                showError(err.message || "Could not parse launched file.");
+                showError(err.message || "Could not parse launched file.", err);
             }
         });
     }
+    // #endregion REMOVE-IN-EMBEDDED-REPORT
     // #endregion
 
     // #region Initialization
@@ -1380,27 +1356,22 @@
     }
 
     async function init() {
-        Perf.start('App Init');
-        let loaded = false;
-
         initTheme();
         initExample();
         readURL();
 
+        let loaded = false;
         try {
             loaded = await loadSarifFromScript('sarif-report', "Embedded Report", true);
         } catch (err) {
-            showError(`Error processing embedded report: ${err.message}`);
-            console.error(err);
+            showError(`Error processing embedded report: ${err.message}`, err);
         } finally {
-            DOM.loaderContainer.classList.add('is-hidden');
-            if (!loaded) DOM.dropZone.classList.remove('is-hidden');
+            if (!loaded) showStartupPage();
         }
-        Perf.end('App Init');
     }
     // #endregion
 
-    init();
+    Perf.trace('App Init', async () => init());
 </script>
 </body>
 </html>
