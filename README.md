@@ -15,7 +15,7 @@
 - **🔍 Advanced Filtering:** Filter by severity, category, rule ID, or Regex.
 - **⚙️ CI/CD Ready:** Embed report data to generate portable HTML artifacts.
 - **💅 Modern UI:** Markdown support and highlighted inline code snippets.
-
+- **⚡ PWA:** Installable app with native `.sarif` file handling.
 
 > [!IMPORTANT]
 > <details>
