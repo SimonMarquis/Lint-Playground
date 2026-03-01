@@ -70,8 +70,6 @@
 
         #results-container { max-width: 1200px; margin: 0 auto; }
 
-        #severity-pills .pill[data-value].is-active { background-color: color-mix(in srgb, var(--pill-color) 15%, transparent); color: var(--pill-color); border-color: var(--pill-color); }
-
         .all-pill { justify-content: center; flex-shrink: 0; }
 
         .category-badge { background-color: var(--bg-surface); border: 1px solid var(--border); color: var(--text-secondary); padding: 0.2rem 0.6rem; border-radius: 100px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
@@ -165,16 +163,17 @@
         .path-dir { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; flex-shrink: 1; color: var(--text-tertiary); direction: ltr; }
         .path-name { white-space: nowrap; flex-shrink: 0; color: var(--text-secondary); font-weight: 600; }
 
-        .pill { appearance: none; font-family: inherit; background-color: var(--bg-elevation); color: var(--text-secondary); border: 1px solid transparent; padding: 0.25rem 0.6rem; border-radius: 20px; font-size: 0.75rem; cursor: pointer; transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease; user-select: none; display: flex; align-items: center; justify-content: center; min-width: 0; max-width: 100%; line-height: 1.2; vertical-align: middle; }
+        .pill { appearance: none; font-family: inherit; --pill-color: var(--primary); background-color: var(--bg-elevation); color: var(--text-secondary); border: 1px solid transparent; padding: 0.25rem 0.6rem; border-radius: 20px; font-size: 0.75rem; cursor: pointer; transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease; user-select: none; display: flex; align-items: center; justify-content: center; min-width: 0; max-width: 100%; line-height: 1.2; vertical-align: middle; }
         .pill-container { display: flex; flex-wrap: wrap; gap: 0.35rem; min-width: 0; }
         .pill-count { white-space: nowrap; padding-left: 0.35rem; flex: 0 0 auto; }
         .pill-label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; flex: 0 1 auto; }
         .pill.is-active { background-color: var(--primary-bg); color: var(--primary); border-color: var(--primary); text-shadow: 0 0 0.65px currentColor; font-weight: normal; }
-        .pill:focus { outline: 2px solid var(--text-tertiary); outline-offset: 2px; border-color: var(--text-tertiary); }
-        .pill:hover { background-color: var(--border); color: var(--text-main); }
-        .pill[data-value="error"].is-active { --pill-color: var(--severity-error); }
-        .pill[data-value="info"].is-active { --pill-color: var(--severity-info); }
-        .pill[data-value="warning"].is-active { --pill-color: var(--severity-warning); }
+        .pill:focus { outline: 2px solid var(--pill-color); outline-offset: 2px; }
+        .pill:hover { color: var(--text-main); border-color: var(--pill-color); }
+        .pill[data-value="error"] { --pill-color: var(--severity-error); }
+        .pill[data-value="info"] { --pill-color: var(--severity-info); }
+        .pill[data-value="warning"] { --pill-color: var(--severity-warning); }
+        .pill[data-value].is-active { background-color: color-mix(in srgb, var(--pill-color) 15%, transparent); color: var(--pill-color); border-color: var(--pill-color); }
 
         .regex-toggle { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: 1px solid transparent; color: var(--text-secondary); border-radius: 4px; padding: 4px 6px; font-family: monospace; font-weight: 700; cursor: pointer; transition: all 0.2s ease; user-select: none; font-size: 1rem; }
         .regex-toggle.is-active { background-color: var(--primary-bg); color: var(--primary); border-color: var(--primary); }
