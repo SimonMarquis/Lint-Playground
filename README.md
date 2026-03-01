@@ -59,6 +59,7 @@
 >     } |
 >     sed -e '/<!--region REMOVE-IN-EMBEDDED-REPORT-->/,/<!--endregion REMOVE-IN-EMBEDDED-REPORT-->/d' \
 >         -e '/\/\/ #region REMOVE-IN-EMBEDDED-REPORT/,/\/\/ #endregion REMOVE-IN-EMBEDDED-REPORT/d' \
+>         -e '/\/\* #region REMOVE-IN-EMBEDDED-REPORT/,/\/\* #endregion REMOVE-IN-EMBEDDED-REPORT/d' \
 >     > "$output"
 >   )
 >   ```
