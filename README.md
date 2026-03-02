@@ -21,7 +21,7 @@
 > <details>
 > <summary>Why a SARIF Viewer?</summary><br>
 >
-> Mostly because the official HTML report is broken (it relies on external js/css resources that are 403'ing) since January 2025 and no sign of activity since then on the official issue tracker:
+> ~Mostly because the official HTML report is broken (it relies on external js/css resources that are 403'ing) since January 2025 and no sign of activity since then on the official issue tracker:~ [Fixed!](https://android.googlesource.com/platform/tools/base/+/23d77cb3317d8598fad5d17bdb3911f3cd707e09%5E%21/)
 > - [*Android Lint HTML reports broken by code.getmdl.io 403 Forbidden error*](https://issuetracker.google.com/issues/486495092)
 > - [*Generated HTML output of lint references JS and CSS that are no longer available (code.getmdl.io)*](https://issuetracker.google.com/issues/474474279)
 >
