@@ -1,8 +1,69 @@
 # 🛝 Lint Playground
 
-### [🔍 Android Lint SARIF Viewer](https://simonmarquis.github.io/Lint-Playground/)
+### [🔍 Android Lint SARIF Viewer](https://simonmarquis.github.io/Lint-Playground/?utm_source=github-readme)
 
-<a href="https://simonmarquis.github.io/Lint-Playground/"><img src="docs/screenshot.png" alt="screenshot" width="400" /></a>
+<a href="https://simonmarquis.github.io/Lint-Playground/?utm_source=github-readme">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/screenshot-dark.png">
+    <source media="(prefers-color-scheme: light)" srcset="docs/screenshot-light.png">
+    <!--suppress CheckImageSize -->
+    <img alt="Screenshot" src="docs/screenshot-dark.png" width="400">
+  </picture>
+</a>
+
+- **📦 Zero Dependencies:** Single-file, self-contained, offline-first HTML viewer.
+- **🔍 Advanced Filtering:** Filter by severity, category, rule ID, or Regex.
+- **⚙️ CI/CD Ready:** Embed report data to generate portable HTML artifacts.
+- **💅 Modern UI:** Markdown support and highlighted inline code snippets.
+- **⚡ PWA:** Installable app with native `.sarif` file handling.
+
+> [!IMPORTANT]
+> <details>
+> <summary>Why a SARIF Viewer?</summary><br>
+>
+> ~Mostly because the official HTML report is broken (it relies on external js/css resources that are 403'ing) since January 2025 and no sign of activity since then on the official issue tracker:~ [Fixed!](https://android.googlesource.com/platform/tools/base/+/23d77cb3317d8598fad5d17bdb3911f3cd707e09%5E%21/)
+> - [*Android Lint HTML reports broken by code.getmdl.io 403 Forbidden error*](https://issuetracker.google.com/issues/486495092)
+> - [*Generated HTML output of lint references JS and CSS that are no longer available (code.getmdl.io)*](https://issuetracker.google.com/issues/474474279)
+>
+> It also lacks proper search & filter mechanisms that can be very useful to focus on a specific scope.  
+> And finally, if we take as an example a 10k issues report:
+> - the SARIF file is ~23MB
+> - the default HTML report is ~2.3MB but only shows the [50 first instances](https://cs.android.com/android-studio/platform/tools/base/+/mirror-goog-studio-main:lint/cli/src/main/java/com/android/tools/lint/HtmlReporter.kt;l=987?q=MAX_COUNT&sq=&ss=android-studio%2Fplatform%2Ftools%2Fbase) of each issue and omits the rest
+> - this new HTML report is ~1.5MB and contains all the reported issues!
+> </details>
+
+> [!TIP]
+> <details>
+> <summary>How to create an embedded HTML report from a SARIF file?</summary><br>
+>
+> - with a GHA composite action: [`📝 Generate Lint Embedded Reports`](.github/actions/generate-lint-embedded-reports/action.yaml)
+>   ```yaml
+>   - id: lint
+>     run: ./gradlew lint --continue
+>   - if: ${{ !cancelled() && contains(fromJSON('["success", "failure"]'), steps.lint.outcome) }}
+>     uses: ./.github/actions/generate-lint-embedded-reports
+>   ```
+> - with a bash script:
+>   ```bash
+>   (
+>     sarif="input.sarif"         # SARIF input file
+>     template="docs/index.html"  # HTML template file
+>     output="report.html"        # HTML output file
+>   
+>     {
+>       sed -n '1,/<!--region SARIF-EMBEDDED-REPORT-->/p' "$template"
+>       printf '<script id="sarif-report" type="application/gzip+base64">'
+>       jq -c . "$sarif" | gzip -cn | base64 | tr -d '\n'
+>       printf '</script>\n'
+>       sed -n '/<!--endregion SARIF-EMBEDDED-REPORT-->/,$p' "$template"
+>     } |
+>     sed -e '/<!--region REMOVE-IN-EMBEDDED-REPORT-->/,/<!--endregion REMOVE-IN-EMBEDDED-REPORT-->/d' \
+>         -e '/\/\/ #region REMOVE-IN-EMBEDDED-REPORT/,/\/\/ #endregion REMOVE-IN-EMBEDDED-REPORT/d' \
+>         -e '/\/\* #region REMOVE-IN-EMBEDDED-REPORT/,/\/\* #endregion REMOVE-IN-EMBEDDED-REPORT/d' \
+>     > "$output"
+>   )
+>   ```
+> </details>
 
 ### ▶️ Run configurations
 
@@ -49,5 +110,7 @@ classDef jvm fill:#7F52FF,stroke:#fff,stroke-width:2px,color:#fff;
 
 ### 🔗 Links
 
-- https://googlesamples.github.io/android-custom-lint-rules/
-- https://cs.android.com/android-studio/platform/tools/base/+/mirror-goog-studio-main:lint/
+- [SARIF specification](https://sarifweb.azurewebsites.net/#Specification)
+- [SARIF validator](https://sarifweb.azurewebsites.net/Validation)
+- [Android Lint documentation](https://googlesamples.github.io/android-custom-lint-rules/)
+- [Android Lint source code](https://cs.android.com/android-studio/platform/tools/base/+/mirror-goog-studio-main:lint/)

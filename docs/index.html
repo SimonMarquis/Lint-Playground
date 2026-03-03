@@ -2,1754 +2,1240 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Android Lint SARIF Viewer</title>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='24px' viewBox='0 -960 960 960' width='24px' fill='%233ddc84'%3E%3Cpath d='M480-200q66 0 113-47t47-113v-160q0-66-47-113t-113-47q-66 0-113 47t-47 113v160q0 66 47 113t113 47Zm-80-120h160v-80H400v80Zm0-160h160v-80H400v80Zm80 40Zm0 320q-65 0-120.5-32T272-240H160v-80h84q-3-20-3.5-40t-.5-40h-80v-80h80q0-20 .5-40t3.5-40h-84v-80h112q14-23 31.5-43t40.5-35l-64-66 56-56 86 86q28-9 57-9t57 9l88-86 56 56-66 66q23 15 41.5 34.5T688-640h112v80h-84q3 20 3.5 40t.5 40h80v80h-80q0 20-.5 40t-3.5 40h84v80H688q-32 56-87.5 88T480-120Z'/%3E%3C/svg%3E"/>
+
+    <meta name="title" content="Android Lint SARIF Viewer">
+    <meta name="description" content="A modern, offline-first viewer for Android Lint SARIF reports. Analyze your lint issues, filter by severity, and visualize code snippets directly in your browser.">
+    <meta name="keywords" content="Android Lint, SARIF, Viewer, Static Analysis, Kotlin, Java, Android Studio, Code Quality, DevOps, CI/CD">
+    <meta name="author" content="Simon Marquis">
+    <meta name="theme-color" content="#3ddc84">
+    <meta name="color-scheme" content="dark light">
+
+    <!--region REMOVE-IN-EMBEDDED-REPORT-->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simonmarquis.github.io/Lint-Playground/">
+    <meta property="og:title" content="Android Lint SARIF Viewer">
+    <meta property="og:description" content="A modern, offline-first viewer for Android Lint SARIF reports. Analyze your lint issues, filter by severity, and visualize code snippets directly in your browser.">
+    <meta property="og:image" content="https://simonmarquis.github.io/Lint-Playground/screenshot-dark.png">
+    <meta property="og:locale" content="en_US">
+
+    <link rel="canonical" href="https://simonmarquis.github.io/Lint-Playground/">
+    <link rel="icon" type="image/png" href="96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="manifest" href="manifest.json" />
+    <!--endregion REMOVE-IN-EMBEDDED-REPORT-->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20height%3D%2224px%22%20viewBox%3D%220%20-960%20960%20960%22%20width%3D%2224px%22%20fill%3D%22%233ddc84%22%3E%3Cpath%20d%3D%22M467-85q-6-1-12-3-135-45-215-166.5T160-516v-189q0-25%2014.5-45t37.5-29l240-90q14-5%2028-5t28%205l240%2090q23%209%2037.5%2029t14.5%2045v189q0%2075-23.5%20146.5T709-240q-8%2011-21.5%2011.5T664-238L560-342q-18%2011-38.5%2016.5T480-320q-66%200-113-47t-47-113q0-66%2047-113t113-47q66%200%20113%2047t47%20113q0%2022-5.5%2042.5T618-398l60%2060q20-41%2031-86t11-92v-189l-240-90-240%2090v189q0%20121%2068%20220t172%20132q16-5%2031.5-12t30.5-16q14-8%2030.5-6t26.5%2016q10%2014%206.5%2030T588-127q-20%2012-40%2021.5T505-88q-6%202-12%203t-13%201q-7%200-13-1Zm69.5-338.5Q560-447%20560-480t-23.5-56.5Q513-560%20480-560t-56.5%2023.5Q400-513%20400-480t23.5%2056.5Q447-400%20480-400t56.5-23.5ZM488-477Z%22%2F%3E%3C%2Fsvg%3E"/>
+
     <style>
-        :root {
-            --primary: #3ddc84;
-            --primary-dark: #32b36b;
-            --primary-bg: rgba(61, 220, 132, 0.1);
-            --bg-body: #121212;
-            --bg-surface: #1e1e1e;
-            --bg-elevation: #2d2d2d;
-            --text-main: #ffffff;
-            --text-secondary: #a0a0a0;
-            --text-tertiary: #666666;
-            --border: #333333;
-            --code-bg: #171717;
-            --code-text: #d4d4d4;
-            --code-border: #333333;
-            --severity-fatal: #d32f2f;
-            --severity-error: #ef5350;
-            --severity-warning: #ffca28;
-            --severity-info: #42a5f5;
-            --severity-ignore: #78909c;
-            --header-height: 76px; 
-        }
+        :root /*    "dark"*/ { --primary: #3ddc84; --primary-bg: rgba(61, 220, 132, 0.1); --bg-body: #121212; --bg-surface: #1e1e1e; --bg-elevation: #2d2d2d; --text-main: #ffffff; --text-secondary: #a0a0a0; --text-tertiary: #666666; --border: #333333; --code-bg: #171717; --code-text: #d4d4d4; --code-border: #333333; --severity-error: #ef5350; --severity-warning: #ffca28; --severity-info: #42a5f5; --header-height: 76px; }
+        [data-theme="light"] { --primary: #007a51; --primary-bg: rgba(0, 135, 90, 0.08); --bg-body: #e4e7eb; --bg-surface: #ffffff; --bg-elevation: #e2e8f0; --text-main: #1f1f1f; --text-secondary: #4b5563; --text-tertiary: #57606a; --border: #cdd5df; --code-bg: #f6f8fa; --code-text: #24292e; --code-border: #e1e4e8; --severity-error: #d32f2f; --severity-warning: #b34200; --severity-info: #01579b; }
+        [data-theme="dark"] .theme-toggle .icon-moon, [data-theme="light"] .theme-toggle .icon-sun { display: block; }
 
-        [data-theme="light"] {
-            --primary: #00875A;
-            --primary-dark: #006c4c;
-            --primary-bg: rgba(0, 135, 90, 0.08);
-            --bg-body: #e4e7eb;
-            --bg-surface: #ffffff;
-            --bg-elevation: #f1f5f9;
-            --text-main: #1f1f1f;
-            --text-secondary: #4b5563;
-            --text-tertiary: #6b7280;
-            --border: #cdd5df;
-            --code-bg: #f6f8fa;
-            --code-text: #24292e;
-            --code-border: #e1e4e8;
-            --severity-fatal: #b71c1c;
-            --severity-error: #d32f2f;
-            --severity-warning: #ea580c;
-            --severity-info: #0284c7;
-            --severity-ignore: #90a4ae;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        html {
-            scrollbar-gutter: stable;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            line-height: 1.6;
-            min-height: 100vh;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        header {
-            background-color: var(--bg-surface);
-            border-bottom: 1px solid var(--border);
-            padding: 1rem 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            position: sticky;
-            top: 0;
-            z-index: 50;
-            transition: background-color 0.3s ease, border-color 0.3s ease;
-            gap: 1rem;
-            height: var(--header-height);
-        }
-
-        h1 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--text-main);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            white-space: nowrap;
-            overflow: hidden; text-overflow: ellipsis;
-            min-width: 0;
-            flex: 0 1 auto;
-            user-select: none;
-        }
-
+        html { scrollbar-gutter: stable; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: var(--bg-body); color: var(--text-main); line-height: 1.6; min-height: 100vh; transition: background-color 0.3s ease, color 0.3s ease; }
+        header { background-color: var(--bg-surface); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; align-items: center; position: sticky; top: 0; z-index: 50; transition: background-color 0.3s ease, border-color 0.3s ease; gap: 1rem; height: var(--header-height); }
+        h1 { font-size: 1.25rem; font-weight: 600; color: var(--text-main); display: flex; align-items: center; gap: 0.5rem; min-width: 0; flex: 0 1 auto; user-select: none; cursor: pointer; }
         h1 svg { flex-shrink: 0; }
-        h1 span { color: var(--primary); }
+        main { padding: 2rem; }
+        kbd { background-color: var(--bg-elevation); border: 1px solid var(--border); border-radius: 4px; padding: 1px 6px; font-family: inherit; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.2; box-shadow: 0 1px 0 var(--border); }
+        summary.issue-group-header { cursor: pointer; list-style: none; }
+        summary.issue-group-header::-webkit-details-marker { display: none; }
 
-        .status-badge {
-            font-size: 0.75rem;
-            background-color: var(--bg-elevation);
-            border: 1px solid var(--border);
-            color: var(--text-secondary);
-            padding: 0.2rem 0.6rem;
-            border-radius: 12px;
-            font-weight: 500;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            flex-shrink: 0;
-            margin-right: auto;
-        }
+        @media (max-width: 768px) { #report-info { max-width: 150px; } .title-prefix { display: none; } }
+        @media (max-width: 480px) { header { padding: 0.75rem 1rem; } h1 { font-size: 1rem; } .header-controls { gap: 0.5rem; } #report-info { display: none; } }
+        @media (max-width: 360px) { .title-suffix { display: none; } }
 
-        .header-controls {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            flex-shrink: 0;
-            margin-left: auto;
-        }
+        @keyframes animloader { 0% { transform: scale(0); opacity: 1; } 100% { transform: scale(1); opacity: 0; } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideIn { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-        #report-info {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            justify-content: center;
-            margin-right: 0.5rem;
-            text-align: right;
-            line-height: 1.3;
-            max-width: 250px;
-            min-height: 3.2rem; 
-        }
+        #report-info { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; margin-right: 0.5rem; text-align: right; line-height: 1.3; max-width: 250px; min-height: 3.2rem; }
 
-        .info-line-primary {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--text-main);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            width: 100%;
-        }
+        /* #region REMOVE-IN-EMBEDDED-REPORT */
+        #drop-zone { border: 2px dashed var(--border); border-radius: 12px; padding: 4rem 2rem; text-align: center; background-color: var(--bg-surface); transition: all 0.2s ease; cursor: pointer; margin: 0 auto 2rem; display: flex; flex-direction: column; align-items: center; justify-content: center; max-width: 1200px; }
+        #drop-zone:hover { border-color: var(--text-secondary); background-color: var(--bg-elevation); }
+        #drop-zone.highlight { border-color: var(--primary); background-color: var(--primary-bg); }
+        #drop-zone > svg { width: 48px; height: 48px; margin-bottom: 1rem; stroke: var(--text-secondary); }
 
-        .info-line-secondary {
-            font-size: 0.7rem;
-            color: var(--text-secondary);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            width: 100%;
-        }
+        #drag-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; background-color: color-mix(in srgb, var(--bg-body) 90%, transparent); display: flex; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(4px); border: 4px dashed var(--primary); color: var(--primary); }
+        #drag-overlay svg { width: 64px; height: 64px; stroke: var(--primary); margin-bottom: 1rem; }
+        #drag-overlay h2 { font-size: 1.5rem; font-weight: 600; }
 
-        .info-line-tertiary {
-            font-size: 0.65rem;
-            color: var(--text-tertiary);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            width: 100%;
-        }
+        #file-input { display: none; }
+        /* #endregion REMOVE-IN-EMBEDDED-REPORT */
 
-        @media (max-width: 768px) {
-            .status-badge { display: none; }
-            #report-info { max-width: 150px; }
-        }
+        #results-container { max-width: 1200px; margin: 0 auto; }
 
-        @media (max-width: 480px) {
-            header { padding: 0.75rem 1rem; }
-            h1 { font-size: 1rem; }
-            .header-controls { gap: 0.5rem; }
-            #report-info { display: none; }
-        }
+        .all-pill { justify-content: center; flex-shrink: 0; }
 
-        .theme-toggle {
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: var(--text-secondary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.5rem;
-            border-radius: 50%;
-            transition: color 0.2s ease, background-color 0.2s ease;
-        }
+        .category-badge { background-color: var(--bg-surface); border: 1px solid var(--border); color: var(--text-secondary); padding: 0.2rem 0.6rem; border-radius: 100px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+        .category-wrapper { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: flex-end; max-width: 100%; flex-shrink: 0; }
 
-        .theme-toggle:hover {
-            color: var(--text-main);
-            background-color: var(--bg-elevation);
-        }
+        .chevron-icon { transition: transform 0.2s ease; flex-shrink: 0; }
+        .chevron-icon-bold { stroke-width: 2.5; }
 
-        .header-link {
-            color: var(--text-secondary);
-            padding: 0.5rem;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: color 0.2s ease, background-color 0.2s ease;
-            text-decoration: none;
-        }
+        .code-content { color: var(--code-text); white-space: pre; padding-left: 1rem; padding-right: 0.75rem; }
+        .code-highlight { text-decoration: underline wavy var(--severity-error) 1.5px; background-color: color-mix(in srgb, var(--severity-error) 10%, transparent); }
+        .code-line-number { color: var(--text-tertiary); min-width: 3ch; text-align: right; user-select: none; border-right: 1px solid var(--border); padding-right: 0.75rem; padding-left: 0.75rem; position: sticky; left: 0; background-color: var(--code-bg); z-index: 1; }
 
-        .header-link:hover {
-            color: var(--text-main);
-            background-color: var(--bg-elevation);
-        }
+        /* #region REMOVE-IN-EMBEDDED-REPORT */
+        .drop-actions strong { font-weight: 700; }
+        .drop-actions { font-size: 0.85rem; color: var(--text-secondary); text-decoration: underline dotted; text-underline-offset: 3px; transition: color 0.2s ease; user-select: none; cursor: pointer; display: inline-block; }
+        .drop-actions:hover { color: var(--primary); text-decoration-style: solid; }
+        .drop-text-main { font-size: 1.2rem; font-weight: 500; margin-bottom: 0.5rem; }
+        /* #endregion REMOVE-IN-EMBEDDED-REPORT */
 
-        main {
-            padding: 2rem;
-            width: 100%;
-            max-width: 100%;
-        }
+        .empty-state svg { color: var(--text-secondary); }
+        .empty-state { text-align: center; padding: 2rem; color: var(--text-secondary); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem; }
+        .empty-state-subtitle { font-size: 0.9rem; color: var(--text-tertiary); }
+        .empty-state-title { font-weight: 600; font-size: 1.1rem; color: var(--text-secondary); margin-top: 0.5rem; }
 
-        #drop-zone {
-            border: 2px dashed var(--border);
-            border-radius: 12px;
-            padding: 4rem 2rem;
-            text-align: center;
-            background-color: var(--bg-surface);
-            transition: all 0.2s ease;
-            cursor: pointer;
-            margin-bottom: 2rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            max-width: 1200px;
-            margin-left: auto;
-            margin-right: auto;
-        }
+        .filter-group { display: contents; }
+        .filter-input { width: 100%; background-color: var(--bg-body); border: 1px solid var(--border); color: var(--text-main); padding: 0.75rem 48px 0.75rem 40px; border-radius: 6px; font-size: 1rem; }
+        .filter-input.is-invalid, .filter-input.is-invalid:focus { border-color: var(--severity-error); box-shadow: 0 0 0 1px var(--severity-error); }
+        .filter-input.is-regex { font-family: 'Consolas', 'Monaco', 'Courier New', monospace; }
+        .filter-input:focus { outline: none; border-color: var(--text-tertiary); box-shadow: 0 0 0 1px var(--text-tertiary); }
+        .filter-label { font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; white-space: nowrap; height: 24px; display: flex; align-items: center; }
+        .filter-section { padding: 1rem; margin-bottom: 1.5rem; display: grid; grid-template-columns: max-content max-content 1fr; gap: 0.5rem; align-items: start; }
+        .filter-section, .issue-group, .empty-state { background-color: var(--bg-surface); border-radius: 8px; border: 1px solid var(--border); transition: box-shadow 0.2s ease, border-color 0.2s ease; }
+        .filter-section:hover, .issue-group:hover, .empty-state:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.3); border-color: var(--text-tertiary); }
 
-        #drop-zone:hover {
-            border-color: var(--text-secondary);
-            background-color: var(--bg-elevation);
-        }
+        .header-controls { display: flex; align-items: center; gap: 1rem; flex-shrink: 0; margin-left: auto; }
+        .header-logo { color: var(--primary); width: 36px; height: 36px; flex-shrink: 0; }
 
-        #drop-zone.highlight {
-            border-color: var(--primary);
-            background-color: var(--primary-bg);
-        }
+        .info-line-primary { font-size: 0.85rem; font-weight: 600; color: var(--text-main); }
+        .info-line-primary, .info-line-secondary, .info-line-tertiary { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
+        .info-line-secondary { font-size: 0.7rem; color: var(--text-secondary); }
+        .info-line-tertiary { font-size: 0.65rem; color: var(--text-tertiary); }
 
-        #drop-zone > svg {
-            width: 48px;
-            height: 48px;
-            margin-bottom: 1rem;
-            stroke: var(--text-secondary);
-        }
+        .is-hidden { display: none !important; }
 
-        .drop-text-main {
-            font-size: 1.2rem;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-        }
+        .issue-card { background-color: var(--bg-body); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; transition: transform 0.1s ease; }
+        .issue-card:hover { border-color: var(--text-tertiary); }
+        .issue-code-snippet { margin-top: 0.8rem; background-color: var(--code-bg); border: 1px solid var(--code-border); border-radius: 6px; padding: 0.75rem 0; font-family: 'Consolas', 'Monaco', 'Courier New', monospace; font-size: 0.85rem; overflow-x: auto; line-height: 1.4; position: relative; display: grid; grid-template-columns: max-content minmax(max-content, 1fr); }
+        .issue-group { overflow: hidden; content-visibility: auto; contain-intrinsic-size: 500px; border-radius: 12px; }
+        .issue-group-content { border-top: 1px solid var(--border); padding: 1rem; display: flex; flex-direction: column; gap: 0.8rem; }
+        .issue-group-count { background-color: var(--bg-body); color: var(--text-secondary); padding: 0.1rem 0.6rem; border-radius: 12px; font-size: 0.8rem; font-weight: 600; border: 1px solid var(--border); flex-shrink: 0; }
+        .issue-group-header { background-color: var(--bg-elevation); padding: 0.8rem 1rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; user-select: none; transition: background-color 0.2s ease, border-color 0.2s ease; }
+        .issue-group-meta { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; justify-content: flex-end; flex-shrink: 0; }
+        .issue-group-title { display: flex; align-items: center; gap: 0.75rem; font-family: monospace; font-weight: 700; color: var(--badge-color); font-size: 1.1rem; flex: 1 1 auto; min-width: 0; margin-right: 0.5rem; }
+        .issue-group.is-collapsed .issue-group-content { display: none; }
+        .issue-list { display: flex; flex-direction: column; gap: 1.5rem; }
+        .issue-location { appearance: none; background-color: var(--bg-surface); padding: 0.5rem 0.75rem; border-radius: 6px; font-family: monospace; font-size: 0.85rem; color: var(--text-secondary); display: flex; align-items: center; text-decoration: none; border: 1px solid transparent; transition: all 0.2s ease; cursor: pointer; width: 100%; text-align: left; overflow: hidden; }
+        .issue-location:focus { outline: 2px solid var(--text-tertiary); outline-offset: 2px; border-color: var(--text-tertiary); }
+        .issue-location:hover { border-color: var(--text-tertiary); color: var(--text-main); background-color: var(--bg-elevation); }
+        .issue-message { font-size: 1rem; margin-bottom: 0.75rem; color: var(--text-main); display: flex; align-items: flex-start; gap: 0.75rem; word-break: break-word; overflow-wrap: anywhere; }
+        .issue-rule-id { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        .or-separator {
-            display: flex;
-            align-items: center;
-            width: 100%;
-            max-width: 280px;
-            margin: 1rem 0;
-            color: var(--text-tertiary);
-            font-size: 0.8rem;
-            user-select: none;
-        }
+        .line-number { color: var(--text-tertiary); white-space: nowrap; flex-shrink: 0; }
 
-        .or-separator::before, .or-separator::after {
-            content: "";
-            flex: 1;
-            height: 1px;
-            background: var(--border);
-        }
+        .loader { width: 48px; height: 48px; background: var(--primary); display: inline-block; border-radius: 50%; box-sizing: border-box; animation: animloader 1s ease-in infinite; }
+        .loader-container { display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 50vh; }
 
-        .or-separator span {
-            padding: 0 1rem;
-        }
+        .markdown-content .formatted-code { background-color: var(--bg-elevation); border: 1px solid var(--border); padding: 0.1rem 0.35rem; border-radius: 4px; font-family: 'Consolas', 'Monaco', monospace; font-size: 0.85em; color: var(--primary); white-space: pre-wrap; word-break: break-word; }
+        .markdown-content del { opacity: 0.7; }
+        .markdown-content em { font-style: italic; }
+        .markdown-content pre code { font-family: 'Consolas', 'Monaco', monospace; font-size: 0.85em; color: var(--code-text); white-space: pre; background: none; padding: 0; border: none; }
+        .markdown-content pre { background-color: var(--code-bg); border: 1px solid var(--code-border); padding: 0.75rem; border-radius: 6px; overflow-x: auto; margin: 0.75rem 0; }
+        .markdown-content strong { font-weight: 700; color: var(--text-main); }
+        .markdown-content u { text-decoration: underline; text-underline-offset: 3px; }
 
-        .drop-actions {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            text-decoration: underline dotted;
-            text-underline-offset: 3px;
-            transition: color 0.2s ease;
-            user-select: none;
-            cursor: pointer;
-            display: inline-block;
-        }
-
-        .drop-actions:hover {
-            color: var(--primary);
-            text-decoration-style: solid;
-        }
-
-        .drop-actions strong {
-            font-weight: 700;
-        }
-
-        #results-container {
-            display: none;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .metric-card {
-            --card-accent: var(--text-main);
-            background-color: var(--bg-surface);
-            padding: 1rem;
-            border-radius: 8px;
-            /* Default: colored with alpha (40% opacity used for border visibility) */
-            border: 1px solid var(--border); /* Fallback */
-            border: 1px solid color-mix(in srgb, var(--card-accent) 40%, transparent);
-            transition: box-shadow 0.2s ease, border-color 0.2s ease;
-            position: relative; /* Context for icon positioning */
-            overflow: hidden;
-        }
-
+        .metric-card { --card-accent: var(--text-main); background-color: var(--bg-surface); padding: 1rem; border-radius: 8px; border: 1px solid color-mix(in srgb, var(--card-accent) 40%, transparent); transition: box-shadow 0.2s ease, border-color 0.2s ease; position: relative; overflow: hidden; cursor: pointer; user-select: none; }
+        .metric-card.is-active { border-color: var(--card-accent); }
         .metric-card.is-error { --card-accent: var(--severity-error); }
-        .metric-card.is-warning { --card-accent: var(--severity-warning); }
         .metric-card.is-info { --card-accent: var(--severity-info); }
+        .metric-card.is-warning { --card-accent: var(--severity-warning); }
+        .metric-card:hover, .metric-card.is-active { box-shadow: 0 4px 12px color-mix(in srgb, var(--card-accent) 30%, transparent); }
+        .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+        .metric-icon svg { width: 100%; height: 100%; fill: currentColor; }
+        .metric-icon { position: absolute; top: 1rem; right: 1rem; width: 24px; height: 24px; color: var(--card-accent); pointer-events: none; display: flex; align-items: center; justify-content: center; }
+        .metric-label { color: var(--card-accent); font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; position: relative; z-index: 1; line-height: 1.2; }
+        .metric-value { font-size: 2rem; font-weight: 700; color: var(--card-accent); position: relative; z-index: 1; line-height: 1; margin-bottom: 0.25rem; }
 
-        .metric-card:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            border-color: var(--card-accent);
-        }
-        
-        .metric-card:hover .metric-icon {
-            opacity: 1;
-        }
-        
-        /* New Icon Style for Metric Cards */
-        .metric-icon {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            width: 24px;
-            height: 24px;
-            color: var(--card-accent);
-            opacity: 0.5;
-            pointer-events: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 0.2s ease;
-        }
-        
-        .metric-icon svg {
-            width: 100%;
-            height: 100%;
-            stroke-width: 2;
-        }
+        .or-separator span { padding: 0 1rem; }
+        .or-separator { display: flex; align-items: center; width: 100%; max-width: 280px; margin: 1rem auto; color: var(--text-tertiary); font-size: 0.8rem; user-select: none; }
+        .or-separator::before, .or-separator::after { content: ""; flex: 1; height: 1px; background: var(--border); }
 
-        .metric-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--card-accent);
-            position: relative;
-            z-index: 1;
-            line-height: 1; /* Fixes large top gap to match padding */
-            margin-bottom: 0.25rem; /* Adds definition between number and label */
-        }
+        .path-dir { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; flex-shrink: 1; color: var(--text-tertiary); direction: ltr; }
+        .path-name { white-space: nowrap; flex-shrink: 0; color: var(--text-secondary); font-weight: 600; }
 
-        .metric-label {
-            color: var(--card-accent);
-            font-size: 0.875rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            position: relative;
-            z-index: 1;
-            line-height: 1.2; /* Tighter baseline for consistent bottom spacing */
-        }
+        .pill { appearance: none; font-family: inherit; --pill-color: var(--primary); background-color: var(--bg-elevation); color: var(--text-secondary); border: 1px solid transparent; padding: 0.25rem 0.6rem; border-radius: 20px; font-size: 0.75rem; cursor: pointer; transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease; user-select: none; display: flex; align-items: center; justify-content: center; min-width: 0; max-width: 100%; line-height: 1.2; vertical-align: middle; }
+        .pill-container { display: flex; flex-wrap: wrap; gap: 0.35rem; min-width: 0; }
+        .pill-count { white-space: nowrap; padding-left: 0.35rem; flex: 0 0 auto; }
+        .pill-label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; flex: 0 1 auto; }
+        .pill.is-active { background-color: var(--primary-bg); color: var(--primary); border-color: var(--primary); text-shadow: 0 0 0.65px currentColor; font-weight: normal; }
+        .pill:focus { outline: 2px solid var(--pill-color); outline-offset: 2px; }
+        .pill:hover { color: var(--text-main); border-color: var(--pill-color); }
+        .pill[data-value="error"] { --pill-color: var(--severity-error); }
+        .pill[data-value="info"] { --pill-color: var(--severity-info); }
+        .pill[data-value="warning"] { --pill-color: var(--severity-warning); }
+        .pill[data-value].is-active { background-color: color-mix(in srgb, var(--pill-color) 15%, transparent); color: var(--pill-color); border-color: var(--pill-color); }
 
-        .filter-section {
-            background-color: var(--bg-surface);
-            padding: 1.5rem;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            margin-bottom: 1.5rem;
-            transition: box-shadow 0.2s ease, border-color 0.2s ease;
-        }
+        .regex-toggle { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: 1px solid transparent; color: var(--text-secondary); border-radius: 4px; padding: 4px 6px; font-family: monospace; font-weight: 700; cursor: pointer; transition: all 0.2s ease; user-select: none; font-size: 1rem; }
+        .regex-toggle.is-active { background-color: var(--primary-bg); color: var(--primary); border-color: var(--primary); }
+        .regex-toggle:hover { background-color: var(--bg-elevation); color: var(--text-main); }
 
-        .filter-section:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            border-color: var(--text-tertiary);
-        }
+        .related-location-card { margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.25rem; padding-left: 0.75rem; border-left: 2px solid var(--border); }
+        .related-location-msg { font-size: 0.75rem; color: var(--text-tertiary); font-style: italic; }
 
-        .search-row {
-            margin-bottom: 1.5rem;
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
+        .rule-description-content { padding: 0 1rem 1rem; font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 0; word-break: break-word; overflow-wrap: anywhere; background-color: var(--bg-elevation); }
+        .rule-details[open] .chevron-icon { transform: rotate(90deg); }
+        .rule-details[open] .rule-description-content { animation: fadeIn 0.2s ease-out; }
 
-        .filter-input {
-            width: 100%;
-            background-color: var(--bg-body);
-            border: 1px solid var(--border);
-            color: var(--text-main);
-            padding: 0.75rem 0.75rem 0.75rem 40px;
-            border-radius: 6px;
-            font-size: 1rem;
-        }
+        .search-container { grid-column: 1 / -1; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+        .search-hint { position: absolute; top: 0; bottom: 0; left: 40px; font-size: 1rem; color: var(--text-secondary); pointer-events: none; user-select: none; display: flex; align-items: center; gap: 8px; transition: opacity 0.1s ease; }
+        .search-icon { position: absolute; top: 0; bottom: 0; left: 12px; color: var(--text-secondary); pointer-events: none; display: flex; align-items: center; }
+        .search-row { flex: 1; margin-bottom: 0; position: relative; display: flex; align-items: center; }
 
-        .filter-input:focus {
-            outline: none;
-            border-color: var(--text-tertiary);
-            box-shadow: 0 0 0 1px var(--text-tertiary);
-        }
+        .severity-error { --badge-color: var(--severity-error); }
+        .severity-icon { width: 1rem; height: 1rem; flex-shrink: 0; cursor: pointer; fill: var(--badge-color); }
+        .severity-info { --badge-color: var(--severity-info); }
+        .severity-warning { --badge-color: var(--severity-warning); }
 
-        .search-icon {
-            position: absolute;
-            left: 12px;
-            color: var(--text-secondary);
-            pointer-events: none;
-            display: flex;
-            align-items: center;
-        }
+        .sort-button { width: 2.75rem; height: 2.75rem; padding: 0.75rem; flex-shrink: 0; background-color: var(--bg-body); border: 1px solid var(--border); border-radius: 6px; color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; }
+        .sort-button:hover { background-color: var(--bg-elevation); color: var(--text-main); border-color: var(--text-tertiary); }
 
-        .search-hint {
-            position: absolute;
-            left: 40px;
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-            pointer-events: none;
-            user-select: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: opacity 0.1s ease;
-        }
+        .svg-icon { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; display: block; }
+        .svg-icon-fill { fill: currentColor; stroke: none; display: block; }
+        .svg-sprites { display: none; }
 
-        kbd {
-            background-color: var(--bg-elevation);
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            padding: 1px 6px;
-            font-family: inherit;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            line-height: 1.2;
-            box-shadow: 0 1px 0 var(--border);
-        }
+        .theme-toggle .icon-sun, .theme-toggle .icon-moon { display: none; }
+        .theme-toggle, .header-link, .open-button { background: none; border: none; cursor: pointer; color: var(--text-secondary); display: flex; align-items: center; justify-content: center; padding: 0.5rem; border-radius: 50%; transition: color 0.2s ease, background-color 0.2s ease; text-decoration: none; }
+        .theme-toggle:hover, .header-link:hover, .open-button:hover { color: var(--text-main); background-color: var(--bg-elevation); }
 
-        .filter-group {
-            display: flex;
-            align-items: flex-start;
-            gap: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
+        .title-prefix { color: var(--text-main); margin-right: 0.5rem; }
+        .title-suffix { color: var(--primary); font-weight: bold; }
+        .title-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 
-        .filter-group:last-child {
-            margin-bottom: 0;
-        }
-
-        .filter-label {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            font-weight: 600;
-            min-width: 80px;
-            white-space: nowrap;
-            flex-shrink: 0;
-            height: 24px;
-            display: flex;
-            align-items: center;
-        }
-
-        .pills-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.35rem;
-            flex: 1;
-        }
-
-        .pill {
-            appearance: none;
-            font-family: inherit;
-            background-color: var(--bg-elevation);
-            color: var(--text-secondary);
-            border: 1px solid transparent;
-            padding: 0.25rem 0.6rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            cursor: pointer;
-            transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-            user-select: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 0; /* Allow shrinking */
-            max-width: 100%; /* Prevent overflow */
-            line-height: 1.2;
-            vertical-align: middle;
-        }
-
-        .pill-label {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            min-width: 0;
-            flex: 0 1 auto;
-        }
-
-        .pill-count {
-            white-space: nowrap;
-            padding-left: 0.35rem;
-            flex: 0 0 auto;
-            font-variant-numeric: tabular-nums;
-        }
-
-        .pill:hover {
-            background-color: var(--border);
-            color: var(--text-main);
-        }
-
-        .pill:focus {
-            outline: 2px solid var(--text-tertiary);
-            outline-offset: 2px;
-            border-color: var(--text-tertiary);
-        }
-
-        .pill.active {
-            background-color: var(--primary-bg);
-            color: var(--primary);
-            border-color: var(--primary);
-            text-shadow: 0 0 0.65px currentColor;
-            font-weight: normal;
-        }
-
-        .pill[data-severity="error"].active {
-            background-color: rgba(239, 83, 80, 0.15);
-            color: var(--severity-error);
-            border-color: var(--severity-error);
-        }
-        .pill[data-severity="warning"].active {
-            background-color: rgba(255, 202, 40, 0.15);
-            color: var(--severity-warning);
-            border-color: var(--severity-warning);
-        }
-        .pill[data-severity="info"].active {
-            background-color: rgba(66, 165, 245, 0.15);
-            color: var(--severity-info);
-            border-color: var(--severity-info);
-        }
-
-        .issue-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .issue-group {
-            background-color: var(--bg-surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            overflow: hidden;
-            content-visibility: auto;
-            contain-intrinsic-size: 500px;
-            transition: box-shadow 0.2s ease, border-color 0.2s ease;
-        }
-
-        .issue-group:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            border-color: var(--text-tertiary);
-        }
-        
-        .issue-group-header {
-            background-color: var(--bg-elevation);
-            padding: 1rem 1.25rem;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap; 
-            gap: 0.5rem;
-            user-select: none;
-            transition: background-color 0.2s ease;
-        }
-        
-        .issue-group-title {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-family: monospace;
-            font-weight: 700;
-            color: var(--primary);
-            font-size: 1.1rem;
-            flex: 1 1 auto;
-            min-width: 0;
-            margin-right: 0.5rem;
-        }
-        
-        .issue-rule-id {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            min-width: 0;
-            flex: 0 1 auto;
-        }
-
-        .issue-group-count {
-            background-color: var(--bg-body);
-            color: var(--text-secondary);
-            padding: 0.1rem 0.6rem;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            border: 1px solid var(--border);
-            flex-shrink: 0;
-        }
-
-        .issue-group-content {
-            padding: 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-        }
-
-        .issue-card {
-            background-color: var(--bg-body);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 1rem;
-            transition: transform 0.1s ease;
-            /* Removed position relative */
-        }
-
-        .issue-card:hover {
-            border-color: var(--text-tertiary);
-        }
-        
-        /* Removed .issue-card-icon style */
-
-        .categories-wrapper {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-            max-width: 100%;
-            flex-shrink: 0;
-        }
-
-        .category-badge {
-            background-color: var(--bg-surface);
-            border: 1px solid var(--border);
-            color: var(--text-secondary);
-            padding: 0.2rem 0.6rem;
-            border-radius: 100px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .severity-badge {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            display: inline-block;
-            flex-shrink: 0;
-            margin-top: 0.5rem;
-        }
-
-        .issue-group-title .severity-badge {
-            margin-top: 0;
-            width: 12px;
-            height: 12px;
-        }
-
-        .severity-error {
-            background-color: var(--severity-error);
-            box-shadow: 0 0 6px var(--severity-error);
-            opacity: 0.9;
-        }
-        .severity-warning {
-            background-color: var(--severity-warning);
-            box-shadow: 0 0 6px var(--severity-warning);
-            opacity: 0.9;
-        }
-        .severity-info {
-            background-color: var(--severity-info);
-            box-shadow: 0 0 6px var(--severity-info);
-            opacity: 0.9;
-        }
-
-        .issue-message {
-            font-size: 1rem;
-            margin-bottom: 0.75rem;
-            color: var(--text-main);
-            display: flex;
-            align-items: flex-start;
-            gap: 0.75rem;
-        }
-
-        /* Formatting Styles for Markdown */
-        .issue-message strong { font-weight: 700; color: var(--text-main); }
-        .issue-message em { font-style: italic; }
-        .issue-message u { text-decoration: underline; text-underline-offset: 3px; }
-        .issue-message del { opacity: 0.7; }
-        .issue-message .formatted-code {
-            background-color: var(--bg-elevation);
-            border: 1px solid var(--border);
-            padding: 0.1rem 0.35rem;
-            border-radius: 4px;
-            font-family: 'Consolas', 'Monaco', monospace;
-            font-size: 0.85em;
-            color: var(--primary);
-            white-space: pre-wrap;
-            word-break: break-word;
-        }
-
-        .issue-location {
-            appearance: none;
-            background: none;
-            background-color: var(--bg-surface);
-            padding: 0.5rem 0.75rem;
-            border-radius: 6px;
-            font-family: monospace;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            display: flex;
-            align-items: center;
-            gap: 0;
-            text-decoration: none;
-            border: 1px solid transparent;
-            transition: all 0.2s ease;
-            cursor: pointer;
-            width: 100%;
-            text-align: left;
-            overflow: hidden;
-        }
-
-        .path-dir {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            min-width: 0;
-            flex-shrink: 1;
-            color: var(--text-tertiary);
-            direction: ltr;
-        }
-
-        .path-name {
-            white-space: nowrap;
-            flex-shrink: 0;
-            color: var(--text-secondary);
-            font-weight: 600;
-        }
-
-        .line-number {
-            color: var(--text-tertiary);
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-
-        .issue-location:hover {
-            border-color: var(--text-tertiary);
-            color: var(--text-main);
-            background-color: var(--bg-elevation);
-        }
-
-        .issue-location:focus {
-            outline: 2px solid var(--text-tertiary);
-            outline-offset: 2px;
-            border-color: var(--text-tertiary);
-        }
-
-        .issue-code-snippet {
-            margin-top: 0.8rem;
-            background-color: var(--code-bg);
-            border: 1px solid var(--code-border);
-            border-radius: 6px;
-            /* Modified padding: remove left padding from container to allow sticky element to sit flush */
-            padding: 0.75rem 0.75rem 0.75rem 0;
-            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-            font-size: 0.85rem;
-            overflow-x: auto;
-            line-height: 1.4;
-            position: relative; /* Context for sticky */
-            display: grid; /* Ensures all lines stretch to the width of the longest line */
-        }
-
-        .code-line {
-            display: flex;
-            gap: 1rem;
-            /* min-width: fit-content; Removed as grid handles width stretching */
-        }
-
-        .code-line-number {
-            color: var(--text-tertiary);
-            min-width: 3ch;
-            text-align: right;
-            user-select: none;
-            border-right: 1px solid var(--border);
-            /* Add left padding here instead of container */
-            padding-right: 0.75rem;
-            padding-left: 0.75rem;
-            flex-shrink: 0;
-            /* Sticky positioning */
-            position: sticky;
-            left: 0;
-            background-color: var(--code-bg);
-            z-index: 1;
-        }
-
-        .code-content {
-            color: var(--code-text);
-            white-space: pre;
-        }
-
-        .code-highlight {
-            text-decoration: underline;
-            text-decoration-style: wavy;
-            text-decoration-color: var(--severity-error);
-            text-decoration-thickness: 1.5px;
-            background-color: rgba(239, 83, 80, 0.1);
-        }
-
-        .hidden { display: none !important; }
-
-        .toast {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            padding: 1rem 2rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-            z-index: 100;
-            animation: slideIn 0.3s ease;
-            font-weight: 500;
-            border: 1px solid transparent;
-        }
-
-        .toast-error {
-            background-color: #3e2727;
-            color: #ff8a80;
-            border-color: #ff5252;
-        }
-
-        .toast-info {
-            background-color: var(--bg-elevation);
-            color: var(--text-main);
-            border-color: var(--primary);
-        }
-
-        @keyframes slideIn {
-            from { transform: translateY(100%); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 4rem 2rem;
-            color: var(--text-secondary);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .empty-state-title {
-            font-weight: 600;
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-            margin-top: 0.5rem;
-        }
-
-        .empty-state-subtitle {
-            font-size: 0.9rem;
-            color: var(--text-tertiary);
-        }
-
-        .empty-state svg {
-            color: var(--text-secondary);
-        }
-
-        .reset-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: var(--text-secondary);
-            padding: 0.5rem;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: color 0.2s ease, background-color 0.2s ease;
-        }
-
-        .reset-btn:hover {
-            color: var(--text-main);
-            background-color: var(--bg-elevation);
-        }
-
-        #drag-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(18, 18, 18, 0.9);
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(4px);
-            border: 4px dashed var(--primary);
-            color: var(--primary);
-        }
-
-        [data-theme="light"] #drag-overlay {
-            background-color: rgba(255, 255, 255, 0.9);
-        }
-
-        #drag-overlay svg {
-            width: 64px;
-            height: 64px;
-            stroke: var(--primary);
-            margin-bottom: 1rem;
-        }
+        .toast { position: fixed; bottom: 2rem; right: 2rem; padding: 1rem 2rem; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); z-index: 100; animation: slideIn 0.3s ease; font-weight: 500; border: 1px solid transparent; }
+        .toast.is-error { background-color: color-mix(in srgb, var(--severity-error) 15%, var(--bg-surface)); color: var(--severity-error); border-color: var(--severity-error); }
+        .toast.is-info { background-color: var(--bg-elevation); color: var(--text-main); border-color: var(--primary); }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" style="color:var(--primary)">
-                <path d="M20 8h-2.81c-.45-.78-1.07-1.45-1.82-1.96L17 4.41 15.59 3l-2.17 2.17C12.96 5.06 12.49 5 12 5c-.49 0-.96.06-1.41.17L8.41 3 7 4.41l1.62 1.63C7.88 6.55 7.26 7.22 6.81 8H4v2h2.09c-.05.33-.09.66-.09 1v1H4v2h2v1c0 .34.04.67.09 1H4v2h2.81c1.04 1.79 2.97 3 5.19 3s4.15-1.21 5.19-3H20v-2h-2.09c.05-.33.09-.66.09-1v-1h2v-2h-2v-1c0-.34-.04-.67-.09-1H20V8zm-6 8h-4v-2h4v2zm0-4h-4v-2h4v2z"/>
-            </svg>
-            Android Lint <span>SARIF Viewer</span>
-        </h1>
-        <span class="status-badge">🚧 Work in Progress 🚧</span>
-        <div class="header-controls">
-            <div id="report-info"></div>
+<svg class="svg-sprites" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <symbol id="icon-logo" viewBox="0 -960 960 960"><path d="M467-85q-6-1-12-3-135-45-215-166.5T160-516v-189q0-25 14.5-45t37.5-29l240-90q14-5 28-5t28 5l240 90q23 9 37.5 29t14.5 45v189q0 75-23.5 146.5T709-240q-8 11-21.5 11.5T664-238L560-342q-18 11-38.5 16.5T480-320q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 22-5.5 42.5T618-398l60 60q20-41 31-86t11-92v-189l-240-90-240 90v189q0 121 68 220t172 132q16-5 31.5-12t30.5-16q14-8 30.5-6t26.5 16q10 14 6.5 30T588-127q-20 12-40 21.5T505-88q-6 2-12 3t-13 1q-7 0-13-1Zm69.5-338.5Q560-447 560-480t-23.5-56.5Q513-560 480-560t-56.5 23.5Q400-513 400-480t23.5 56.5Q447-400 480-400t56.5-23.5ZM488-477Z"></path></symbol>
+        <symbol id="icon-open" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path><line x1="12" y1="11" x2="12" y2="17"></line><line x1="9" y1="14" x2="15" y2="14"></line></symbol>
+        <symbol id="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></symbol>
+        <symbol id="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></symbol>
+        <symbol id="icon-github" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></symbol>
+        <symbol id="icon-list-outline" viewBox="0 -960 960 960"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h168q13-36 43.5-58t68.5-22q38 0 68.5 22t43.5 58h168q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm80-80h280v-80H280v80Zm0-160h400v-80H280v80Zm0-160h400v-80H280v80Zm221.5-198.5Q510-807 510-820t-8.5-21.5Q493-850 480-850t-21.5 8.5Q450-833 450-820t8.5 21.5Q467-790 480-790t21.5-8.5ZM200-200v-560 560Z"/></symbol>
+        <symbol id="icon-list-fill" viewBox="0 -960 960 960"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h168q13-36 43.5-58t68.5-22q38 0 68.5 22t43.5 58h168q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm80-160h280v-80H280v80Zm0-160h400v-80H280v80Zm0-160h400v-80H280v80Zm221.5-198.5Q510-807 510-820t-8.5-21.5Q493-850 480-850t-21.5 8.5Q450-833 450-820t8.5 21.5Q467-790 480-790t21.5-8.5Z"/></symbol>
+        <symbol id="icon-error-fill" viewBox="0 -960 960 960"><path d="M363-120q-16 0-30.5-6T307-143L143-307q-11-11-17-25.5t-6-30.5v-234q0-16 6-30.5t17-25.5l164-164q11-11 25.5-17t30.5-6h234q16 0 30.5 6t25.5 17l164 164q11 11 17 25.5t6 30.5v234q0 16-6 30.5T817-307L653-143q-11 11-25.5 17t-30.5 6H363Zm117-304 86 86q11 11 28 11t28-11q11-11 11-28t-11-28l-86-86 86-86q11-11 11-28t-11-28q-11-11-28-11t-28 11l-86 86-86-86q-11-11-28-11t-28 11q-11 11-11 28t11 28l86 86-86 86q-11 11-11 28t11 28q11 11 28 11t28-11l86-86Z"/></symbol>
+        <symbol id="icon-error-outline" viewBox="0 -960 960 960"><path d="M363-120q-16 0-30.5-6T307-143L143-307q-11-11-17-25.5t-6-30.5v-234q0-16 6-30.5t17-25.5l164-164q11-11 25.5-17t30.5-6h234q16 0 30.5 6t25.5 17l164 164q11 11 17 25.5t6 30.5v234q0 16-6 30.5T817-307L653-143q-11 11-25.5 17t-30.5 6H363Zm1-80h232l164-164v-232L596-760H364L200-596v232l164 164Zm116-224 86 86q11 11 28 11t28-11q11-11 11-28t-11-28l-86-86 86-86q11-11 11-28t-11-28q-11-11-28-11t-28 11l-86 86-86-86q-11-11-28-11t-28 11q-11 11-11 28t11 28l86 86-86 86q-11 11-11 28t11 28q11 11 28 11t28-11l86-86Zm0-56Z"/></symbol>
+        <symbol id="icon-warning-fill" viewBox="0 -960 960 960"><path d="M109-120q-11 0-20-5.5T75-140q-5-9-5.5-19.5T75-180l370-640q6-10 15.5-15t19.5-5q10 0 19.5 5t15.5 15l370 640q6 10 5.5 20.5T885-140q-5 9-14 14.5t-20 5.5H109Zm399.5-131.5Q520-263 520-280t-11.5-28.5Q497-320 480-320t-28.5 11.5Q440-297 440-280t11.5 28.5Q463-240 480-240t28.5-11.5Zm0-120Q520-383 520-400v-120q0-17-11.5-28.5T480-560q-17 0-28.5 11.5T440-520v120q0 17 11.5 28.5T480-360q17 0 28.5-11.5Z"/></symbol>
+        <symbol id="icon-warning-outline" viewBox="0 -960 960 960"><path d="M109-120q-11 0-20-5.5T75-140q-5-9-5.5-19.5T75-180l370-640q6-10 15.5-15t19.5-5q10 0 19.5 5t15.5 15l370 640q6 10 5.5 20.5T885-140q-5 9-14 14.5t-20 5.5H109Zm69-80h604L480-720 178-200Zm330.5-51.5Q520-263 520-280t-11.5-28.5Q497-320 480-320t-28.5 11.5Q440-297 440-280t11.5 28.5Q463-240 480-240t28.5-11.5Zm0-120Q520-383 520-400v-120q0-17-11.5-28.5T480-560q-17 0-28.5 11.5T440-520v120q0 17 11.5 28.5T480-360q17 0 28.5-11.5ZM480-460Z"/></symbol>
+        <symbol id="icon-info-fill" viewBox="0 -960 960 960"><path d="M508.5-291.5Q520-303 520-320v-160q0-17-11.5-28.5T480-520q-17 0-28.5 11.5T440-480v160q0 17 11.5 28.5T480-280q17 0 28.5-11.5Zm0-320Q520-623 520-640t-11.5-28.5Q497-680 480-680t-28.5 11.5Q440-657 440-640t11.5 28.5Q463-600 480-600t28.5-11.5ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z"/></symbol>
+        <symbol id="icon-info-outline" viewBox="0 -960 960 960"><path d="M508.5-291.5Q520-303 520-320v-160q0-17-11.5-28.5T480-520q-17 0-28.5 11.5T440-480v160q0 17 11.5 28.5T480-280q17 0 28.5-11.5Zm0-320Q520-623 520-640t-11.5-28.5Q497-680 480-680t-28.5 11.5Q440-657 440-640t11.5 28.5Q463-600 480-600t28.5-11.5ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/></symbol>
+        <symbol id="icon-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></symbol>
+        <symbol id="icon-empty-search" viewBox="0 -960 960 960"><path d="M508.5-331.5Q520-343 520-360t-11.5-28.5Q497-400 480-400t-28.5 11.5Q440-377 440-360t11.5 28.5Q463-320 480-320t28.5-11.5Zm0-160Q520-503 520-520v-120q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640v120q0 17 11.5 28.5T480-480q17 0 28.5-11.5ZM467-85q-6-1-12-3-135-45-215-166.5T160-516v-189q0-25 14.5-45t37.5-29l240-90q14-5 28-5t28 5l240 90q23 9 37.5 29t14.5 45v189q0 140-80 261.5T505-88q-6 2-12 3t-13 1q-7 0-13-1Zm13-79q104-33 172-132t68-220v-189l-240-90-240 90v189q0 121 68 220t172 132Zm0-316Z"/></symbol>
+        <symbol id="icon-empty-report" viewBox="0 -960 960 960"><path d="m438-452-56-56q-12-12-28-12t-28 12q-12 12-12 28.5t12 28.5l84 85q12 12 28 12t28-12l170-170q12-12 12-28.5T636-593q-12-12-28.5-12T579-593L438-452Zm29 367q-6-1-12-3-135-45-215-166.5T160-516v-189q0-25 14.5-45t37.5-29l240-90q14-5 28-5t28 5l240 90q23 9 37.5 29t14.5 45v189q0 140-80 261.5T505-88q-6 2-12 3t-13 1q-7 0-13-1Zm13-79q104-33 172-132t68-220v-189l-240-90-240 90v189q0 121 68 220t172 132Zm0-316Z"/></symbol>
+        <symbol id="icon-sort-name" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 0-2 2v8h2v-4h2v4h2V9a2 2 0 0 0-2-2zm0 2h2v2H3m12-.5V9a2 2 0 0 0-2-2H9v10h4a2 2 0 0 0 2-2v-1.5a1.5 1.5 0 0 0-1.5-1.5 1.5 1.5 0 0 0 1.5-1.5M13 15h-2v-2h2zm0-4h-2V9h2m6-2a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-1h-2v1h-2V9h2v1h2V9a2 2 0 0 0-2-2Z"/></symbol>
+        <symbol id="icon-sort-count" viewBox="0 0 24 24"><path d="M4 17V9H2V7h4v10zm18-2a2 2 0 0 1-2 2h-4v-2h4v-2h-2v-2h2V9h-4V7h4a2 2 0 0 1 2 2v1.5a1.5 1.5 0 0 1-1.5 1.5 1.5 1.5 0 0 1 1.5 1.5zm-8 0v2H8v-4q.2-1.8 2-2h2V9H8V7h4a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-2v2z"/></symbol>
+        <symbol id="icon-chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></symbol>
+    </defs>
+</svg>
 
-            <button id="reset-button" class="reset-btn hidden" title="Load New File">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-                    <line x1="12" y1="11" x2="12" y2="17"></line>
-                    <line x1="9" y1="14" x2="15" y2="14"></line>
-                </svg>
-            </button>
-            <button id="theme-toggle" class="theme-toggle" title="Toggle Theme"></button>
-            <a href="https://github.com/SimonMarquis/Lint-Playground?utm_source=sarif-viewer" target="_blank" rel="noopener noreferrer" class="header-link" title="View on GitHub">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
-                </svg>
-            </a>
-        </div>
-    </header>
+<header>
+    <h1>
+        <svg class="svg-icon-fill header-logo"><use href="#icon-logo"/></svg>
+        <span class="title-text">
+            <span class="title-prefix">Android Lint</span><span class="title-suffix">SARIF Viewer</span>
+        </span>
+    </h1>
+    <div class="header-controls">
+        <div id="report-info"></div>
+        <!--region REMOVE-IN-EMBEDDED-REPORT-->
+        <button id="open-button" class="open-button" title="Load New File">
+            <svg class="svg-icon" width="20" height="20"><use href="#icon-open"/></svg>
+        </button>
+        <!--endregion REMOVE-IN-EMBEDDED-REPORT-->
+        <button id="theme-toggle" class="theme-toggle" title="Toggle Theme">
+            <svg class="icon-sun svg-icon" width="20" height="20"><use href="#icon-sun"/></svg>
+            <svg class="icon-moon svg-icon" width="20" height="20"><use href="#icon-moon"/></svg>
+        </button>
+        <a href="https://github.com/SimonMarquis/Lint-Playground?utm_source=sarif-viewer" target="_blank" rel="noopener noreferrer" class="header-link" title="View on GitHub">
+            <svg class="svg-icon" width="20" height="20"><use href="#icon-github"/></svg>
+        </a>
+    </div>
+</header>
 
-    <main>
-        <div id="drop-zone">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-                <line x1="12" y1="11" x2="12" y2="17"></line>
-                <line x1="9" y1="14" x2="15" y2="14"></line>
-            </svg>
-            <div class="drop-text-main">Drop your SARIF file here</div>
-            
+<main>
+    <div id="loader-container" class="loader-container">
+        <span class="loader"></span>
+    </div>
+
+    <!--region REMOVE-IN-EMBEDDED-REPORT-->
+    <div id="drop-zone" class="is-hidden">
+        <svg class="svg-icon"><use href="#icon-open"/></svg>
+        <div class="drop-text-main">Drop your SARIF file here</div>
+
+        <div id="example-container" class="is-hidden">
             <div class="or-separator">
                 <span>or</span>
             </div>
 
-            <div class="drop-actions" id="load-example-wrapper">
-                load report from <strong>android/nowinandroid</strong> project
-            </div>
-            <input type="file" id="file-input" accept=".sarif,.json" style="display:none">
+            <div class="drop-actions" id="load-example-wrapper"></div>
         </div>
-
-        <div id="results-container">
-            <div class="metrics-grid">
-                <div class="metric-card">
-                    <div class="metric-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                    </div>
-                    <div class="metric-value" id="metric-total">0</div>
-                    <div class="metric-label">Total Issues</div>
-                </div>
-                <div class="metric-card is-error">
-                    <div class="metric-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                            <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon>
-                            <line x1="9" y1="9" x2="15" y2="15"></line>
-                            <line x1="15" y1="9" x2="9" y2="15"></line>
-                        </svg>
-                    </div>
-                    <div class="metric-value" id="metric-errors">0</div>
-                    <div class="metric-label">Errors</div>
-                </div>
-                <div class="metric-card is-warning">
-                    <div class="metric-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-                    </div>
-                    <div class="metric-value" id="metric-warnings">0</div>
-                    <div class="metric-label">Warnings</div>
-                </div>
-                <div class="metric-card is-info">
-                    <div class="metric-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                    </div>
-                    <div class="metric-value" id="metric-info">0</div>
-                    <div class="metric-label">Hints</div>
-                </div>
-            </div>
-
-            <div class="filter-section">
-                <div class="search-row">
-                    <div class="search-icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="11" cy="11" r="8"></circle>
-                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                        </svg>
-                    </div>
-                    <input type="text" id="filter-text" class="filter-input">
-                    <span class="search-hint" id="search-hint">Type <kbd>/</kbd> to search</span>
-                </div>
-                <div class="filter-group">
-                    <div class="filter-label">Severity</div>
-                    <div class="pills-container" id="severity-pills">
-                        <button class="pill active" data-value="all">All</button>
-                        <button class="pill" data-value="error" data-severity="error">Error</button>
-                        <button class="pill" data-value="warning" data-severity="warning">Warning</button>
-                        <button class="pill" data-value="info" data-severity="info">Hint</button>
-                    </div>
-                </div>
-                <div class="filter-group">
-                    <div class="filter-label">Category</div>
-                    <div class="pills-container" id="category-pills">
-                        <button class="pill active" data-value="all">All</button>
-                    </div>
-                </div>
-                <div class="filter-group">
-                    <div class="filter-label">Issue ID</div>
-                    <div class="pills-container" id="issue-id-pills">
-                        <button class="pill active" data-value="all">All</button>
-                    </div>
-                </div>
-            </div>
-
-            <div id="issue-list" class="issue-list"></div>
-            <div id="empty-filter-state" class="empty-state hidden">
-                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    <line x1="8" y1="11" x2="14" y2="11"></line>
-                </svg>
-                <span class="empty-state-title">No matching issues found!</span>
-                <span class="empty-state-subtitle">Try adjusting your filters or search query.</span>
-            </div>
-        </div>
-    </main>
-
-    <div id="toast" class="toast hidden"></div>
-
-    <div id="drag-overlay" class="hidden">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-            <line x1="12" y1="11" x2="12" y2="17"></line>
-            <line x1="9" y1="14" x2="15" y2="14"></line>
-        </svg>
-        <h2 style="font-size: 1.5rem; font-weight: 600;">Drop to Load New File</h2>
+        <input type="file" id="file-input" accept=".sarif,.json">
     </div>
+    <!--endregion REMOVE-IN-EMBEDDED-REPORT-->
 
-    <script id="sarif-example" data-src="lint-results-demoDebug.sarif" type="application/json"></script>
-    <!--<script id="sarif-example" type="application/gzip+base64">H4sICJmRi2kAA3NtYWxsLnNhcmlmAMVVTW/bMAz9K4IwoIel9up2wJqlWbvusAIdMDTdaRkCxWJsDbZkSHTSrMh/H2U7qfPdw4A5h+iDfHokn6hn/sbFKeSCd3mKWLhuGFoxCxKFaTkuHdjYaASNQWzy0Ain3CnGLnTCqsmpKyAOc+EQbDioYFAst6rpaRScBe+C385o3uFTsE7RqMurZVqxpXa8+/OZozEZ7z5zaRVZ+ZEWOZDljZbWKMnulcY1iA9B1EBkUGMoSctfhZWxkSAf4ck7uNRY/AIutqrAypMO81stU1YtLDpcwkSUGd4aPVFJacXSIYMpED0O1hrrDQtrCrCo/MmEJxLPgN8aayFGDc7RyXeUN6srDJGpPzXYr8Wi0zD9oSm98gGcKW0M7jDX2pjZlfUr2M6E1Uon+/l+BzsxNhc6hjaxx3lhjtAZFJBlhM1WGTlGRhuE12WOmHgynGIlwLq0vsh3u8qbk4dIYGdVHVpPccgH5ThXOOQdRiGVmWSUS3bdbC9T6smt15nmJq4CqUkU6dypWGT3zao/VFAoExFje620ijBEUYTO+uuhdEiHhJmYmxJDMlZThfOR3wie8oxXsSaNs0OCJLFTSGfvO/X01mRlTrvReYeDli+7NFntXRJMdVef8GEnWkRoWhUFYCtbjL7e5xLR6KFmzSfqO9dV8mrIr98qGboqg6Nxbci3TevgRjMlMSWnmRXFqOkcu8z96VcvhdmLl4JKUtwCZGGfLxZeJ52WNrYv1LY6HlNYVZydPAS1CIKych3VsxNGtQNhHUPDxsDqzbY+ljfrHytkKrKS/moW7qA2LjakcXbZksbFmjLOoyPK2C+M5or4Vkw1IL4jPxzy/rc5uymKXkO1X9dv0zz24Y4cIPpwyGvQDA/7rdWCvJrWN6jmh10zkyiSZ//e/69Md0hl2eK2BULtwj85ykiSmXJMMHr4cqNZrpxrut5HJulFIoGyHIRuPEi1Q/6prZKq5f0/iUQbEjmPWhKJ1iVytHnskkhv9RrtEcC6XuqsbuimF76ANHXyv7+XESPqlwgAAA==</script>-->
-    <!-- Placeholder for embedded report (populated by CI/CD or other tools) -->
-    <script id="sarif-report" type="application/gzip+base64"></script>
+    <div id="results-container" class="is-hidden">
+        <div class="metric-grid">
+            <div class="metric-card is-active">
+                <div class="metric-icon"><svg class="svg-icon"><use href="#icon-list-fill"/></svg></div>
+                <div class="metric-value" id="metric-total">0</div>
+                <div class="metric-label">Total Issues</div>
+            </div>
+            <div class="metric-card is-error" data-value="error">
+                <div class="metric-icon"><svg class="svg-icon"><use href="#icon-error-outline"/></svg></div>
+                <div class="metric-value" id="metric-errors">0</div>
+                <div class="metric-label">Errors</div>
+            </div>
+            <div class="metric-card is-warning" data-value="warning">
+                <div class="metric-icon"><svg class="svg-icon"><use href="#icon-warning-outline"/></svg></div>
+                <div class="metric-value" id="metric-warnings">0</div>
+                <div class="metric-label">Warnings</div>
+            </div>
+            <div class="metric-card is-info" data-value="info">
+                <div class="metric-icon"><svg class="svg-icon"><use href="#icon-info-outline"/></svg></div>
+                <div class="metric-value" id="metric-info">0</div>
+                <div class="metric-label">Hints</div>
+            </div>
+        </div>
 
-    <script>
-        const debounce = (fn, delay) => {
-            let timeoutId;
-            return (...args) => {
-                clearTimeout(timeoutId);
-                timeoutId = setTimeout(() => fn(...args), delay);
-            };
-        };
+        <div class="filter-section">
+            <div class="search-container">
+                <div class="search-row">
+                    <div class="search-icon"><svg class="svg-icon" width="20" height="20"><use href="#icon-search"/></svg></div>
+                    <input type="text" id="filter-text" class="filter-input">
+                    <label class="search-hint" id="search-hint" for="filter-text">Type <kbd>/</kbd> to search</label>
+                    <button id="regex-toggle" class="regex-toggle" title="Use Regular Expression">.*</button>
+                </div>
+                <button id="sort-toggle" class="sort-button" title="Sorted by name">
+                    <svg class="svg-icon-fill" width="22" height="22"><use href="#icon-sort-name"/></svg>
+                </button>
+            </div>
+            <div class="filter-group" id="severity-group">
+                <div class="filter-label">Severity</div>
+                <button class="pill is-active all-pill">All</button>
+                <div class="pill-container" id="severity-pills"></div>
+            </div>
+            <div class="filter-group" id="category-group">
+                <div class="filter-label">Category</div>
+                <button class="pill is-active all-pill">All</button>
+                <div class="pill-container" id="category-pills"></div>
+            </div>
+            <div class="filter-group" id="rule-group">
+                <div class="filter-label">Rule ID</div>
+                <button class="pill is-active all-pill">All</button>
+                <div class="pill-container" id="rule-pills"></div>
+            </div>
+        </div>
 
-        async function decodeBase64GzipJson(b64) {
-            if (!("DecompressionStream" in window)) {
-                showError("DecompressionStream('gzip') not supported in this browser.");
-                return null;
-            }
+        <div id="issue-list" class="issue-list"></div>
+
+        <div id="empty-filter-state" class="empty-state is-hidden">
+            <svg class="svg-icon-fill" width="100" height="100"><use href="#icon-empty-search"/></svg>
+            <span class="empty-state-title">No matching issues found!</span>
+            <span class="empty-state-subtitle">Try adjusting your filters or search query.</span>
+        </div>
+
+        <div id="empty-report-state" class="empty-state is-hidden">
+            <svg class="svg-icon-fill" width="100" height="100"><use href="#icon-empty-report"/></svg>
+            <span class="empty-state-title">No issues found!</span>
+            <span class="empty-state-subtitle">This report contains no lint issues. Great job!</span>
+        </div>
+    </div>
+</main>
+
+<div id="toast" class="toast is-hidden"></div>
+
+<!--region REMOVE-IN-EMBEDDED-REPORT-->
+<div id="drag-overlay" class="is-hidden">
+    <svg class="svg-icon"><use href="#icon-open"/></svg>
+    <h2>Drop to Load New File</h2>
+</div>
+<!--endregion REMOVE-IN-EMBEDDED-REPORT-->
+
+<!--region SARIF-EMBEDDED-REPORT-->
+<script id="sarif-example" data-src="lint-results-demoDebug.sarif" data-project="android/nowinandroid" type="application/json"></script>
+<!-- Placeholders for embedded report (populated by CI/CD or other tools) -->
+<!--SARIF raw-->
+<!--<script id="sarif-report" type="application/json">{...}</script>-->
+<!--SARIF file-->
+<!--<script id="sarif-report" type="application/json" data-src="lint-results-demoDebug.sarif"></script>-->
+<!--SARIF b64 GZIP-->
+<!--<script id="sarif-report" type="application/gzip+base64">H4sICJmRi2kAA3NtYWxsLnNhcmlmAMVVTW/bMAz9K4IwoIel9up2wJqlWbvusAIdMDTdaRkCxWJsDbZkSHTSrMh/H2U7qfPdw4A5h+iDfHokn6hn/sbFKeSCd3mKWLhuGFoxCxKFaTkuHdjYaASNQWzy0Ain3CnGLnTCqsmpKyAOc+EQbDioYFAst6rpaRScBe+C385o3uFTsE7RqMurZVqxpXa8+/OZozEZ7z5zaRVZ+ZEWOZDljZbWKMnulcY1iA9B1EBkUGMoSctfhZWxkSAf4ck7uNRY/AIutqrAypMO81stU1YtLDpcwkSUGd4aPVFJacXSIYMpED0O1hrrDQtrCrCo/MmEJxLPgN8aayFGDc7RyXeUN6srDJGpPzXYr8Wi0zD9oSm98gGcKW0M7jDX2pjZlfUr2M6E1Uon+/l+BzsxNhc6hjaxx3lhjtAZFJBlhM1WGTlGRhuE12WOmHgynGIlwLq0vsh3u8qbk4dIYGdVHVpPccgH5ThXOOQdRiGVmWSUS3bdbC9T6smt15nmJq4CqUkU6dypWGT3zao/VFAoExFje620ijBEUYTO+uuhdEiHhJmYmxJDMlZThfOR3wie8oxXsSaNs0OCJLFTSGfvO/X01mRlTrvReYeDli+7NFntXRJMdVef8GEnWkRoWhUFYCtbjL7e5xLR6KFmzSfqO9dV8mrIr98qGboqg6Nxbci3TevgRjMlMSWnmRXFqOkcu8z96VcvhdmLl4JKUtwCZGGfLxZeJ52WNrYv1LY6HlNYVZydPAS1CIKych3VsxNGtQNhHUPDxsDqzbY+ljfrHytkKrKS/moW7qA2LjakcXbZksbFmjLOoyPK2C+M5or4Vkw1IL4jPxzy/rc5uymKXkO1X9dv0zz24Y4cIPpwyGvQDA/7rdWCvJrWN6jmh10zkyiSZ//e/69Md0hl2eK2BULtwj85ykiSmXJMMHr4cqNZrpxrut5HJulFIoGyHIRuPEi1Q/6prZKq5f0/iUQbEjmPWhKJ1iVytHnskkhv9RrtEcC6XuqsbuimF76ANHXyv7+XESPqlwgAAA==</script>-->
+<!--endregion SARIF-EMBEDDED-REPORT-->
+
+<script>
+    // #region Utilities
+    const Perf = {
+        start: (name) => performance.mark(`${name}-start`),
+        end: (name) => {
+            performance.mark(`${name}-end`);
+            performance.measure(name, `${name}-start`, `${name}-end`);
+            console.log(`⏱️ [${name}] ${Number(performance.getEntriesByName(name).pop().duration.toFixed(2))} ms`);
+            performance.clearMarks(`${name}-start`);
+            performance.clearMarks(`${name}-end`);
+            performance.clearMeasures(name);
+        },
+        trace: (name, fn) => {
+            Perf.start(name);
             try {
-                const cleanB64 = b64.trim();
-                const binaryString = atob(cleanB64);
-                const bytes = Uint8Array.from(binaryString, c => c.charCodeAt(0));
-                const stream = new Blob([bytes]).stream()
-                    .pipeThrough(new DecompressionStream("gzip"));
-                const text = await new Response(stream).text();
-                return JSON.parse(text);
+                const result = fn();
+                if (result && typeof result.then === "function") return result.finally(() => Perf.end(name));
+                Perf.end(name);
+                return result;
             } catch (err) {
-                console.error("Decompression failed", err);
-                showError("Failed to decompress example file: " + err.message);
-                return null;
+                Perf.end(name);
+                throw err;
             }
-        }
+        },
+    };
 
-        async function copyToClipboard(text) {
-            try {
-                await navigator.clipboard.writeText(text);
-                showToast(`Path copied to clipboard!`, false);
-            } catch (err) {
-                console.error('Failed to copy: ', err);
-                showToast('Failed to copy to clipboard', true);
-            }
-        }
-
-        const toast = document.getElementById('toast');
-        function showToast(msg, isError = false) {
-            toast.textContent = msg;
-            toast.className = 'toast';
-            if (isError) toast.classList.add('toast-error');
-            else toast.classList.add('toast-info');
-            toast.classList.remove('hidden');
-            setTimeout(() => toast.classList.add('hidden'), isError ? 10000 : 3000);
-        }
-
-        function showError(msg) { showToast(msg, true); }
-
-        function sanitize(str) {
-            if (!str) return '';
-            const div = document.createElement('div');
-            div.textContent = str;
-            return div.innerHTML;
-        }
-
-        function formatMarkdown(text) {
-            if (!text) return '';
-            let html = sanitize(text);
-            const parts = html.split(/(`[^`]+`)/);
-            for (let i = 0; i < parts.length; i++) {
-                if (parts[i].startsWith('`') && parts[i].endsWith('`') && parts[i].length > 1) {
-                    const content = parts[i].substring(1, parts[i].length - 1);
-                    parts[i] = `<code class="formatted-code">${content}</code>`;
-                } else {
-                    let s = parts[i];
-                    s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>'); 
-                    s = s.replace(/__([^_]+)__/g, '<u>$1</u>');      
-                    s = s.replace(/~~([^~]+)~~/g, '<del>$1</del>');   
-                    s = s.replace(/\*([^*]+)\*/g, '<em>$1</em>');     
-                    parts[i] = s;
-                }
-            }
-            return parts.join('');
-        }
-
-        const themeToggle = document.getElementById('theme-toggle');
-        const iconSun = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
-        const iconMoon = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
-
-        function initTheme() {
-            const savedTheme = localStorage.getItem('theme');
-            const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            applyTheme(savedTheme || (systemDark ? 'dark' : 'light'), false);
-        }
-
-        function applyTheme(theme, persist = true) {
-            document.documentElement.setAttribute('data-theme', theme);
-            themeToggle.innerHTML = theme === 'dark' ? iconSun : iconMoon;
-            if (persist) localStorage.setItem('theme', theme);
-        }
-
-        themeToggle.addEventListener('click', () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
-            applyTheme(currentTheme === 'dark' ? 'light' : 'dark', true);
-        });
-
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-            if (!localStorage.getItem('theme')) applyTheme(e.matches ? 'dark' : 'light', false);
-        });
-
-        initTheme();
-
-        const state = {
-            rawIssues: [],
-            filteredIssues: [],
-            categories: new Set(),
-            uniqueIssueIds: new Set(),
-            rules: new Map(),
-            filename: '',
-            driverInfo: { name: '', version: '' },
-            reportDate: null,
-            fileLastModified: null,
-            filters: {
-                text: '',
-                categories: new Set(['all']),
-                issueIds: new Set(['all']),
-                severities: new Set(['all'])
-            }
+    const debounce = (fn, delay) => {
+        let timeoutId;
+        return (...args) => {
+            const callNow = !timeoutId;
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => {
+                timeoutId = null;
+                if (!callNow) fn(...args);
+            }, delay);
+            if (callNow) fn(...args);
         };
+    };
 
-        const dropZone = document.getElementById('drop-zone');
-        const fileInput = document.getElementById('file-input');
-        const resultsContainer = document.getElementById('results-container');
-        const reportInfoContainer = document.getElementById('report-info');
-        const resetButton = document.getElementById('reset-button');
-        const issueList = document.getElementById('issue-list');
-        const emptyFilterState = document.getElementById('empty-filter-state');
-        const filterText = document.getElementById('filter-text');
-        const searchHint = document.getElementById('search-hint');
-        const severityPillsContainer = document.getElementById('severity-pills');
-        const categoryPillsContainer = document.getElementById('category-pills');
-        const issueIdPillsContainer = document.getElementById('issue-id-pills');
-        const dragOverlay = document.getElementById('drag-overlay');
-        const exampleLoadWrapper = document.getElementById('load-example-wrapper');
-        const metricTotal = document.getElementById('metric-total');
-        const metricErrors = document.getElementById('metric-errors');
-        const metricWarnings = document.getElementById('metric-warnings');
-        const metricInfo = document.getElementById('metric-info');
+    const normalize = (str) =>
+      str.normalize("NFD")
+         .replace(/[\u0300-\u036f]/g, "")
+         .toLowerCase();
 
-        // URL Synchronization Logic
-        function updateURL() {
-            const params = new URLSearchParams();
-            if (state.filters.text) params.set('query', state.filters.text);
-            
-            ['categories', 'issueIds', 'severities'].forEach(key => {
-                const set = state.filters[key];
-                if (!set.has('all') && set.size > 0) {
-                    const paramName = key === 'issueIds' ? 'issueId' : (key === 'severities' ? 'severity' : 'category');
-                    params.set(paramName, Array.from(set).join(','));
+    const truncate = (str, maxLength) => str.length <= maxLength ? str : str.slice(0, maxLength - 1) + '…';
+
+    const searchRegex = (query) => new RegExp(query, 'i');
+
+    // Custom sortBy with mutliple comparators
+    [Array, Set].forEach(Ctor => {
+        Ctor.prototype.sortBy = function(...comparators) {
+            const arr = this instanceof Set ? Array.from(this) : this;
+            return arr.sort((a, b) => {
+                for (const compare of comparators) {
+                    const result = compare(a, b);
+                    if (result !== 0) return result;
                 }
+                return 0;
             });
+        };
+    });
 
-            const newUrl = `${window.location.pathname}?${params.toString()}`;
-            try {
-                window.history.replaceState({ path: newUrl }, '', newUrl);
-            } catch (e) {
-                // Silently fail in restricted environments (blob:, sandboxed iframes)
-            }
+    Array.prototype.associateBy = function(keySelector, valueTransform) { return Object.fromEntries(this.map(item => [keySelector(item), valueTransform(item)])); };
+    Array.prototype.toSet = function() { return new Set(this); };
+    Object.prototype.keys = function() { return Object.keys(this); };
+    Object.prototype.values = function() { return Object.values(this); };
+    Object.prototype.entries = function() { return Object.entries(this); };
+
+    const SEVERITY_LEVELS = { error: 'error', warning: 'warning', note: 'info', none: 'info' };
+    const SEVERITY_LABELS = { error: 'Error', warning: 'Warning', info: 'Hint' };
+    const SEVERITY_WEIGHTS = { error: 3, warning: 2, info: 1 };
+    // #endregion
+
+    // #region State
+    const DOM = {
+        // #region REMOVE-IN-EMBEDDED-REPORT
+        dragOverlay: document.getElementById('drag-overlay'),
+        dropZone: document.getElementById('drop-zone'),
+        exampleContainer: document.getElementById('example-container'),
+        fileInput: document.getElementById('file-input'),
+        loadExampleWrapper: document.getElementById('load-example-wrapper'),
+        openButton: document.getElementById('open-button'),
+        // #endregion REMOVE-IN-EMBEDDED-REPORT
+        emptyFilterState: document.getElementById('empty-filter-state'),
+        emptyReportState: document.getElementById('empty-report-state'),
+        filters: {
+            severities: { param: 'severity', group: document.getElementById('severity-group'), pills: document.getElementById('severity-pills') },
+            categories: { param: 'category', group: document.getElementById('category-group'), pills: document.getElementById('category-pills') },
+            rules: { param: 'rule', group: document.getElementById('rule-group'), pills: document.getElementById('rule-pills') }
+        },
+        filterText: document.getElementById('filter-text'),
+        issueList: document.getElementById('issue-list'),
+        loaderContainer: document.getElementById('loader-container'),
+        metrics: {
+            grid: document.querySelector('.metric-grid'),
+            total: document.getElementById('metric-total'),
+            error: document.getElementById('metric-errors'),
+            warning: document.getElementById('metric-warnings'),
+            info: document.getElementById('metric-info')
+        },
+        regexToggle: document.getElementById('regex-toggle'),
+        reportInfo: document.getElementById('report-info'),
+        resultsContainer: document.getElementById('results-container'),
+        searchHint: document.getElementById('search-hint'),
+        sortToggle: document.getElementById('sort-toggle'),
+        themeToggle: document.getElementById('theme-toggle'),
+        toast: document.getElementById('toast'),
+    };
+
+    const EMPTY_STATE = Object.freeze({
+        issues: { all: [], matching: [], filtered: [] },
+        rulesById: {},
+        metadata: null,
+        filters: {
+            text: '',
+            isRegex: false,
+            isSortingByCount: false,
+            severities: new Set(),
+            categories: new Set(),
+            rules: new Set(),
         }
+    });
 
-        function readURL() {
-            const params = new URLSearchParams(window.location.search);
-            
-            const query = params.get('query');
-            if (query) {
-                state.filters.text = query;
-                filterText.value = query;
-                searchHint.style.opacity = '0';
-            } else {
-                state.filters.text = '';
-                filterText.value = '';
-                searchHint.style.opacity = '1';
-            }
+    const state = structuredClone(EMPTY_STATE);
+    // #endregion
 
-            const readSet = (paramName, targetSet) => {
-                const val = params.get(paramName);
-                targetSet.clear();
-                if (val) {
-                    val.split(',').forEach(v => targetSet.add(v.trim()));
-                } else {
-                    targetSet.add('all');
-                }
-            };
+    // #region Helpers
+    const parseJson = text => Perf.trace('JSON parse', () => JSON.parse(text));
 
-            readSet('severity', state.filters.severities);
-            readSet('category', state.filters.categories);
-            readSet('issueId', state.filters.issueIds);
+    async function decodeGzipBase64(base64) {
+        if (!("DecompressionStream" in window)) {
+            showError("DecompressionStream('gzip') not supported in this browser.");
+            return null;
         }
+        try {
+            return await Perf.trace('Base64 decode & unzip', async () => {
+                const bytes = Uint8Array.from(atob(base64.trim()), c => c.charCodeAt(0));
+                const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream("gzip"));
+                return await new Response(stream).text();
+            });
+        } catch (err) {
+            showError(`Failed to decompress embedded file: ${err.message}`, err);
+            return null;
+        }
+    }
 
-        window.addEventListener('popstate', () => {
-            readURL();
-            if (state.rawIssues.length > 0) {
-                updatePillVisuals(severityPillsContainer, state.filters.severities);
-                updatePillVisuals(categoryPillsContainer, state.filters.categories);
-                updatePillVisuals(issueIdPillsContainer, state.filters.issueIds);
-                applyFilters();
+    async function copyToClipboard(text) {
+        try {
+            await navigator.clipboard.writeText(text);
+            showToast('Path copied to clipboard!', false);
+        } catch (err) {
+            showError('Failed to copy to clipboard', err);
+        }
+    }
+
+    function showToast(message, isError = false) {
+        DOM.toast.textContent = message;
+        DOM.toast.className = `toast ${isError ? 'is-error' : 'is-info'}`;
+        DOM.toast.classList.remove('is-hidden');
+        setTimeout(() => DOM.toast.classList.add('is-hidden'), isError ? 10000 : 3000);
+    }
+
+    function showError(message, error) {
+        if (error) console.error(error);
+        showToast(message, true);
+    }
+
+    function sanitize(str) {
+        if (!str) return '';
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
+    function formatMarkdown(text) {
+        if (!text) return '';
+        return sanitize(text).split(/(```[\s\S]*?```|`[^`]+`)/).map(part => {
+            if (part.startsWith('```') && part.endsWith('```')) {
+                const [, lang, content] = part.match(/```(\w*)\n?([\s\S]*?)```/) || [];
+                return content ? `<pre><code${lang ? ` class="language-${lang}"` : ''}>${content.trimEnd()}</code></pre>` : part;
             }
+            if (part.startsWith('`') && part.endsWith('`') && part.length > 1) {
+                return `<code class="formatted-code">${part.slice(1, -1)}</code>`;
+            }
+            return part.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+                       .replace(/__([^_]+)__/g, '<u>$1</u>')
+                       .replace(/~~([^~]+)~~/g, '<del>$1</del>')
+                       .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+                       .replace(/\n/g, '<br>');
+        }).join('');
+    }
+
+    const getMarkdownOrText = obj => obj?.markdown || obj?.text || "";
+    // #endregion
+
+    // #region SARIF
+    async function loadSarifFromScript(elementId, defaultFilename, keepUrlParams = false) {
+        const element = document.getElementById(elementId);
+        if (!element) return false;
+
+        const src = element.getAttribute('data-src');
+        const type = element.getAttribute('type');
+        const content = element.textContent.trim();
+        if (!src && !content) return false;
+
+        const json = await Perf.trace('Fetch report', async () => {
+            if (src) {
+                const response = await fetch(src);
+                if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                return await response.text();
+            } else if (type === 'application/json') {
+                return content;
+            } else if (type === 'application/gzip+base64') {
+                return await decodeGzipBase64(content);
+            }
+            throw new Error("Unknown data format type.");
         });
 
-        // Initialize from URL immediately
+        if (!json) return false;
+        loadSarifData(parseJson(json), element.getAttribute('title') || src || defaultFilename, Date.now(), keepUrlParams);
+        return true;
+    }
+
+    function loadSarifFromFiles(files) {
+        if (!files || files.length === 0) return;
+        const file = files[0];
+        const fileName = file.name.toLowerCase();
+
+        if (!fileName.endsWith('.sarif') && !fileName.endsWith('.json')) {
+            return showError("Invalid file format. Please use .sarif or .json files.");
+        }
+
+        showLoadingPage();
+        Perf.start('File read');
+        const reader = new FileReader();
+        reader.onload = event => {
+            Perf.end('File read');
+            try {
+                loadSarifData(parseJson(event.target.result), file.name, file.lastModified);
+            } catch (err) {
+                state.filename = '';
+                DOM.reportInfo.innerHTML = '';
+                showError(err.message || "Could not parse JSON.", err);
+                showStartupPage();
+            }
+        };
+        reader.onerror = () => {
+            Perf.end('File read');
+            showError("Error reading file.");
+            showStartupPage();
+        };
+        reader.readAsText(file);
+    }
+
+    function loadSarifData(json, filename, lastModified, keepUrlParams = false) {
+        resetApp(!keepUrlParams);
+        processSarif(json, { filename: filename, fileLastModified: lastModified });
+    }
+
+    function processSarif(sarif, metadata) {
+        if (!sarif?.runs || !Array.isArray(sarif.runs)) throw new Error("Invalid SARIF: Missing 'runs' array.");
+        const run = sarif.runs[0] || {};
+
+        const driver = run.tool?.driver || {};
+        const sarifDate = run.invocations?.[0]?.endTimeUtc || run.invocations?.[0]?.startTimeUtc;
+        state.metadata = {
+            ...metadata,
+            driverInfo: {
+                name: driver.fullName || driver.name || "Unknown Tool",
+                version: driver.semanticVersion || driver.version || ""
+            },
+            reportDate: sarifDate ? new Date(sarifDate) : (metadata.fileLastModified ? new Date(metadata.fileLastModified) : new Date()),
+        }
+        renderMetadata();
+
+        state.rulesById = Perf.trace(
+            'Extract rules',
+            () => (driver.rules || []).associateBy(
+                r => r.id,
+                r => ({
+                    id: r.id,
+                    label: r.shortDescription?.text,
+                    categories: r.tags || r.properties?.tags || [],
+                    level: SEVERITY_LEVELS[r.defaultConfiguration?.level] || SEVERITY_LEVELS.warning,
+                    description: getMarkdownOrText(r.fullDescription),
+                }),
+            ),
+        );
+
+        state.issues.all = Perf.trace(
+            'Extract issues',
+            () => (run.results || []).map(it => {
+                const rule = state.rulesById[it.ruleId];
+                const location = it.locations?.[0]?.physicalLocation;
+                const context = location?.contextRegion;
+                return {
+                    id: crypto.randomUUID(),
+                    ruleId: it.ruleId,
+                    message: getMarkdownOrText(it.message) || "No message",
+                    categories: rule?.categories || [],
+                    file: location?.artifactLocation?.uri || "Unknown",
+                    line: location?.region?.startLine,
+                    column: location?.region?.startColumn,
+                    level: it.level || rule?.level || SEVERITY_LEVELS.warning,
+                    snippet: context?.snippet?.text ? {
+                        text: context?.snippet.text,
+                        startLine: context?.startLine
+                    } : null,
+                    region: location?.region || {},
+                    relatedLocations: (it.relatedLocations || []).map(l => ({
+                        file: l.physicalLocation?.artifactLocation?.uri || "Unknown",
+                        line: l.physicalLocation?.region?.startLine,
+                        column: l.physicalLocation?.region?.startColumn,
+                        message: getMarkdownOrText(l.message) || ""
+                    }))
+                };
+            }).sortBy(
+                (a, b) => a.file.localeCompare(b.file),
+                (a, b) => (a.line || 0) - (b.line || 0),
+                (a, b) => (a.column || 0) - (b.column || 0),
+            )
+        );
+
+        renderMetricsCounters();
+        renderMetricsCards();
+        renderSortToggle();
+        renderPills();
+        renderIssues();
+        showResultsPage();
+        applyFilters();
+    }
+    // #endregion
+
+    // #region Logic
+    function applyTheme(theme, persist = true) {
+        if (persist) localStorage.setItem('theme', theme);
+        renderTheme(theme);
+    }
+
+    function applyFilters() {
+        writeURL();
+        Perf.trace('Filtering issues', () => {
+            const query = state.filters.text?.trim();
+            const queryNormalized = normalize(query);
+
+            // update matching issues based on query
+            if (!query) {
+                state.issues.matching = state.issues.all
+            } else {
+                let regex = null;
+                if (state.filters.isRegex) try { regex = searchRegex(query) } catch (e) { }
+
+                const matchedCategories = [...state.rulesById.values().flatMap(r => r.categories).toSet()]
+                        .filter(c => state.filters.isRegex && regex ? regex.test(c) : normalize(c).includes(queryNormalized))
+                        .toSet();
+
+                const matchedRules = state.rulesById.values()
+                    .filter(({id, label, description, categories}) => {
+                        if (categories.some(c => matchedCategories.has(c))) return true;
+                        if (regex) {
+                            if (regex.test(id)) return true;
+                            if (regex.test(label)) return true;
+                            if (regex.test(description)) return true;
+                        } else {
+                            if (normalize(id).includes(queryNormalized)) return true;
+                            if (normalize(label).includes(queryNormalized)) return true;
+                            if (normalize(description).includes(queryNormalized)) return true;
+                        }
+                        return false;
+                    })
+                    .map(r => r.id)
+                    .toSet();
+
+                state.issues.matching = state.issues.all
+                    .filter(i => {
+                        if (matchedRules.has(i.ruleId)) return true;
+                        if (regex) {
+                            if (regex.test(i.ruleId)) return true;
+                            if (regex.test(i.message)) return true;
+                            if (regex.test(i.file)) return true;
+                        } else {
+                            if (normalize(i.ruleId).includes(queryNormalized)) return true;
+                            if (normalize(i.message).includes(queryNormalized)) return true;
+                            if (normalize(i.file).includes(queryNormalized)) return true;
+                        }
+                        return false;
+                    });
+            }
+
+            // filter issues based on active filters
+            state.issues.filtered = state.issues.matching.filter(i => {
+                if (state.filters.severities.size > 0 && !state.filters.severities.has(i.level)) return false;
+                if (state.filters.categories.size > 0 && !state.rulesById[i.ruleId].categories.some(c => state.filters.categories.has(c))) return false;
+                if (state.filters.rules.size > 0 && !state.filters.rules.has(i.ruleId)) return false;
+                return true;
+            });
+        });
+
+        updatePills();
+        updateIssues();
+    }
+
+    function readURL() {
+        const params = new URLSearchParams(window.location.search);
+        state.filters.text = params.get('query') || '';
+        state.filters.isRegex = params.get('regex') === 'true';
+        DOM.filters.entries().forEach(([type, config]) => {
+            const value = params.get(config.param);
+            state.filters[type].clear();
+            if (!value) return;
+            value.split(',').forEach(v => state.filters[type].add(v.trim()));
+        });
+    }
+
+    function writeURL() {
+        const params = new URLSearchParams();
+        if (state.filters.text) params.set('query', state.filters.text);
+        if (state.filters.isRegex) params.set('regex', 'true');
+
+        DOM.filters.entries().forEach(([type, config]) => {
+            const set = state.filters[type];
+            if (set.size === 0) return;
+            params.set(config.param, Array.from(set).join(','));
+        });
+
+        const queryString = params.toString();
+        const newUrl = queryString ? `${window.location.pathname}?${queryString}` : window.location.pathname;
+        try {
+            window.history.replaceState({ path: newUrl }, '', newUrl);
+        } catch (e) {}
+    }
+
+    function onPillClicked(event, filterType) {
+        const target = event.target.closest('.pill') || event.target.closest('.metric-card');
+        if (!target) return;
+
+        const value = target.getAttribute('data-value');
+        const filters = state.filters[filterType];
+
+        if (!value) {
+            filters.clear();
+        } else {
+            if (filters.has(value)) filters.delete(value);
+            else filters.add(value);
+        }
+
+        if (filterType === 'severities') renderMetricsCards();
+        applyFilters();
+    }
+
+    function toggleIssueGroups(collapsed) {
+        DOM.issueList.querySelectorAll('.issue-group').forEach(g => {
+            g.classList.toggle('is-collapsed', collapsed);
+            const use = g.querySelector('.severity-icon use');
+            if (!use) return;
+            const href = use.getAttribute('href');
+            use.setAttribute('href', collapsed ? href.replace('-fill', '-outline') : href.replace('-outline', '-fill'));
+        });
+    }
+
+    function resetApp(resetFilters = true) {
+        Object.assign(state, structuredClone(EMPTY_STATE));
+        if (!resetFilters) readURL();
+        writeURL();
+
+        // #region REMOVE-IN-EMBEDDED-REPORT
+        DOM.fileInput.value = '';
+        // #endregion REMOVE-IN-EMBEDDED-REPORT
+
+        renderSearch(true);
+        renderMetadata();
+        renderMetricsCards();
+        showStartupPage();
+    }
+    // #endregion
+
+    // #region Rendering
+    function showStartupPage() {
+        // #region REMOVE-IN-EMBEDDED-REPORT
+        DOM.dropZone.classList.remove('is-hidden');
+        // #endregion REMOVE-IN-EMBEDDED-REPORT
+        DOM.loaderContainer.classList.add('is-hidden');
+        DOM.resultsContainer.classList.add('is-hidden');
+    }
+
+    function showResultsPage() {
+        // #region REMOVE-IN-EMBEDDED-REPORT
+        DOM.dropZone.classList.add('is-hidden');
+        // #endregion REMOVE-IN-EMBEDDED-REPORT
+        DOM.loaderContainer.classList.add('is-hidden');
+        DOM.resultsContainer.classList.remove('is-hidden');
+    }
+
+    function showLoadingPage() {
+        // #region REMOVE-IN-EMBEDDED-REPORT
+        DOM.dropZone.classList.add('is-hidden');
+        // #endregion REMOVE-IN-EMBEDDED-REPORT
+        DOM.loaderContainer.classList.remove('is-hidden');
+        DOM.resultsContainer.classList.add('is-hidden');
+    }
+
+    function renderTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        const color = getComputedStyle(document.documentElement).getPropertyValue('--bg-surface').trim();
+        document.querySelector('meta[name="theme-color"]')?.setAttribute('content', color);
+    }
+
+    function renderIssues() {
+        Perf.trace('Rendering issues', () => {
+            if (state.issues.all.length === 0) return DOM.issueList.innerHTML = '';
+            DOM.issueList.innerHTML = state.issues.all.reduce((acc, issue) => {
+                const key = `${issue.ruleId}::${issue.level}`;
+                (acc[key] || (acc[key] = { ruleId: issue.ruleId, level: issue.level, categories: state.rulesById[issue.ruleId].categories, issues: [] })).issues.push(issue);
+                return acc;
+            }, {})
+            .values()
+            .sortBy(
+                (a, b) => SEVERITY_WEIGHTS[b.level] - SEVERITY_WEIGHTS[a.level], // by severity
+                (a, b) => a.ruleId.localeCompare(b.ruleId), // by ruleId
+            )
+            .map(g => `
+                <div class="issue-group severity-${g.level}" data-group-key="${g.ruleId}::${g.level}">
+                    <details class="rule-details">
+                        <summary class="issue-group-header">
+                            <div class="issue-group-title">
+                                <svg class="severity-icon severity-${g.level}"><use href="#icon-${g.level}-fill"></use></svg>
+                                <span class="issue-rule-id" title="${sanitize(state.rulesById[g.ruleId].label)}">${sanitize(g.ruleId)}</span>
+                                <svg class="chevron-icon svg-icon chevron-icon-bold" width="18" height="18"><use href="#icon-chevron"/></svg>
+                            </div>
+                            <div class="issue-group-meta">
+                                <div class="category-wrapper">${g.categories.map(c => `<span class="category-badge">${sanitize(c)}</span>`).join('')}</div>
+                                <span class="issue-group-count"></span>
+                            </div>
+                        </summary>
+                        <div class="rule-description-content markdown-content">${formatMarkdown(state.rulesById[g.ruleId].description || "No description provided.")}</div>
+                    </details>
+                    <div class="issue-group-content">${g.issues.map(i => createIssueCard(i)).join('\n')}</div>
+                </div>
+            `)
+            .join('');
+        });
+    }
+
+    function createIssueCard(issue) {
+        let html = `<div class="issue-card" data-issue-id="${issue.id}"><div class="issue-message markdown-content"><span>${formatMarkdown(issue.message)}</span></div>`;
+        html += createLocationHtml(issue.file, issue.line, issue.column);
+        issue.relatedLocations?.forEach(l => {
+            html += `<div class="related-location-card">`;
+            if (l.message) html += `<div class="related-location-msg">${formatMarkdown(l.message)}</div>`;
+            html += createLocationHtml(l.file, l.line, l.column);
+            html += `</div>`;
+        });
+        if (issue.snippet) html += createCodeSnippet(issue);
+        html += `</div>`;
+        return html;
+    }
+
+    function createLocationHtml(file, line, column) {
+        const lastIndex = file.lastIndexOf('/');
+        const dir = sanitize(file.substring(0, lastIndex + 1));
+        const name = sanitize(file.substring(lastIndex + 1));
+        const showLine = line > 1 || (line === 1 && column > 0);
+        const showColumn = showLine && column > 0;
+        const linePart = showLine ? `:${line}` : '';
+        const colPart = showColumn ? `:${column}` : '';
+        const lineHtml = showLine ? `<span class="line-number">${linePart}</span>` : '';
+        const colHtml = showColumn ? `<span class="line-number">${colPart}</span>` : '';
+        return `<button class="issue-location"><span class="path-dir">${dir}</span><span class="path-name">${name}</span>${lineHtml}${colHtml}</button>`;
+    }
+
+    function createCodeSnippet(issue, max = 1000) {
+        const lines = issue.snippet.text.split('\n').map((line, idx) => {
+            line = truncate(line, max);
+            const currentLine = issue.snippet.startLine ? issue.snippet.startLine + idx : '';
+            const region = issue.region;
+            const startLine = region.startLine;
+            const endLine = region.endLine || startLine;
+            let content;
+            if (currentLine && startLine && currentLine >= startLine && currentLine <= endLine) {
+                const startCol = currentLine === startLine ? Math.max(0, (region.startColumn || 1) - 1) : 0;
+                const endCol = currentLine === endLine && region.endColumn ? Math.min(line.length, region.endColumn - 1) : line.length;
+                const visibleStart = Math.min(line.length, startCol);
+                const visibleEnd = Math.min(line.length, endCol);
+                if (visibleStart < visibleEnd) {
+                    content = `${sanitize(line.substring(0, visibleStart))}<span class="code-highlight">${sanitize(line.substring(visibleStart, visibleEnd))}</span>${sanitize(line.substring(visibleEnd))}`;
+                } else {
+                    content = sanitize(line);
+                }
+            } else {
+                content = sanitize(line);
+            }
+            return `<span class="code-line-number">${currentLine}</span><span class="code-content">${content}</span>`;
+        }).join('');
+        return `<div class="issue-code-snippet">${lines}</div>`;
+    }
+
+    function renderPills() {
+        [
+            [DOM.filters.severities, SEVERITY_LABELS.keys(),                                      it => SEVERITY_LABELS[it], (a, b) => SEVERITY_WEIGHTS[b] - SEVERITY_WEIGHTS[a]],
+            [DOM.filters.categories, state.rulesById.values().flatMap(r => r.categories).toSet(), it => it,                  (a, b) => a.localeCompare(b)],
+            [DOM.filters.rules,      state.rulesById.keys(),                                      it => it,                  (a, b) => a.localeCompare(b)],
+        ].forEach(([container, items, label, comparator]) => {
+            container.pills.innerHTML = items
+                .sortBy(comparator)
+                .map(it => `<button class="pill" data-value="${sanitize(it)}"><span class="pill-label">${sanitize(label(it))}</span><span class="pill-count"></span></button>`)
+                .join('');
+        });
+    }
+
+    function renderMetadata() {
+        if (!state.metadata) {
+            DOM.reportInfo.innerHTML = '';
+            return;
+        }
+        DOM.reportInfo.innerHTML = `
+            <div class="info-line-primary">${sanitize(state.metadata.filename || "Unknown")}</div>
+            <div class="info-line-secondary">${sanitize(`${state.metadata.driverInfo.name} ${state.metadata.driverInfo.version ? 'v' + state.metadata.driverInfo.version : ''}`)}</div>
+            <div class="info-line-tertiary">${sanitize(state.metadata.reportDate?.toLocaleString() || '')}</div>
+        `;
+    }
+
+    function renderMetricsCounters() {
+        const counts = { error: 0, warning: 0, info: 0 };
+        state.issues.all.forEach(i => counts[i.level]++);
+
+        DOM.metrics.total.textContent = state.issues.all.length;
+        DOM.metrics.error.textContent = counts.error;
+        DOM.metrics.warning.textContent = counts.warning;
+        DOM.metrics.info.textContent = counts.info;
+    }
+
+    function renderMetricsCards() {
+        const filters = state.filters.severities;
+        Array.from(DOM.metrics.grid.children).forEach(c => {
+            const value = c.getAttribute('data-value');
+            const isActive = value ? filters.has(value) : filters.size === 0;
+            c.classList.toggle('is-active', isActive);
+            c.querySelector('use').setAttribute('href', `#icon-${value ? value : 'list'}-${isActive ? 'fill' : 'outline'}`);
+        });
+    }
+
+    function renderSearch(overwrite) {
+        if (overwrite) DOM.filterText.value = state.filters.text;
+        DOM.filterText.classList.toggle('is-regex', state.filters.isRegex);
+        DOM.searchHint.style.opacity = DOM.filterText.matches(':focus') || state.filters.text ? '0' : '1';
+        DOM.regexToggle.classList.toggle('is-active', state.filters.isRegex);
+        let isRegexInvalid = false;
+        if (state.filters.isRegex) {
+            try { searchRegex(state.filters.text); } catch (e) { isRegexInvalid = true; }
+        }
+        DOM.filterText.classList.toggle('is-invalid', isRegexInvalid);
+    }
+
+    function renderSortToggle() {
+        const isCount = state.filters.isSortingByCount;
+        DOM.sortToggle.title = isCount ? 'Sorted by count' : 'Sorted by name';
+        DOM.sortToggle.querySelector('use').setAttribute('href', `#icon-sort-${isCount ? 'count' : 'name'}`);
+    }
+
+    function updatePills() {
+        const counts = { severities: {}, categories: {}, rules: {} };
+        state.issues.matching.forEach(i => {
+            counts.severities[i.level] = (counts.severities[i.level] || 0) + 1;
+            state.rulesById[i.ruleId].categories.forEach(c => counts.categories[c] = (counts.categories[c] || 0) + 1);
+            counts.rules[i.ruleId] = (counts.rules[i.ruleId] || 0) + 1;
+        });
+        DOM.filters.entries().forEach(([type, config]) => {
+            const filter = DOM.filters[type];
+            const activeFilters = state.filters[type];
+            Array.from(filter.group.querySelectorAll('.pill')).forEach(p => {
+                const val = p.getAttribute('data-value');
+                if (!val) return p.classList.toggle('is-active', activeFilters.size === 0);
+                const count = counts[type][val] || 0;
+                const isActive = activeFilters.has(val);
+                p.classList.toggle('is-active', isActive);
+                p.classList.toggle('is-hidden', count === 0 && !isActive);
+                p.querySelector('.pill-count').textContent = `(${count})`;
+                p.style.order = state.filters.isSortingByCount ? -count : null;
+            });
+        });
+    }
+
+    function updateIssues() {
+        Perf.trace('Updating issues', () => {
+            DOM.emptyReportState.classList.toggle('is-hidden', state.issues.all.length !== 0);
+            DOM.emptyFilterState.classList.toggle('is-hidden', state.issues.all.length === 0 || state.issues.filtered.length !== 0);
+            const ids = state.issues.filtered.map(i => i.id).toSet();
+            Array.from(DOM.issueList.querySelectorAll('.issue-group')).forEach(g => {
+                const key = g.getAttribute('data-group-key');
+                let count = 0;
+                g.querySelectorAll('.issue-card').forEach(c => {
+                    const isVisible = ids.has(c.getAttribute('data-issue-id'));
+                    c.classList.toggle('is-hidden', !isVisible);
+                    if (isVisible) count++;
+                });
+                g.classList.toggle('is-hidden', count === 0);
+                g.querySelector('.issue-group-count').textContent = count;
+                g.style.order = state.filters.isSortingByCount && count > 0 ? -count : null;
+            });
+        });
+    }
+    // #endregion
+
+    // #region Event listeners
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+        if (!localStorage.getItem('theme')) applyTheme(event.matches ? 'dark' : 'light', false);
+    });
+
+    window.addEventListener('popstate', () => {
+        readURL();
+        if (state.issues.all.length === 0) return;
+        applyFilters();
+    });
+
+    window.addEventListener('keydown', event => {
+        // Search
+        if (event.key === '/' && document.activeElement !== DOM.filterText && DOM.resultsContainer.style.display !== 'none') {
+            event.preventDefault();
+            DOM.filterText.focus();
+        }
+        // Collapse all
+        if (event.ctrlKey && event.shiftKey && event.code === 'NumpadSubtract') {
+            event.preventDefault();
+            toggleIssueGroups(true);
+        }
+        // Expand all
+        if (event.ctrlKey && event.shiftKey && event.code === 'NumpadAdd') {
+            event.preventDefault();
+            toggleIssueGroups(false);
+        }
+    });
+
+    document.querySelector('header h1').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+    DOM.themeToggle.addEventListener('click', () => applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark', true));
+    DOM.filterText.addEventListener('focus', () => renderSearch());
+    DOM.filterText.addEventListener('blur', () => renderSearch());
+    DOM.filterText.addEventListener('input', debounce(() => { state.filters.text = DOM.filterText.value; renderSearch(); applyFilters(); }, 200));
+    DOM.regexToggle.addEventListener('click', () => { state.filters.isRegex = !state.filters.isRegex; renderSearch(); applyFilters(); });
+    DOM.sortToggle.addEventListener('click', () => { state.filters.isSortingByCount = !state.filters.isSortingByCount; renderSortToggle(); applyFilters(); });
+
+    // #region REMOVE-IN-EMBEDDED-REPORT
+    DOM.dropZone.addEventListener('click', event => { if (!event.target.closest('#load-example-wrapper')) DOM.fileInput.click(); });
+    DOM.fileInput.addEventListener('change', event => loadSarifFromFiles(event.target.files));
+    DOM.openButton.addEventListener('click', () => DOM.fileInput.click());
+
+    const hasFiles = event => Array.from(event.dataTransfer?.types || []).includes('Files');
+    let dragCounter = 0;
+
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        DOM.dropZone.addEventListener(eventName, event => {
+            event.preventDefault();
+            event.stopPropagation();
+            DOM.dropZone.classList.toggle('highlight', (eventName === 'dragenter' || eventName === 'dragover') && hasFiles(event));
+            if (eventName === 'drop') loadSarifFromFiles(event.dataTransfer.files);
+        });
+
+        window.addEventListener(eventName, event => {
+            event.preventDefault();
+            if (eventName === 'dragover' || !hasFiles(event)) return;
+            if (eventName === 'dragenter') dragCounter++;
+            else if (eventName === 'dragleave') dragCounter--;
+            else if (eventName === 'drop') dragCounter = 0, loadSarifFromFiles(event.dataTransfer.files);
+
+            DOM.dragOverlay.classList.toggle('is-hidden', dragCounter <= 0);
+            if (dragCounter < 0) dragCounter = 0;
+        });
+    });
+
+    DOM.loadExampleWrapper.addEventListener('click', async event => {
+        event.preventDefault();
+        event.stopPropagation();
+        try {
+            if (!(await loadSarifFromScript('sarif-example', "Unknown"))) showError("Example data not found.");
+        } catch (err) {
+            showError(`Failed to load: ${err.message}`, err);
+        }
+    });
+    // #endregion REMOVE-IN-EMBEDDED-REPORT
+
+    DOM.issueList.addEventListener('click', event => {
+        const icon = event.target.closest('.severity-icon');
+        if (icon) {
+            event.preventDefault();
+            event.stopPropagation();
+            const group = icon.closest('.issue-group');
+            if (!group) return;
+
+            const isCollapsed = group.classList.toggle('is-collapsed');
+            const use = icon.querySelector('use');
+            const href = use.getAttribute('href');
+            use.setAttribute('href', isCollapsed ? href.replace('-fill', '-outline') : href.replace('-outline', '-fill'));
+            return;
+        }
+        const locationButton = event.target.closest('.issue-location');
+        if (locationButton) {
+            event.preventDefault();
+            copyToClipboard(locationButton.textContent);
+        }
+    });
+
+    DOM.metrics.grid.addEventListener('click', event => onPillClicked(event, 'severities'));
+    DOM.filters.entries().forEach(([type, config]) => config.group.addEventListener('click', event => onPillClicked(event, type)));
+
+    // #region REMOVE-IN-EMBEDDED-REPORT file_handlers
+    if ('launchQueue' in window) {
+        window.launchQueue.setConsumer(async (launchParams) => {
+            if (!launchParams.files || launchParams.files.length === 0) return;
+            try {
+                const file = await launchParams.files[0].getFile();
+                loadSarifData(parseJson(await file.text()), file.name, file.lastModified);
+            } catch (err) {
+                showError(err.message || "Could not parse launched file.", err);
+            }
+        });
+    }
+    // #endregion REMOVE-IN-EMBEDDED-REPORT
+    // #endregion
+
+    // #region Initialization
+    function initTheme() {
+        const saved = localStorage.getItem('theme');
+        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        applyTheme(saved || (systemPrefersDark ? 'dark' : 'light'), false);
+    }
+
+    // #region REMOVE-IN-EMBEDDED-REPORT
+    function initExample() {
+        const exampleElement = document.getElementById('sarif-example');
+        if (!exampleElement) return;
+        const project = exampleElement.getAttribute('data-project');
+        const src = exampleElement.getAttribute('data-src');
+        const message = project ? `load report from <strong>${sanitize(project)}</strong> project`
+                      : src ? `load <strong>${sanitize(src)}</strong> report`
+                      : null;
+        if (!message) return;
+        DOM.loadExampleWrapper.innerHTML = message;
+        DOM.exampleContainer.classList.remove('is-hidden');
+    }
+    // #endregion REMOVE-IN-EMBEDDED-REPORT
+
+    async function init() {
+        initTheme();
+        // #region REMOVE-IN-EMBEDDED-REPORT
+        initExample();
+        // #endregion REMOVE-IN-EMBEDDED-REPORT
         readURL();
 
-        window.addEventListener('keydown', (e) => {
-            if (e.key === '/' && document.activeElement !== filterText && resultsContainer.style.display !== 'none') {
-                e.preventDefault();
-                filterText.focus();
-            }
-        });
-
-        filterText.addEventListener('focus', () => searchHint.style.opacity = '0');
-        filterText.addEventListener('blur', () => {
-            if (filterText.value === '') searchHint.style.opacity = '1';
-        });
-
-        dropZone.addEventListener('click', (e) => {
-            if (e.target.closest('#load-example-wrapper')) return;
-            fileInput.click();
-        });
-
-        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-            dropZone.addEventListener(eventName, e => { e.preventDefault(); e.stopPropagation(); }, false);
-        });
-
-        ['dragenter', 'dragover'].forEach(eventName => {
-            dropZone.addEventListener(eventName, e => {
-                if (e.dataTransfer && Array.from(e.dataTransfer.types).includes('Files')) dropZone.classList.add('highlight');
-            }, false);
-        });
-
-        ['dragleave', 'drop'].forEach(eventName => {
-            dropZone.addEventListener(eventName, () => dropZone.classList.remove('highlight'), false);
-        });
-
-        dropZone.addEventListener('drop', e => handleFiles(e.dataTransfer.files));
-        fileInput.addEventListener('change', e => handleFiles(e.target.files));
-        resetButton.addEventListener('click', () => fileInput.click());
-
-        exampleLoadWrapper.addEventListener('click', async (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            const el = document.getElementById('sarif-example');
-            if (!el) return showError("Example data not found.");
-
-            const src = el.getAttribute('data-src');
-            const type = el.getAttribute('type');
-            const title = el.getAttribute('title');
-            let json = null;
-
-            try {
-                if (src) {
-                    const response = await fetch(src);
-                    if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                    json = await response.json();
-                } else if (type === 'application/json') {
-                    json = JSON.parse(el.textContent);
-                } else if (type === 'application/gzip+base64') {
-                    json = await decodeBase64GzipJson(el.textContent);
-                } else {
-                    throw new Error("Unknown example format type.");
-                }
-            } catch (err) {
-                return showError(`Failed to load: ${err.message}`);
-            }
-
-            if (json) {
-                try {
-                    resetApp();
-                    state.filename = title || src || "Unknown";
-                    state.fileLastModified = Date.now();
-                    processSarif(json);
-                    readURL(); // Re-read URL after resetApp clears it, effectively persisting filters
-                    updatePillVisuals(severityPillsContainer, state.filters.severities);
-                    showResultsUI();
-                } catch (err) {
-                    showError("Error processing example: " + err.message);
-                }
-            }
-        });
-
-        let dragCounter = 0;
-        window.addEventListener('dragenter', e => {
-            e.preventDefault();
-            if (!e.dataTransfer || !Array.from(e.dataTransfer.types).includes('Files')) return;
-            dragCounter++;
-            dragOverlay.classList.remove('hidden');
-        });
-
-        window.addEventListener('dragleave', e => {
-            e.preventDefault();
-            if (!e.dataTransfer || !Array.from(e.dataTransfer.types).includes('Files')) return;
-            dragCounter--;
-            if (dragCounter <= 0) { dragCounter = 0; dragOverlay.classList.add('hidden'); }
-        });
-
-        window.addEventListener('dragover', e => e.preventDefault());
-        window.addEventListener('drop', e => {
-            e.preventDefault();
-            dragCounter = 0;
-            dragOverlay.classList.add('hidden');
-            if (e.dataTransfer && e.dataTransfer.files.length > 0) handleFiles(e.dataTransfer.files);
-        });
-
-        issueList.addEventListener('click', e => {
-            const btn = e.target.closest('.issue-location');
-            if (btn) { e.preventDefault(); const path = btn.getAttribute('data-path'); if (path) copyToClipboard(path); }
-        });
-
-        filterText.addEventListener('input', debounce(e => {
-            state.filters.text = e.target.value.toLowerCase();
-            applyFilters();
-        }, 200));
-
-        severityPillsContainer.addEventListener('click', e => handlePillClick(e, 'severities', severityPillsContainer));
-        categoryPillsContainer.addEventListener('click', e => handlePillClick(e, 'categories', categoryPillsContainer));
-        issueIdPillsContainer.addEventListener('click', e => handlePillClick(e, 'issueIds', issueIdPillsContainer));
-
-        function handlePillClick(e, filterType, container) {
-            const target = e.target.closest('.pill');
-            if (!target) return;
-            const value = target.getAttribute('data-value');
-            const filterSet = state.filters[filterType];
-            if (value === 'all') {
-                filterSet.clear();
-                filterSet.add('all');
-            } else {
-                if (filterSet.has('all')) filterSet.delete('all');
-                if (filterSet.has(value)) filterSet.delete(value);
-                else filterSet.add(value);
-                if (filterSet.size === 0) filterSet.add('all');
-            }
-            updatePillVisuals(container, filterSet);
-            applyFilters();
+        let loaded = false;
+        try {
+            loaded = await loadSarifFromScript('sarif-report', "Embedded Report", true);
+        } catch (err) {
+            showError(`Error processing embedded report: ${err.message}`, err);
+        } finally {
+            if (!loaded) showStartupPage();
         }
+    }
+    // #endregion
 
-        function updatePillVisuals(container, filterSet) {
-            Array.from(container.children).forEach(pill => {
-                if (filterSet.has(pill.getAttribute('data-value'))) pill.classList.add('active');
-                else pill.classList.remove('active');
-            });
-        }
-
-        function handleFiles(files) {
-            if (!files || files.length === 0) return;
-            const file = files[0];
-            const fileName = file.name.toLowerCase();
-            if (!fileName.endsWith('.sarif') && !fileName.endsWith('.json')) {
-                return showError("Invalid file format. Please use .sarif or .json files.");
-            }
-            resetApp();
-            state.filename = file.name;
-            state.fileLastModified = file.lastModified;
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                try {
-                    processSarif(JSON.parse(e.target.result));
-                    readURL(); // Restore filters from URL
-                    updatePillVisuals(severityPillsContainer, state.filters.severities); // Sync UI
-                    showResultsUI();
-                } catch (err) {
-                    state.filename = '';
-                    reportInfoContainer.innerHTML = '';
-                    showError(err.message || "Could not parse JSON.");
-                }
-            };
-            reader.onerror = () => showError("Error reading file.");
-            reader.readAsText(file);
-        }
-
-        function processSarif(sarif) {
-            if (!sarif?.runs || !Array.isArray(sarif.runs)) throw new Error("Invalid SARIF: Missing 'runs' array.");
-            const run = sarif.runs[0] || {};
-            const driver = run.tool?.driver || {};
-            state.driverInfo = { name: driver.fullName || driver.name || "Unknown Tool", version: driver.semanticVersion || driver.version || "" };
-
-            let dateVal = run.invocations?.[0]?.endTimeUtc || run.invocations?.[0]?.startTimeUtc || sarif.time;
-            state.reportDate = dateVal ? new Date(dateVal) : (state.fileLastModified ? new Date(state.fileLastModified) : new Date());
-
-            const getDesc = (obj) => obj?.markdown || obj?.text || "";
-
-            state.rules.clear();
-            (driver.rules || []).forEach(rule => {
-                let tags = rule.tags || rule.properties?.tags || [rule.properties?.category] || ["General"];
-                state.rules.set(rule.id, {
-                    name: rule.shortDescription?.text || rule.name || rule.id,
-                    categories: Array.isArray(tags) ? tags : ["General"],
-                    defaultLevel: rule.defaultConfiguration?.level || "warning",
-                    shortDescription: getDesc(rule.shortDescription),
-                    fullDescription: getDesc(rule.fullDescription) || getDesc(rule.shortDescription)
-                });
-            });
-
-            state.rawIssues = (run.results || []).map(result => {
-                const ruleId = result.ruleId;
-                const rd = state.rules.get(ruleId) || { categories: ['Unknown'], name: ruleId };
-                const loc = result.locations?.[0]?.physicalLocation;
-                
-                const related = (result.relatedLocations || []).map(rel => {
-                    const pLoc = rel.physicalLocation;
-                    return {
-                        file: pLoc?.artifactLocation?.uri || "Unknown",
-                        line: pLoc?.region?.startLine || 0,
-                        message: rel.message?.markdown || rel.message?.text || ""
-                    };
-                });
-
-                return {
-                    id: ruleId,
-                    name: rd.name,
-                    categories: rd.categories,
-                    message: result.message?.markdown || result.message?.text || "No message",
-                    file: loc?.artifactLocation?.uri || "Unknown",
-                    line: loc?.region?.startLine || 0,
-                    level: result.level || rd.defaultLevel || "warning",
-                    snippet: loc?.contextRegion?.snippet?.text ? { text: loc.contextRegion.snippet.text, startLine: loc.contextRegion.startLine || 1 } : null,
-                    region: loc?.region || {},
-                    relatedLocations: related
-                };
-            });
-
-            const uniqueCats = new Set();
-            const uniqueIds = new Set();
-            state.rawIssues.forEach(i => { uniqueIds.add(i.id); i.categories.forEach(c => uniqueCats.add(c)); });
-            state.categories = uniqueCats;
-            state.uniqueIssueIds = uniqueIds;
-            renderCategoryPills();
-            renderIssueIdPills();
-            updateMetrics();
-            applyFilters();
-        }
-
-        function showResultsUI() {
-            dropZone.classList.add('hidden');
-            resultsContainer.style.display = 'block';
-            resetButton.classList.remove('hidden');
-            const toolStr = `${state.driverInfo.name} ${state.driverInfo.version ? 'v' + state.driverInfo.version : ''}`;
-            const dateStr = state.reportDate?.toLocaleString() || '';
-            reportInfoContainer.innerHTML = `
-                <div class="info-line-primary">${sanitize(state.filename)}</div>
-                <div class="info-line-secondary">${sanitize(toolStr)}</div>
-                <div class="info-line-tertiary" title="${sanitize(dateStr)}">${sanitize(dateStr)}</div>
-            `;
-        }
-
-        function resetApp() {
-            Object.assign(state, { rawIssues: [], filteredIssues: [], categories: new Set(), uniqueIssueIds: new Set(), rules: new Map(), filename: '', driverInfo: { name: '', version: '' }, reportDate: null, fileLastModified: null });
-            state.filters = { text: '', categories: new Set(['all']), issueIds: new Set(['all']), severities: new Set(['all']) };
-            dropZone.classList.remove('hidden');
-            resultsContainer.style.display = 'none';
-            resetButton.classList.add('hidden');
-            reportInfoContainer.innerHTML = '';
-            fileInput.value = ''; filterText.value = '';
-            categoryPillsContainer.innerHTML = '<button class="pill active" data-value="all"><span class="pill-label">All</span></button>';
-            issueIdPillsContainer.innerHTML = '<button class="pill active" data-value="all"><span class="pill-label">All</span></button>';
-            updatePillVisuals(severityPillsContainer, state.filters.severities);
-        }
-
-        function renderCategoryPills() {
-            categoryPillsContainer.innerHTML = '<button class="pill active" data-value="all"><span class="pill-label">All</span></button>';
-            Array.from(state.categories).sort().forEach(cat => {
-                const p = document.createElement('button'); 
-                p.className = 'pill'; 
-                p.setAttribute('data-value', cat); 
-                p.innerHTML = `<span class="pill-label">${sanitize(cat)}</span><span class="pill-count"></span>`;
-                categoryPillsContainer.appendChild(p);
-            });
-        }
-
-        function renderIssueIdPills() {
-            issueIdPillsContainer.innerHTML = '<button class="pill active" data-value="all"><span class="pill-label">All</span></button>';
-            Array.from(state.uniqueIssueIds).sort().forEach(id => {
-                const rd = state.rules.get(id);
-                const p = document.createElement('button');
-                p.className = 'pill';
-                p.setAttribute('data-value', id);
-                p.innerHTML = `<span class="pill-label">${sanitize(id)}</span><span class="pill-count"></span>`;
-                if (rd?.shortDescription) p.setAttribute('title', rd.shortDescription);
-                issueIdPillsContainer.appendChild(p);
-            });
-        }
-
-        function applyFilters() {
-            const query = state.filters.text;
-            const match = state.rawIssues.filter(i => i.id.toLowerCase().includes(query) || i.message.toLowerCase().includes(query) || i.file.toLowerCase().includes(query));
-            updatePillCounts(match);
-            state.filteredIssues = match.filter(i => {
-                const lvl = (i.level || 'warning').toLowerCase();
-                const sMatch = state.filters.severities.has('all') || (state.filters.severities.has('error') && lvl === 'error') || (state.filters.severities.has('warning') && lvl === 'warning') || (state.filters.severities.has('info') && (lvl === 'note' || lvl === 'none'));
-                return sMatch && (state.filters.categories.has('all') || i.categories.some(c => state.filters.categories.has(c))) && (state.filters.issueIds.has('all') || state.filters.issueIds.has(i.id));
-            });
-            updateURL();
-            renderList();
-        }
-
-        function updatePillCounts(issues) {
-            const counts = { cats: {}, ids: {}, sevs: { error: 0, warning: 0, info: 0 } };
-            issues.forEach(i => {
-                counts.ids[i.id] = (counts.ids[i.id] || 0) + 1;
-                i.categories.forEach(c => counts.cats[c] = (counts.cats[c] || 0) + 1);
-                const l = (i.level || 'warning').toLowerCase();
-                if (l === 'error') counts.sevs.error++; else if (l === 'warning') counts.sevs.warning++; else counts.sevs.info++;
-            });
-            const update = (c, val, count, label) => {
-                const p = c.querySelector(`[data-value="${val}"]`);
-                if (p) { 
-                    const name = label || val;
-                    p.innerHTML = `<span class="pill-label">${sanitize(name)}</span><span class="pill-count">(${count})</span>`;
-                    if (count === 0 && val !== 'all') p.classList.add('hidden'); else p.classList.remove('hidden'); 
-                    
-                    // Restore active class if it was set via URL
-                    const type = c === severityPillsContainer ? 'severities' : (c === categoryPillsContainer ? 'categories' : 'issueIds');
-                    if (state.filters[type].has(val)) p.classList.add('active'); else p.classList.remove('active');
-                }
-            };
-            update(severityPillsContainer, 'error', counts.sevs.error, 'Error');
-            update(severityPillsContainer, 'warning', counts.sevs.warning, 'Warning');
-            update(severityPillsContainer, 'info', counts.sevs.info, 'Hint');
-            Array.from(state.categories).forEach(c => update(categoryPillsContainer, c, counts.cats[c] || 0));
-            Array.from(state.uniqueIssueIds).forEach(id => update(issueIdPillsContainer, id, counts.ids[id] || 0));
-        }
-
-        function updateMetrics() {
-            const issues = state.rawIssues;
-            metricTotal.textContent = issues.length;
-            metricErrors.textContent = issues.filter(i => i.level === 'error').length;
-            metricWarnings.textContent = issues.filter(i => i.level === 'warning').length;
-            metricInfo.textContent = issues.filter(i => i.level === 'note' || i.level === 'none').length;
-        }
-
-        function renderList() {
-            issueList.innerHTML = '';
-            if (state.filteredIssues.length === 0) return emptyFilterState.classList.remove('hidden');
-            emptyFilterState.classList.add('hidden');
-
-            const groups = {};
-            state.filteredIssues.forEach(i => { 
-                // Group by ID + Level to handle severity overrides for the same rule
-                const key = i.id + '::' + i.level;
-                if (!groups[key]) groups[key] = { id: i.id, level: i.level, categories: i.categories, instances: [] }; 
-                groups[key].instances.push(i); 
-            });
-
-            const fragment = document.createDocumentFragment();
-            Object.values(groups).sort((a, b) => {
-                const diff = a.id.localeCompare(b.id);
-                if (diff !== 0) return diff;
-                
-                // If Rule IDs are the same, sort by severity (Error > Warning > Info)
-                const getWeight = (lvl) => {
-                    const l = (lvl || '').toLowerCase();
-                    if (l === 'error') return 3;
-                    if (l === 'warning') return 2;
-                    return 1;
-                };
-                return getWeight(b.level) - getWeight(a.level);
-            }).forEach(group => {
-                const rd = state.rules.get(group.id);
-                const lvl = (group.level || 'warning').toLowerCase();
-                const sCls = lvl === 'error' ? 'severity-error' : (lvl === 'note' || lvl === 'none' ? 'severity-info' : 'severity-warning');
-                const g = document.createElement('div'); g.className = 'issue-group';
-
-                // Add header content
-                const header = document.createElement('div');
-                header.className = 'issue-group-header';
-                header.innerHTML = `
-                        <div class="issue-group-title" style="color: var(--${sCls})" ${rd?.fullDescription ? `title="${sanitize(rd.fullDescription)}"` : ''}>
-                            <span class="severity-badge ${sCls}"></span>
-                            <span class="issue-rule-id">${sanitize(group.id)}</span>
-                            <span class="issue-group-count">${group.instances.length}</span>
-                        </div>
-                        <div class="categories-wrapper">${group.categories.map(c => `<span class="category-badge">${sanitize(c)}</span>`).join('')}</div>`;
-                
-                g.appendChild(header);
-
-                const content = document.createElement('div'); content.className = 'issue-group-content';
-                group.instances.forEach(i => {
-                    let snippet = '';
-                    if (i.snippet) {
-                        const lines = i.snippet.text.split('\n');
-                        const lHtml = lines.map((text, idx) => {
-                            const cur = i.snippet.startLine + idx;
-                            let content = sanitize(text);
-                            if (cur >= i.region.startLine && cur <= (i.region.endLine || i.region.startLine)) {
-                                let start = cur === i.region.startLine ? Math.max(0, (i.region.startColumn || 1) - 1) : 0;
-                                let end = cur === (i.region.endLine || i.region.startLine) && i.region.endColumn ? Math.min(text.length, i.region.endColumn - 1) : text.length;
-                                content = `${sanitize(text.substring(0, start))}<span class="code-highlight">${sanitize(text.substring(start, end))}</span>${sanitize(text.substring(end))}`;
-                            }
-                            return `<div class="code-line"><span class="code-line-number">${cur}</span><span class="code-content">${content}</span></div>`;
-                        }).join('');
-                        snippet = `<div class="issue-code-snippet">${lHtml}</div>`;
-                    }
-                    
-                    const last = i.file.lastIndexOf('/');
-                    
-                    let relatedHtml = '';
-                    if (i.relatedLocations?.length > 0) {
-                        relatedHtml = i.relatedLocations.map(rel => {
-                            const rLast = rel.file.lastIndexOf('/');
-                            return `
-                                <div style="margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.25rem; padding-left: 0.75rem; border-left: 2px solid var(--border);">
-                                    ${rel.message ? `<div style="font-size: 0.75rem; color: var(--text-tertiary); font-style: italic;">${formatMarkdown(rel.message)}</div>` : ''}
-                                    <button class="issue-location" data-path="${sanitize(rel.file)}:${rel.line}">
-                                        <span class="path-dir">${sanitize(rel.file.substring(0, rLast + 1))}</span>
-                                        <span class="path-name">${sanitize(rel.file.substring(rLast + 1))}</span>
-                                        <span class="line-number">:${rel.line}</span>
-                                    </button>
-                                </div>
-                            `;
-                        }).join('');
-                    }
-
-                    const card = document.createElement('div'); card.className = 'issue-card';
-                    card.innerHTML = `
-                        <!-- Apply markdown formatting only to the issue message (i.message) -->
-                        <div class="issue-message"><span>${formatMarkdown(i.message)}</span></div>
-                        <button class="issue-location" data-path="${sanitize(i.file)}:${i.line}">
-                            <span class="path-dir">${sanitize(i.file.substring(0, last + 1))}</span>
-                            <span class="path-name">${sanitize(i.file.substring(last + 1))}</span>
-                            <span class="line-number">:${i.line}</span>
-                        </button>
-                        ${relatedHtml}
-                        ${snippet}`;
-                    content.appendChild(card);
-                });
-                g.appendChild(content); fragment.appendChild(g);
-            });
-            issueList.appendChild(fragment);
-        }
-
-        // Auto-load embedded report if present
-        async function tryLoadEmbeddedReport() {
-            const el = document.getElementById('sarif-report');
-            if (!el) return;
-            
-            const content = el.textContent.trim();
-            if (!content) return;
-
-            const type = el.getAttribute('type');
-            let json = null;
-
-            try {
-                if (type === 'application/json') {
-                    json = JSON.parse(content);
-                } else if (type === 'application/gzip+base64') {
-                    json = await decodeBase64GzipJson(content);
-                } else {
-                    console.warn("Unknown embedded report type:", type);
-                }
-            } catch (err) {
-                console.error("Failed to load embedded report:", err);
-                showError("Failed to load embedded report: " + err.message);
-                return;
-            }
-
-            if (json) {
-                resetApp();
-                state.filename = "Embedded Report";
-                state.fileLastModified = Date.now();
-                try {
-                    processSarif(json);
-                    readURL(); 
-                    updatePillVisuals(severityPillsContainer, state.filters.severities);
-                    showResultsUI();
-                } catch (err) {
-                    showError("Error processing embedded report: " + err.message);
-                }
-            }
-        }
-
-        tryLoadEmbeddedReport();
-    </script>
+    Perf.trace('App init', async () => init());
+</script>
 </body>
 </html>
