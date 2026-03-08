@@ -5,7 +5,7 @@ compileSdk = "36"
 
 agp = "9.1.0"
 android-tools = "32.1.0"
-kotlin = "2.3.10"
+kgp = "2.3.10"
 
 [libraries]
 android-desugarJdkLibs = "com.android.tools:desugar_jdk_libs:2.1.5"
@@ -30,9 +30,9 @@ android-library = { id = "com.android.library", version.ref = "agp" }
 android-lint = { id = "com.android.lint", version.ref = "agp" }
 android-cacheFix = "org.gradle.android.cache-fix:3.0.3"
 develocity = "com.gradle.develocity:4.3.2"
-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
-kotlin-sam = { id = "org.jetbrains.kotlin.plugin.sam.with.receiver", version.ref = "kotlin" }
-kotlin-assignment = { id = "org.jetbrains.kotlin.plugin.assignment", version.ref = "kotlin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kgp" }
+kotlin-sam = { id = "org.jetbrains.kotlin.plugin.sam.with.receiver", version.ref = "kgp" }
+kotlin-assignment = { id = "org.jetbrains.kotlin.plugin.assignment", version.ref = "kgp" }
 
 playground-android-application = { id = "playground.android-application" }
 playground-android-library = { id = "playground.android-library" }
