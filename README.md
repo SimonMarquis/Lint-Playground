@@ -110,7 +110,7 @@ classDef jvm fill:#7F52FF,stroke:#fff,stroke-width:2px,color:#fff;
 
 ### 💡 Tips
 
-### Lint HTML preferences
+#### Lint HTML preferences
 
 [`lint.html.prefs`](https://googlesamples.github.io/android-custom-lint-rules/api-guide.md.html#appendix:environmentvariablesandsystemproperties/systemproperties/def-lint.html.prefs) can be configured as system property:
 
@@ -118,7 +118,7 @@ classDef jvm fill:#7F52FF,stroke:#fff,stroke-width:2px,color:#fff;
 ./gradlew :app:lint -Dlint.html.prefs=theme=darcula,window=5
 ```
 
-### Lint autofix
+#### Lint autofix
 
 [`lint.autofix`](https://googlesamples.github.io/android-custom-lint-rules/api-guide.md.html#appendix:environmentvariablesandsystemproperties/systemproperties/def-lint.autofix) and [`lint.autofix.imports`](https://googlesamples.github.io/android-custom-lint-rules/api-guide.md.html#appendix:environmentvariablesandsystemproperties/systemproperties/def-lint.autofix.imports) can be configured as system properties:
 
@@ -126,7 +126,7 @@ classDef jvm fill:#7F52FF,stroke:#fff,stroke-width:2px,color:#fff;
 ./gradlew :app:lint -Dlint.autofix=true -Dlint.autofix.imports=true
 ```
 
-#### UAST dump
+##### UAST dump
 
 Use `UElement.asRecursiveLogString()` to dump an entire `UElement` tree:
 
@@ -143,7 +143,7 @@ UCallExpression (kind = UastCallKind(name='method_call'), argCount = 2))
     ULiteralExpression (value = 42)
 ```
 
-### Custom rule with standalone lint
+#### Custom rule with standalone lint
 
 You must first produce a `.jar` file with your custom rules and a `Lint-Registry-v2` attribute:
 
@@ -156,7 +156,6 @@ tasks.jar {
 ```
 
 Then register the `.jar` path in the [`ANDROID_LINT_JARS`](https://googlesamples.github.io/android-custom-lint-rules/api-guide.md.html#appendix:environmentvariablesandsystemproperties/environmentvariables/lintconfigurationvariables/def-android_lint_jars) environment variable.
-
 
 ### 🔗 Links
 
