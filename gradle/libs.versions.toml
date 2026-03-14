@@ -3,8 +3,8 @@ minSdk = "24"
 targetSdk = "36"
 compileSdk = "36"
 
-agp = "9.2.0-alpha04"
-android-tools = "32.2.0-alpha04"
+agp = "9.2.0-alpha03"
+android-tools = "32.2.0-alpha03"
 kgp = "2.3.10"
 
 [libraries]
