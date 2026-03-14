@@ -108,9 +108,59 @@ classDef android-library fill:#3BD482,stroke:#fff,stroke-width:2px,color:#fff;
 classDef jvm fill:#7F52FF,stroke:#fff,stroke-width:2px,color:#fff;
 ```
 
+### 💡 Tips
+
+#### Lint HTML preferences
+
+[`lint.html.prefs`](https://googlesamples.github.io/android-custom-lint-rules/api-guide.md.html#appendix:environmentvariablesandsystemproperties/systemproperties/def-lint.html.prefs) can be configured as system property:
+
+```bash
+./gradlew :app:lint -Dlint.html.prefs=theme=darcula,window=5
+```
+
+#### Lint autofix
+
+[`lint.autofix`](https://googlesamples.github.io/android-custom-lint-rules/api-guide.md.html#appendix:environmentvariablesandsystemproperties/systemproperties/def-lint.autofix) and [`lint.autofix.imports`](https://googlesamples.github.io/android-custom-lint-rules/api-guide.md.html#appendix:environmentvariablesandsystemproperties/systemproperties/def-lint.autofix.imports) can be configured as system properties:
+
+```bash
+./gradlew :app:lint -Dlint.autofix=true -Dlint.autofix.imports=true
+```
+
+##### UAST dump
+
+Use `UElement.asRecursiveLogString()` to dump an entire `UElement` tree:
+
+```kotlin
+fun foo(bar: String, baz: Int) = Unit
+foo(bar = "BAR", baz = 42)
+```
+
+```kotlin
+UCallExpression (kind = UastCallKind(name='method_call'), argCount = 2))
+    UIdentifier (Identifier (foo))
+    USimpleNameReferenceExpression (identifier = foo, resolvesTo = null)
+    ULiteralExpression (value = "BAR")
+    ULiteralExpression (value = 42)
+```
+
+#### Custom rule with standalone lint
+
+You must first produce a `.jar` file with your custom rules and a `Lint-Registry-v2` attribute:
+
+```kotlin
+tasks.jar {
+    manifest {
+        attributes("Lint-Registry-v2" to "fr.smarquis.playground.lint.IssueRegistry")
+    }
+}
+```
+
+Then register the `.jar` path in the [`ANDROID_LINT_JARS`](https://googlesamples.github.io/android-custom-lint-rules/api-guide.md.html#appendix:environmentvariablesandsystemproperties/environmentvariables/lintconfigurationvariables/def-android_lint_jars) environment variable.
+
 ### 🔗 Links
 
 - [SARIF specification](https://sarifweb.azurewebsites.net/#Specification)
 - [SARIF validator](https://sarifweb.azurewebsites.net/Validation)
 - [Android Lint documentation](https://googlesamples.github.io/android-custom-lint-rules/)
+- [Android Lint issue index](https://googlesamples.github.io/android-custom-lint-rules/checks/index.md.html)
 - [Android Lint source code](https://cs.android.com/android-studio/platform/tools/base/+/mirror-goog-studio-main:lint/)
