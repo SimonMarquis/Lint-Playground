@@ -64,7 +64,7 @@ nmcp.publishAllPublicationsToCentralPortal {
 
 val isSnapshotVersion = version.toString().endsWith("-SNAPSHOT")
 tasks.publish.configure {
-    if (isSnapshotVersion) dependsOn("publishAllPublicationsToCentralPortalSnapshots")
+    if (isSnapshotVersion) dependsOn("publishAllPublicationsToCentralSnapshots")
     else dependsOn("publishAllPublicationsToCentralPortal")
 }
 
