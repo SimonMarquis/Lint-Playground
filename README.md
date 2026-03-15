@@ -76,6 +76,12 @@
 - ![Maven Central Version](https://img.shields.io/maven-central/v/fr.smarquis.playground/lint)
 - ![Maven Snapshots Version](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fcentral.sonatype.com%2Frepository%2Fmaven-snapshots%2Ffr%2Fsmarquis%2Fplayground%2Flint%2Fmaven-metadata.xml&label=maven-snapshots)
 
+```kotlin
+dependencies {
+    lintChecks("fr.smarquis.playground:lint:<version>")
+}
+```
+
 ### 🧮 More info
 
 - [Issue registry](checks/src/main/kotlin/fr/smarquis/playground/lint/IssueRegistry.kt): where issues are registered
