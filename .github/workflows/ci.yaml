@@ -62,7 +62,7 @@ jobs:
 
       - name: 👷 Build
         id: build
-        run: ./gradlew assemble
+        run: ./gradlew assemble publishToMavenLocal
       - name: 📦 Archive APKs
         uses: actions/upload-artifact@v7
         with:
