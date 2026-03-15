@@ -1,0 +1,37 @@
+name: 🚀 Publish
+
+on:
+  push:
+    tags: ['*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    if: github.repository == 'SimonMarquis/Lint-Playground'
+    name: 🚀 Publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup-java
+      - uses: ./.github/actions/setup-gradle
+        with:
+          cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
+      - uses: ./.github/actions/setup-gradle-properties
+
+      - name: 🚀 Publish
+        run: ./gradlew :lint:publish --no-configuration-cache
+        env:
+          CENTRAL_PORTAL_USERNAME: ${{ secrets.CENTRAL_PORTAL_USERNAME }}
+          CENTRAL_PORTAL_PASSWORD: ${{ secrets.CENTRAL_PORTAL_PASSWORD }}
+          GPG_SECRET_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          GPG_PASSWORD: ${{ secrets.GPG_PASSWORD }}
+
+      - name: 📦 Archive Maven artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: maven
+          path: build/.m2/repository
