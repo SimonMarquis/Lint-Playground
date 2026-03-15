@@ -23,7 +23,7 @@ jobs:
       - uses: ./.github/actions/setup-gradle-properties
 
       - name: 🚀 Publish
-        run: ./gradlew :lint:publish --no-configuration-cache
+        run: ./gradlew :lint:publish
         env:
           CENTRAL_PORTAL_USERNAME: ${{ secrets.CENTRAL_PORTAL_USERNAME }}
           CENTRAL_PORTAL_PASSWORD: ${{ secrets.CENTRAL_PORTAL_PASSWORD }}
