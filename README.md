@@ -70,7 +70,7 @@
 - `🕵️ Lint`: [txt](app/build/reports/lint-results-debug.txt), [xml](app/build/reports/lint-results-debug.xml), [html](app/build/reports/lint-results-debug.html), [sarif](app/build/reports/lint-results-debug.sarif)
 - `👷 Build`: [lint-debug.aar](lint/build/outputs/aar/lint-debug.aar), [lint-release.aar](lint/build/outputs/aar/lint-release.aar)
 - `🧑‍🔬 Test`: [:app](app/build/reports/tests/testDebugUnitTest/index.html), [:checks](checks/build/reports/tests/test/index.html), [:libs:android](libs/android/build/reports/tests/testDebugUnitTest/index.html)
-- `📦 Publish to Maven Local`: [build/.m2](build/.m2), [:checks](~/.m2)
+- `📦 Publish to Maven Local`: [build/.m2](build/.m2), [~/.m2](~/.m2)
 
 ### 🔢 Lint artifacts
 
