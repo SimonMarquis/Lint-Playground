@@ -73,6 +73,7 @@
 
 ### 🔢 Lint artifacts
 
+- [![🚀 Publish](https://github.com/SimonMarquis/Lint-Playground/actions/workflows/publish.yml/badge.svg)](https://github.com/SimonMarquis/Lint-Playground/actions/workflows/publish.yml)
 - ![Maven Central Version](https://img.shields.io/maven-central/v/fr.smarquis.playground/lint)
 - ![Maven Snapshots Version](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fcentral.sonatype.com%2Frepository%2Fmaven-snapshots%2Ffr%2Fsmarquis%2Fplayground%2Flint%2Fmaven-metadata.xml&label=maven-snapshots)
 
