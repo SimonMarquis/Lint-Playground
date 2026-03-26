@@ -133,11 +133,15 @@ classDef jvm fill:#7F52FF,stroke:#fff,stroke-width:2px,color:#fff;
 
 #### Lint autofix
 
-[`lint.autofix`](https://googlesamples.github.io/android-custom-lint-rules/api-guide.md.html#appendix:environmentvariablesandsystemproperties/systemproperties/def-lint.autofix) and [`lint.autofix.imports`](https://googlesamples.github.io/android-custom-lint-rules/api-guide.md.html#appendix:environmentvariablesandsystemproperties/systemproperties/def-lint.autofix.imports) can be configured as system properties:
+- `lint` CLI only: [`lint.autofix`](https://googlesamples.github.io/android-custom-lint-rules/api-guide.md.html#appendix:environmentvariablesandsystemproperties/systemproperties/def-lint.autofix) and [`lint.autofix.imports`](https://googlesamples.github.io/android-custom-lint-rules/api-guide.md.html#appendix:environmentvariablesandsystemproperties/systemproperties/def-lint.autofix.imports) can be configured as system properties:
+  ```bash
+  lint -Dlint.autofix=true -Dlint.autofix.imports=true
+  ```
 
-```bash
-./gradlew :app:lint -Dlint.autofix=true -Dlint.autofix.imports=true
-```
+- `gradle` AGP only:
+  ```bash
+  ./gradlew :app:lintFix[Variant]
+  ```
 
 ##### UAST dump
 
