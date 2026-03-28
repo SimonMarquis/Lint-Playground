@@ -595,7 +595,8 @@
         });
 
         if (!json) return false;
-        loadSarifData(parseJson(json), element.getAttribute('title') || src || defaultFilename, Date.now(), keepUrlParams);
+        const timestamp = element.getAttribute('data-timestamp');
+        loadSarifData(parseJson(json), element.getAttribute('title') || src || defaultFilename, timestamp ? new Date(timestamp) : Date.now(), keepUrlParams);
         return true;
     }
 

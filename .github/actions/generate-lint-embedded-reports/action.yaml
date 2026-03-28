@@ -16,7 +16,7 @@ runs:
           output="${sarif%.sarif}-embedded.html"
           {
             sed -n '1,/<!--region SARIF-EMBEDDED-REPORT-->/p' "$template"
-            printf '<script id="sarif-report" type="application/gzip+base64">'
+            printf '<script id="sarif-report" type="application/gzip+base64" data-timestamp="%s">' "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
             jq -c . "$sarif" | gzip -cn | base64 | tr -d '\n'
             printf '</script>\n'
             sed -n '/<!--endregion SARIF-EMBEDDED-REPORT-->/,$p' "$template"
