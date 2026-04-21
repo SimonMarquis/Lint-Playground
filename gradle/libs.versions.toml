@@ -29,7 +29,7 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 android-lint = { id = "com.android.lint", version.ref = "agp" }
 android-cacheFix = "org.gradle.android.cache-fix:3.0.3"
-develocity = "com.gradle.develocity:4.4.0"
+develocity = "com.gradle.develocity:4.4.1"
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kgp" }
 kotlin-sam = { id = "org.jetbrains.kotlin.plugin.sam.with.receiver", version.ref = "kgp" }
 kotlin-assignment = { id = "org.jetbrains.kotlin.plugin.assignment", version.ref = "kgp" }
