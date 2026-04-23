@@ -5,7 +5,7 @@ compileSdk = "36"
 
 agp = "9.2.0"
 android-tools = "32.2.0"
-kgp = "2.3.20"
+kgp = "2.3.21"
 
 [libraries]
 android-desugarJdkLibs = "com.android.tools:desugar_jdk_libs:2.1.5"
