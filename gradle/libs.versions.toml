@@ -33,7 +33,7 @@ develocity = "com.gradle.develocity:4.4.1"
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kgp" }
 kotlin-sam = { id = "org.jetbrains.kotlin.plugin.sam.with.receiver", version.ref = "kgp" }
 kotlin-assignment = { id = "org.jetbrains.kotlin.plugin.assignment", version.ref = "kgp" }
-nmcp = "com.gradleup.nmcp:1.4.4"
+nmcp = "com.gradleup.nmcp:1.5.0"
 
 playground-android-application = { id = "playground.android-application" }
 playground-android-library = { id = "playground.android-library" }
