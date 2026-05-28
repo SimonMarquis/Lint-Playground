@@ -42,7 +42,7 @@
         h1 svg { flex-shrink: 0; }
         main { padding: 2rem; }
         kbd { background-color: var(--bg-elevation); border: 1px solid var(--border); border-radius: 4px; padding: 1px 6px; font-family: inherit; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.2; box-shadow: 0 1px 0 var(--border); }
-        summary.issue-group-header { cursor: pointer; list-style: none; }
+        summary.issue-group-header { cursor: pointer; user-select: text, list-style: none; }
         summary.issue-group-header::-webkit-details-marker { display: none; }
 
         @media (max-width: 768px) { #report-info { max-width: 150px; } .title-prefix { display: none; } }
@@ -163,7 +163,7 @@
         .path-dir { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; flex-shrink: 1; color: var(--text-tertiary); direction: ltr; }
         .path-name { white-space: nowrap; flex-shrink: 0; color: var(--text-secondary); font-weight: 600; }
 
-        .pill { appearance: none; font-family: inherit; --pill-color: var(--primary); background-color: var(--bg-elevation); color: var(--text-secondary); border: 1px solid transparent; padding: 0.25rem 0.6rem; border-radius: 20px; font-size: 0.75rem; cursor: pointer; transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease; user-select: none; display: flex; align-items: center; justify-content: center; min-width: 0; max-width: 100%; line-height: 1.2; vertical-align: middle; }
+        .pill { appearance: none; font-family: inherit; --pill-color: var(--primary); background-color: var(--bg-elevation); color: var(--text-secondary); border: 1px solid transparent; padding: 0.25rem 0.6rem; border-radius: 20px; font-size: 0.75rem; cursor: pointer; transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease; user-select: text; display: flex; align-items: center; justify-content: center; min-width: 0; max-width: 100%; line-height: 1.2; vertical-align: middle; }
         .pill-container { display: flex; flex-wrap: wrap; gap: 0.35rem; min-width: 0; }
         .pill-count { white-space: nowrap; padding-left: 0.35rem; flex: 0 0 auto; }
         .pill-label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; flex: 0 1 auto; }
