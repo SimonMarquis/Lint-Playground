@@ -39,6 +39,7 @@
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: var(--bg-body); color: var(--text-main); line-height: 1.6; min-height: 100vh; transition: background-color 0.3s ease, color 0.3s ease; }
         header { background-color: var(--bg-surface); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; align-items: center; position: sticky; top: 0; z-index: 50; transition: background-color 0.3s ease, border-color 0.3s ease; gap: 1rem; height: var(--header-height); }
         h1 { font-size: 1.25rem; font-weight: 600; color: var(--text-main); display: flex; align-items: center; gap: 0.5rem; min-width: 0; flex: 0 1 auto; user-select: none; cursor: pointer; }
+        .header-brand { display: contents; text-decoration: none; color: inherit; }
         h1 svg { flex-shrink: 0; }
         main { padding: 2rem; }
         kbd { background-color: var(--bg-elevation); border: 1px solid var(--border); border-radius: 4px; padding: 1px 6px; font-family: inherit; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.2; box-shadow: 0 1px 0 var(--border); }
@@ -244,10 +245,12 @@
 
 <header>
     <h1>
-        <svg class="svg-icon-fill header-logo"><use href="#icon-logo"/></svg>
-        <span class="title-text">
-            <span class="title-prefix">Android Lint</span><span class="title-suffix">SARIF Viewer</span>
-        </span>
+        <a href="" class="header-brand">
+            <svg class="svg-icon-fill header-logo"><use href="#icon-logo"/></svg>
+            <span class="title-text">
+                <span class="title-prefix">Android Lint</span><span class="title-suffix">SARIF Viewer</span>
+            </span>
+        </a>
     </h1>
     <div class="header-controls">
         <div id="report-info"></div>
@@ -1109,7 +1112,11 @@
         }
     });
 
-    document.querySelector('header h1').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    document.querySelector('header h1').addEventListener('click', event => {
+        if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+        event.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
 
     DOM.themeToggle.addEventListener('click', () => applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark', true));
     DOM.filterText.addEventListener('focus', () => renderSearch());
