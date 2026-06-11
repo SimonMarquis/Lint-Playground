@@ -126,7 +126,7 @@
         .issue-group-title { display: flex; align-items: center; gap: 0.75rem; font-family: monospace; font-weight: 700; color: var(--badge-color); font-size: 1.1rem; flex: 1 1 auto; min-width: 0; margin-right: 0.5rem; }
         .issue-group.is-collapsed .issue-group-content { display: none; }
         .issue-list { display: flex; flex-direction: column; gap: 1.5rem; }
-        .issue-location { appearance: none; background-color: var(--bg-surface); padding: 0.5rem 0.75rem; border-radius: 6px; font-family: monospace; font-size: 0.85rem; color: var(--text-secondary); display: flex; align-items: center; text-decoration: none; border: 1px solid transparent; transition: all 0.2s ease; cursor: pointer; width: 100%; text-align: left; overflow: hidden; }
+        .issue-location { appearance: none; background-color: var(--bg-surface); padding: 0.5rem 0.75rem; border-radius: 6px; font-family: monospace; font-size: 0.85rem; color: var(--text-secondary); display: flex; align-items: center; text-decoration: none; border: 1px solid transparent; transition: all 0.2s ease; cursor: pointer; width: 100%; text-align: left; overflow: hidden; user-select: text; }
         .issue-location:focus { outline: 2px solid var(--text-tertiary); outline-offset: 2px; border-color: var(--text-tertiary); }
         .issue-location:hover { border-color: var(--text-tertiary); color: var(--text-main); background-color: var(--bg-elevation); }
         .issue-message { font-size: 1rem; margin-bottom: 0.75rem; color: var(--text-main); display: flex; align-items: flex-start; gap: 0.75rem; word-break: break-word; overflow-wrap: anywhere; }
@@ -522,15 +522,6 @@
         } catch (err) {
             showError(`Failed to decompress embedded file: ${err.message}`, err);
             return null;
-        }
-    }
-
-    async function copyToClipboard(text) {
-        try {
-            await navigator.clipboard.writeText(text);
-            showToast('Path copied to clipboard!', false);
-        } catch (err) {
-            showError('Failed to copy to clipboard', err);
         }
     }
 
@@ -1164,7 +1155,7 @@
     });
     // #endregion REMOVE-IN-EMBEDDED-REPORT
 
-    DOM.issueList.addEventListener('click', event => {
+    DOM.issueList.addEventListener('click', async event => {
         const icon = event.target.closest('.severity-icon');
         if (icon) {
             event.preventDefault();
@@ -1181,7 +1172,12 @@
         const locationButton = event.target.closest('.issue-location');
         if (locationButton) {
             event.preventDefault();
-            copyToClipboard(locationButton.textContent);
+            try {
+                await navigator.clipboard.writeText(locationButton.textContent);
+                showToast('Path copied to clipboard!', false);
+            } catch (err) {
+                window.getSelection().selectAllChildren(locationButton);
+            }
         }
     });
 
