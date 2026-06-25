@@ -48,5 +48,7 @@ rootProject.name = "Lint-Playground"
 include(":app")
 include(":checks")
 include(":lint")
+include(":libs:annotations")
+include(":libs:config")
 include(":libs:android")
 include(":libs:jvm")
