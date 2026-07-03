@@ -21,7 +21,6 @@ internal class PlaygroundAndroidApplicationPlugin : Plugin<Project> {
                 debug {
                     applicationIdSuffix = ".debug"
                     isDebuggable = true
-                    proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"))
                 }
             }
         }
