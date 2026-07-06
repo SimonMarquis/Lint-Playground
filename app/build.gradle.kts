@@ -4,7 +4,7 @@ plugins {
 }
 
 dependencies {
-    implementation(projects.libs.android)
+    implementation(project(":libs:android"))
 
     androidTestImplementation(libs.androidx.junit)
 }
