@@ -25,9 +25,16 @@ public class ReplaceMethodCallDetector : Detector(), SourceCodeScanner {
             .message(ISSUE.getBriefDescription(RAW))
             .fix(
                 fix()
-                    .name("Replace `foo` with `Unit`")
-                    .replace().all().with("Unit")
-                    .robot(true).independent(true).build(),
+                    .alternatives(
+                        // Primary fix
+                        fix()
+                            .name("Replace `foo` with `Unit`")
+                            .replace().all().with("Unit")
+                            .robot(true).independent(true).build(),
+                        // Secondary fix (without file modification)
+                        fix()
+                            .data("key", "value"),
+                    ),
             )
             .report()
 
