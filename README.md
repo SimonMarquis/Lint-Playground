@@ -41,7 +41,7 @@
 >   - id: lint
 >     run: ./gradlew lint --continue
 >   - if: ${{ !cancelled() && contains(fromJSON('["success", "failure"]'), steps.lint.outcome) }}
->     uses: ./.github/actions/generate-lint-embedded-reports
+>     uses: $/.github/actions/generate-lint-embedded-reports
 >   ```
 > - with a bash script:
 >   ```bash
