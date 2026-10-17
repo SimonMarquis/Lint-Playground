@@ -7,10 +7,7 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
-permissions:
-  actions: read
-  contents: read
-  pull-requests: write
+permissions: {}
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.head.label || github.head_ref || github.ref }}
@@ -36,6 +33,10 @@ jobs:
     name: 👮 Checks
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    permissions:
+      actions: read
+      contents: read
+      pull-requests: write
     steps:
       - uses: actions/checkout@v7
         with:
@@ -54,6 +55,10 @@ jobs:
     name: 👷 Build
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    permissions:
+      actions: read
+      contents: read
+      pull-requests: write
     steps:
       - uses: actions/checkout@v7
         with:
@@ -84,6 +89,10 @@ jobs:
     name: 🧑‍🔬 Test
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    permissions:
+      actions: read
+      contents: read
+      pull-requests: write
     steps:
       - uses: actions/checkout@v7
         with:
