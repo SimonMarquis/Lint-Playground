@@ -1,7 +1,7 @@
 [versions]
 minSdk = "24"
-targetSdk = "36"
-compileSdk = "36"
+targetSdk = "37"
+compileSdk = "37"
 
 agp = "9.4.1"
 android-tools = "32.2.1"
